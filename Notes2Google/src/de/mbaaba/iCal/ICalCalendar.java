@@ -246,13 +246,15 @@ public class ICalCalendar extends AbstractCalendar {
 
 	@Override
 	public void delete(CalendarEntry aParamCalendarEntry) {
-		// TODO: Fix delete
+		// TODO: iCal: Add ability to delete entries
+		// http://github.com/hwacookie/CalendarSyncTool/issues/issue/2
 		// fortunaCalendar.getComponents().remove(component)(aEvent);
 	}
 
 	@Override
 	public void delete(List<CalendarEntry> aList) {
-		// TODO: Fix delete
+		// TODO: iCal: Add ability to delete entries
+		// http://github.com/hwacookie/CalendarSyncTool/issues/issue/2
 	}
 
 }
