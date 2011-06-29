@@ -19,21 +19,52 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.thoughtworks.xstream.XStream;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CalendarEntry.
+ */
 public class CalendarEntry implements ICalendarEntry {
+	
+	/** The Constant sdf. */
 	private static final DateFormat sdf = SimpleDateFormat.getDateTimeInstance();
+	
+	/** The Constant UNKNOWN_PERSON. */
 	private static final Person UNKNOWN_PERSON = new Person();
 
+	/** The subject. */
 	private String subject;
+	
+	/** The body. */
 	private String body;
+	
+	/** The chair. */
 	private Person chair;
+	
+	/** The location. */
 	private String location;
+	
+	/** The room. */
 	private String room;
+	
+	/** The attendees. */
 	private List<Person> attendees;
+	
+	/** The start dates. */
 	private ArrayList<Date> startDates;
+	
+	/** The end dates. */
 	private ArrayList<Date> endDates;
+	
+	/** The last modified. */
 	private Date lastModified;
+	
+	/** The unique id. */
 	private String uniqueID;
+	
+	/** The keep local. */
 	private boolean keepLocal;
+	
+	/** The alarm time. */
 	private Date alarmTime;
 
 	/*
@@ -45,9 +76,7 @@ public class CalendarEntry implements ICalendarEntry {
 		return body;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see de.mbaaba.calendar.ICalendarEntry#setBody(java.lang.String)
 	 */
 	public void setBody(String aBody) {
@@ -208,6 +237,9 @@ public class CalendarEntry implements ICalendarEntry {
 		return subject;
 	}
 
+	/**
+	 * Instantiates a new calendar entry.
+	 */
 	public CalendarEntry() {
 		startDates = new ArrayList<Date>();
 		endDates = new ArrayList<Date>();
@@ -241,6 +273,9 @@ public class CalendarEntry implements ICalendarEntry {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		String location = "";
 		if (getLocation() != null) {
@@ -276,11 +311,21 @@ public class CalendarEntry implements ICalendarEntry {
 		return "\"" + getSubject() + "\" (" + getUniqueID() + ")";
 	}
 
+	/**
+	 * Instantiates a new calendar entry.
+	 *
+	 * @param aCalendarEntry the calendar entry
+	 */
 	public CalendarEntry(ICalendarEntry aCalendarEntry) {
 		this();
 		copyFrom(aCalendarEntry);
 	}
 
+	/**
+	 * Copy from.
+	 *
+	 * @param aCalendarEntry the calendar entry
+	 */
 	public void copyFrom(ICalendarEntry aCalendarEntry) {
 		XStream xStream = new XStream();
 		String xml = xStream.toXML(aCalendarEntry);
@@ -302,10 +347,20 @@ public class CalendarEntry implements ICalendarEntry {
 		setKeepLocal(copy.isKeepLocal());
 	}
 
+	/**
+	 * Sets the keep local.
+	 *
+	 * @param keepPrivate the new keep local
+	 */
 	public void setKeepLocal(boolean keepPrivate) {
 		keepLocal = keepPrivate;
 	}
 
+	/**
+	 * Checks if is keep local.
+	 *
+	 * @return true, if is keep local
+	 */
 	public boolean isKeepLocal() {
 		return keepLocal;
 	}
@@ -328,6 +383,9 @@ public class CalendarEntry implements ICalendarEntry {
 		return alarmTime;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object aObj) {
 		if (aObj instanceof CalendarEntry) {
@@ -344,6 +402,14 @@ public class CalendarEntry implements ICalendarEntry {
 		return false;
 	}
 
+	/**
+	 * List equals.
+	 *
+	 * @param fieldName the field name
+	 * @param list1 the list1
+	 * @param list2 the list2
+	 * @return true, if successful
+	 */
 	public static boolean listEquals(String fieldName, ArrayList<?> list1, ArrayList<?> list2) {
 		boolean res = list1.equals(list2);
 		// if (res == false) {
@@ -353,6 +419,14 @@ public class CalendarEntry implements ICalendarEntry {
 		return res;
 	}
 
+	/**
+	 * Myequals.
+	 *
+	 * @param fieldName the field name
+	 * @param aO1 the o1
+	 * @param aO2 the o2
+	 * @return true, if successful
+	 */
 	public static boolean myequals(String fieldName, Object aO1, Object aO2) {
 		if (aO1 == aO2) {
 			return true;
@@ -371,6 +445,9 @@ public class CalendarEntry implements ICalendarEntry {
 		return res;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
