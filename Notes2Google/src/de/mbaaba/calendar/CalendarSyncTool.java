@@ -112,7 +112,7 @@ public class CalendarSyncTool {
 				if (repeatEach > 0) {
 					Date now = new Date();
 					//TODO: 1: Handling of working-hours http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
-					while ((now.getDay() == 0) || (now.getDay() == 6) || ((now.getHours() < 8) || (now.getHours() > 18))) {
+					while ((now.getDay() ==0) || (now.getDay() == 6) || ((now.getHours() < 8) || (now.getHours() > 18))) {
 						println("Not a working hour, sleeping for an hour!");
 						Thread.sleep(Units.HOUR * 1);
 						now = new Date();
