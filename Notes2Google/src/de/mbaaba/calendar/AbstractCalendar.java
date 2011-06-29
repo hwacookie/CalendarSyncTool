@@ -16,7 +16,7 @@ import de.mbaaba.util.Configurator;
 
 /**
  * Abstract base class for all calendars.
- * @author walden_h1
+ * @author walden_h1 blub
  *
  */
 public abstract class AbstractCalendar {
