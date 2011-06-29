@@ -94,6 +94,7 @@ public class FixLocationFilter implements ICalendarFilter {
 						// result is probably broken!
 						result = defaultLocation;
 					} else {
+						//TODO: check encoding problems
 						result = leg0.getEnd_address();
 					}
 				}
