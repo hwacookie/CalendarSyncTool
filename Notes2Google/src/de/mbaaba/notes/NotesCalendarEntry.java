@@ -70,7 +70,8 @@ public class NotesCalendarEntry extends CalendarEntry {
 			}
 		} else if (itemName.equals("$alarmoffset")) {
 			// DateTime thisAlarmOffset = aItem.getDateTimeValue();
-			// TODO: alarms
+			// TODO: 5: Handle alarm settings
+			// http://github.com/hwacookie/CalendarSyncTool/issues/issue/5
 		} else if (itemName.equals("originalmodtime")) {
 			setLastModified(aItem.getDateTimeValue().toJavaDate());
 		} else if (itemName.equals("requiredattendees") || itemName.equals("optionalattendees")) {
