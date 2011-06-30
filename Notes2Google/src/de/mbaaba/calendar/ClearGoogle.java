@@ -16,6 +16,7 @@ import de.mbaaba.util.PropertyFileConfigurator;
 
 public class ClearGoogle
 {
+	// hmmm
 	public static void clearGoogle() throws Exception {
 		Configurator aConfigurator = new PropertyFileConfigurator("Notes2Google.properties");
 		CommConfigUtil.init(aConfigurator);
