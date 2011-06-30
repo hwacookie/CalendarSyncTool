@@ -37,14 +37,8 @@ public class ScreenDumpCalendar extends AbstractCalendar {
 	public void delete(CalendarEntry aParamCalendarEntry) {
 	}
 
-	@Override
-	public void put(List<CalendarEntry> aParamCalendarEntry) {
-		for (ICalendarEntry calendarEntry : aParamCalendarEntry) {
-			put(calendarEntry);
-		}
-	}
 
 	@Override
-	public void delete(List<CalendarEntry> aList) {
+	public void deleteList(List<CalendarEntry> aList) {
 	}
 }

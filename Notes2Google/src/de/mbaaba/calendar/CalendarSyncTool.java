@@ -155,7 +155,7 @@ public class CalendarSyncTool {
 	private void saveLastKnownCalendarState(ArrayList<CalendarEntry> aEntries) {
 		println("Persisting list of calendar entries.");
 		lastKnownCalendarState.deleteAll();
-		lastKnownCalendarState.putAll(aEntries);
+		lastKnownCalendarState.putList(aEntries);
 		lastKnownCalendarState.close();
 	}
 
@@ -192,11 +192,11 @@ public class CalendarSyncTool {
 		}
 		if (toBeDeletedList.size() > 0) {
 			println("Removing " + obsoleteEntries.size() + " entries ...");
-			targetCalendar.delete(toBeDeletedList);
+			targetCalendar.deleteList(toBeDeletedList);
 		}
 
 		println("Adding/Updating " + newEntries.size() + " entries ...");
-		targetCalendar.put(newEntries);
+		targetCalendar.putList(newEntries);
 
 		targetCalendar.close();
 	}

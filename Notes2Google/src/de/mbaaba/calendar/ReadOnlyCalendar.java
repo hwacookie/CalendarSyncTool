@@ -17,7 +17,7 @@ public abstract class ReadOnlyCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void put(List<CalendarEntry> aParamCalendarEntry) {
+	public void putList(List<CalendarEntry> aParamCalendarEntry) {
 		// TODO Auto-generated method stub
 
 	}
@@ -29,7 +29,7 @@ public abstract class ReadOnlyCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void delete(List<CalendarEntry> aList) {
+	public void deleteList(List<CalendarEntry> aList) {
 		// TODO Auto-generated method stub
 
 	}

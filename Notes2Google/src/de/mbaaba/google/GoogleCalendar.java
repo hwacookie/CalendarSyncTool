@@ -222,7 +222,7 @@ public class GoogleCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void delete(List<CalendarEntry> entriesToDelete) {
+	public void deleteList(List<CalendarEntry> entriesToDelete) {
 		ArrayList<CalendarEventEntry> eventsToDelete = new ArrayList<CalendarEventEntry>();
 		for (ICalendarEntry calendarEntry : entriesToDelete) {
 			try {
@@ -351,15 +351,9 @@ public class GoogleCalendar extends AbstractCalendar {
 	public void delete(CalendarEntry aParamCalendarEntry) {
 		List<CalendarEntry> list = new ArrayList<CalendarEntry>();
 		list.add(aParamCalendarEntry);
-		delete(list);
+		deleteList(list);
 	}
 
-	@Override
-	public void put(List<CalendarEntry> aParamCalendarEntry) {
-		for (ICalendarEntry calendarEntry : aParamCalendarEntry) {
-			put(calendarEntry);
-		}
-	}
 
 	public void deleteAllEntries() {
 		try {

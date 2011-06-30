@@ -237,12 +237,6 @@ public class ICalCalendar extends AbstractCalendar {
 		}
 	}
 
-	@Override
-	public void put(List<CalendarEntry> aParamCalendarEntry) {
-		for (CalendarEntry calendarEntry : aParamCalendarEntry) {
-			put(calendarEntry);
-		}
-	}
 
 	@Override
 	public void delete(CalendarEntry aParamCalendarEntry) {
@@ -252,7 +246,7 @@ public class ICalCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void delete(List<CalendarEntry> aList) {
+	public void deleteList(List<CalendarEntry> aList) {
 		// TODO: iCal: Add ability to delete entries
 		// http://github.com/hwacookie/CalendarSyncTool/issues/issue/2
 	}
