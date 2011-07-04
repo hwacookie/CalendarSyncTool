@@ -13,10 +13,13 @@ import de.mbaaba.util.CommConfigUtil;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.PropertyFileConfigurator;
 
-
-public class ClearGoogle
-{
-	// hmmm
+/**
+ * Utility class that deletes all entries from the google calendar. Use with
+ * care!
+ * 
+ * @author walden_h1
+ */
+public final class ClearGoogle {
 	public static void clearGoogle() throws Exception {
 		Configurator aConfigurator = new PropertyFileConfigurator("Notes2Google.properties");
 		CommConfigUtil.init(aConfigurator);

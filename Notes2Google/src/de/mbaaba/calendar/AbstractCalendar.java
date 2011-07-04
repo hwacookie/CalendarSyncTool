@@ -49,7 +49,7 @@ public abstract class AbstractCalendar {
 	 *            the end date
 	 * @return the list of calendar entries between the two dates.
 	 */
-	public abstract ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate);
+	public abstract ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate);
 
 	/**
 	 * Adds all given calendar entries.
@@ -58,9 +58,10 @@ public abstract class AbstractCalendar {
 	 * @param aCalendarEntries
 	 *            the calendar entries to be added.
 	 */
-	public void putList(List<CalendarEntry> aCalendarEntries) {
-		for (ICalendarEntry calendarEntry : aCalendarEntries)
+	public final void putList(List<ICalendarEntry> aCalendarEntries) {
+		for (ICalendarEntry calendarEntry : aCalendarEntries) {
 			put(calendarEntry);
+		}
 	}
 
 	/**
@@ -78,7 +79,7 @@ public abstract class AbstractCalendar {
 	 * @param aCalendarEntry
 	 *            the calendar entry to be deleted.
 	 */
-	public abstract void delete(CalendarEntry aCalendarEntry);
+	public abstract void delete(ICalendarEntry aCalendarEntry);
 
 	/**
 	 * Delete all calendar entries in this calendar which are contained in the
@@ -87,6 +88,10 @@ public abstract class AbstractCalendar {
 	 * @param aList
 	 *            the list of entries to be deleted.
 	 */
-	public abstract void deleteList(List<CalendarEntry> aList);
+	public void deleteList(List<ICalendarEntry> aCalendarEntries) {
+		for (ICalendarEntry calendarEntry : aCalendarEntries) {
+			delete(calendarEntry);
+		}
+	}
 
 }

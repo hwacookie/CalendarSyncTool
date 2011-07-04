@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 import de.mbaaba.calendar.AbstractCalendar;
-import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.util.Configurator;
 
@@ -24,8 +23,8 @@ public class ScreenDumpCalendar extends AbstractCalendar {
 	public void close() {
 	}
 
-	public ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		return new ArrayList<CalendarEntry>();
+	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
+		return new ArrayList<ICalendarEntry>();
 	}
 
 	public void put(ICalendarEntry aCalendarEntry) {
@@ -34,11 +33,11 @@ public class ScreenDumpCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void delete(CalendarEntry aParamCalendarEntry) {
+	public void delete(ICalendarEntry aParamCalendarEntry) {
 	}
 
 
 	@Override
-	public void deleteList(List<CalendarEntry> aList) {
+	public void deleteList(List<ICalendarEntry> aList) {
 	}
 }

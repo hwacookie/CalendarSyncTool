@@ -24,16 +24,17 @@ import lotus.domino.Session;
 import lotus.domino.View;
 import lotus.domino.ViewEntry;
 import lotus.domino.ViewEntryCollection;
+import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
-import de.mbaaba.calendar.ReadOnlyCalendar;
+import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
-public class NotesCalendar extends ReadOnlyCalendar {
+public class NotesCalendar extends AbstractCalendar {
 
 	private static final Logger LOG = new Logger(NotesCalendar.class);
 
-	public ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
+	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
 		DataFetcher dataFetcher = new DataFetcher(aStartDate, aEndDate);
 		NotesThread nt = new NotesThread(dataFetcher);
 		nt.start();
@@ -43,7 +44,7 @@ public class NotesCalendar extends ReadOnlyCalendar {
 			} catch (InterruptedException localInterruptedException) {
 			}
 		}
-		ArrayList<CalendarEntry> entries = new ArrayList<CalendarEntry>();
+		ArrayList<ICalendarEntry> entries = new ArrayList<ICalendarEntry>();
 		for (CalendarEntry calendarEntry : dataFetcher.getCalendarEntries()) {
 			entries.add(calendarEntry);
 		}
@@ -153,6 +154,16 @@ public class NotesCalendar extends ReadOnlyCalendar {
 		public boolean isRunning() {
 			return running;
 		}
+	}
+
+	@Override
+	public void put(ICalendarEntry aCalendarEntry) {
+		throw new RuntimeException("Operation not yet supported!");
+	}
+
+	@Override
+	public void delete(ICalendarEntry aCalendarEntry) {
+		throw new RuntimeException("Operation not yet supported!");
 	}
 
 }

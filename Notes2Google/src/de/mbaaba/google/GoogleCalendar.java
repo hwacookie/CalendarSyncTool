@@ -6,7 +6,6 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.google;
 
 import java.io.IOException;
@@ -42,7 +41,6 @@ import com.google.gdata.data.extensions.Who;
 import com.google.gdata.util.ServiceException;
 
 import de.mbaaba.calendar.AbstractCalendar;
-import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.CalendarSyncTool;
 import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.calendar.Person;
@@ -69,13 +67,13 @@ public class GoogleCalendar extends AbstractCalendar {
 		return null;
 	}
 
-	private ArrayList<CalendarEntry> dateRangeQuery(DateTime startTime, DateTime endTime) throws ServiceException, IOException {
+	private ArrayList<ICalendarEntry> dateRangeQuery(DateTime startTime, DateTime endTime) throws ServiceException, IOException {
 		CalendarQuery myQuery = new CalendarQuery(feedUrl);
 		myQuery.setMinimumStartTime(startTime);
 		myQuery.setMaximumStartTime(endTime);
 		CalendarEventFeed resultFeed = (CalendarEventFeed) this.calendarService.query(myQuery, CalendarEventFeed.class);
 
-		ArrayList<CalendarEntry> res = new ArrayList<CalendarEntry>();
+		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
 		for (int i = 0; i < resultFeed.getEntries().size(); i++) {
 			CalendarEventEntry entry = (CalendarEventEntry) resultFeed.getEntries().get(i);
 			GoogleCalendarEntry googleCalendarEntry = new GoogleCalendarEntry(entry);
@@ -222,7 +220,7 @@ public class GoogleCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void deleteList(List<CalendarEntry> entriesToDelete) {
+	public void deleteList(List<ICalendarEntry> entriesToDelete) {
 		ArrayList<CalendarEventEntry> eventsToDelete = new ArrayList<CalendarEventEntry>();
 		for (ICalendarEntry calendarEntry : entriesToDelete) {
 			try {
@@ -298,7 +296,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		this.calendarService.useSsl();
 	}
 
-	public ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
+	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
 		try {
 			return dateRangeQuery(new DateTime(aStartDate), new DateTime(aEndDate));
 		} catch (ServiceException e) {
@@ -348,12 +346,11 @@ public class GoogleCalendar extends AbstractCalendar {
 	// }
 
 	@Override
-	public void delete(CalendarEntry aParamCalendarEntry) {
-		List<CalendarEntry> list = new ArrayList<CalendarEntry>();
+	public void delete(ICalendarEntry aParamCalendarEntry) {
+		List<ICalendarEntry> list = new ArrayList<ICalendarEntry>();
 		list.add(aParamCalendarEntry);
 		deleteList(list);
 	}
-
 
 	public void deleteAllEntries() {
 		try {

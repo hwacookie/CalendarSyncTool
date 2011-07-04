@@ -79,8 +79,8 @@ public class ICalCalendar extends AbstractCalendar {
 		}
 	}
 
-	public ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		ArrayList<CalendarEntry> res = new ArrayList<CalendarEntry>();
+	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
+		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
 		ComponentList components = fortunaCalendar.getComponents();
 		for (int i = 0; i < components.size(); i++) {
 			Object object = components.get(i);
@@ -237,16 +237,15 @@ public class ICalCalendar extends AbstractCalendar {
 		}
 	}
 
-
 	@Override
-	public void delete(CalendarEntry aParamCalendarEntry) {
+	public void delete(ICalendarEntry aParamCalendarEntry) {
 		// TODO: iCal: Add ability to delete entries
 		// http://github.com/hwacookie/CalendarSyncTool/issues/issue/2
 		// fortunaCalendar.getComponents().remove(component)(aEvent);
 	}
 
 	@Override
-	public void deleteList(List<CalendarEntry> aList) {
+	public void deleteList(List<ICalendarEntry> aList) {
 		// TODO: iCal: Add ability to delete entries
 		// http://github.com/hwacookie/CalendarSyncTool/issues/issue/2
 	}

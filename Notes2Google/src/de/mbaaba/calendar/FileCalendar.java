@@ -13,26 +13,44 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.thoughtworks.xstream.XStream;
 
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
+/**
+ * This is a calendar that uses {@link XStream} to store its content.
+ */
 public class FileCalendar extends AbstractCalendar {
-	
+
+	/** Used for logging purposes. */
 	private static final Logger LOG = new Logger(FileCalendar.class);
 
+	/**
+	 * The key within the property file that is used to store the filename of
+	 * the calendar.
+	 */
+	private static final String FILECAL_FILENAME_PROPERTY_TAG = "fileCalendar.FileName";
 
-	private static final String FILECAL_FILENAME = "fileCalendar.FileName";
-	ArrayList<CalendarEntry> allEntries;
+	/** A list that caches all entries within the calendar. */
+	private ArrayList<CalendarEntry> allEntries;
+
+	/** The name of the file that is used to store the calendar data. */
 	private String fileName;
 
+	/**
+	 * Instantiates a new file calendar.
+	 */
 	public FileCalendar() {
 		allEntries = new ArrayList<CalendarEntry>();
 	}
 
+	/**
+	 * Closes this calendar by saving its content to the file.
+	 * 
+	 * @see de.mbaaba.calendar.AbstractCalendar#close()
+	 */
 	@Override
 	public void close() {
 		// save to file
@@ -45,10 +63,14 @@ public class FileCalendar extends AbstractCalendar {
 		}
 	}
 
+	/**
+	 * Initializes this calendar and reads all entries from the file given in
+	 * the properties.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void init(Configurator aConfigurator) {
-		fileName = aConfigurator.getProperty(FILECAL_FILENAME, "fileCal.xml");
+		fileName = aConfigurator.getProperty(FILECAL_FILENAME_PROPERTY_TAG, "fileCal.xml");
 		XStream xStream = new XStream();
 		try {
 			allEntries = (ArrayList<CalendarEntry>) xStream.fromXML(new FileInputStream(fileName));
@@ -59,11 +81,27 @@ public class FileCalendar extends AbstractCalendar {
 		}
 	}
 
+	/*
+	 * Returns a list of all entries between aStart and aEnd.
+	 * 
+	 * @see
+	 * de.mbaaba.calendar.AbstractCalendar#readCalendarEntries(java.util.Date,
+	 * java.util.Date)
+	 */
 	@Override
-	public ArrayList<CalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		return allEntries;
+	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
+		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
+		
+		return res;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.mbaaba.calendar.AbstractCalendar#put(de.mbaaba.calendar.ICalendarEntry
+	 * )
+	 */
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
 		for (CalendarEntry calendarEntry : allEntries) {
@@ -76,22 +114,19 @@ public class FileCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void delete(CalendarEntry aParamCalendarEntry) {
-		allEntries.remove(aParamCalendarEntry);
-	}
-
-	@Override
-	public void putList(List<CalendarEntry> aParamCalendarEntry) {
-		for (ICalendarEntry calendarEntry : aParamCalendarEntry) {
-			put(calendarEntry);
+	public void delete(ICalendarEntry aCalendarEntry) {
+		for (CalendarEntry calendarEntry : allEntries) {
+			if (calendarEntry.getUniqueID().equals(aCalendarEntry.getUniqueID())) {
+				allEntries.remove(calendarEntry);
+				return;
+			}
 		}
 	}
 
-	@Override
-	public void deleteList(List<CalendarEntry> aList) {
-		throw new RuntimeException("Not supported");
-	}
 
+	/**
+	 * Delete all.
+	 */
 	public void deleteAll() {
 		allEntries.clear();
 	}

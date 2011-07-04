@@ -9,6 +9,8 @@
 
 package de.mbaaba.calendar;
 
+import de.mbaaba.util.ObjectUtil;
+
 public class Person {
 	private String firstName;
 	private String lastName;
@@ -25,11 +27,11 @@ public class Person {
 	public boolean equals(Object aObj) {
 		if (aObj instanceof Person) {
 			Person other = (Person) aObj;
-			return CalendarEntry.myequals("firstName", firstName, other.firstName) &&
-			CalendarEntry.myequals("lastName", lastName, other.lastName) &&
-			CalendarEntry.myequals("iNetAdress", iNetAdress, other.iNetAdress) &&
-			CalendarEntry.myequals("phoneJob", phoneJob, other.phoneJob) &&
-			CalendarEntry.myequals("phoneMobile", phoneMobile, other.phoneMobile);
+			return ObjectUtil.objectEquals(firstName, other.firstName) &&
+			ObjectUtil.objectEquals(lastName, other.lastName) &&
+			ObjectUtil.objectEquals(iNetAdress, other.iNetAdress) &&
+			ObjectUtil.objectEquals(phoneJob, other.phoneJob) &&
+			ObjectUtil.objectEquals(phoneMobile, other.phoneMobile);
 		}
 		return false;
 	}

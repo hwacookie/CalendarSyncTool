@@ -62,7 +62,7 @@ public class CalendarSyncTool {
 	 */
 	private void loop() {
 
-		ArrayList<CalendarEntry> oldSourceEntries = lastKnownCalendarState.readCalendarEntries(null, null);
+		ArrayList<ICalendarEntry> oldSourceEntries = lastKnownCalendarState.readCalendarEntries(null, null);
 
 		while (true) {
 
@@ -83,7 +83,7 @@ public class CalendarSyncTool {
 				Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
 				Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
 
-				ArrayList<CalendarEntry> sourceEntriesUnfiltered = null;
+				ArrayList<ICalendarEntry> sourceEntriesUnfiltered = null;
 				try {
 					sourceEntriesUnfiltered = sourceCalendar.readCalendarEntries(startDate, endDate);
 				} catch (Exception e) {
@@ -94,10 +94,10 @@ public class CalendarSyncTool {
 				// wrong. In that case, do not write anything to the target
 				// calendar
 				if (sourceEntriesUnfiltered != null) {
-					ArrayList<CalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
+					ArrayList<ICalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
 
-					ArrayList<CalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
-					ArrayList<CalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
+					ArrayList<ICalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
+					ArrayList<ICalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
 
 					if ((newEntries.size() > 0) || (obsoleteEntries.size() > 0)) {
 						writeToTargetCalendar(newEntries, obsoleteEntries);
@@ -111,9 +111,9 @@ public class CalendarSyncTool {
 				int repeatEach = configurator.getProperty("repeatEach", 20);
 				if (repeatEach > 0) {
 					Date now = new Date();
-					//Versuch 2  
-					//TODO: 1: Handling of working-hours http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
-					while ((now.getDay() ==0) || (now.getDay() == 6) || ((now.getHours() < 8) || (now.getHours() > 18))) {
+					// TODO: 1: Handling of working-hours
+					// http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
+					while ((now.getDay() == 0) || (now.getDay() == 6) || ((now.getHours() < 8) || (now.getHours() > 18))) {
 						println("Not a working hour, sleeping for an hour!");
 						Thread.sleep(Units.HOUR * 1);
 						now = new Date();
@@ -152,7 +152,7 @@ public class CalendarSyncTool {
 	 * @param aEntries
 	 *            the source entries
 	 */
-	private void saveLastKnownCalendarState(ArrayList<CalendarEntry> aEntries) {
+	private void saveLastKnownCalendarState(ArrayList<ICalendarEntry> aEntries) {
 		println("Persisting list of calendar entries.");
 		lastKnownCalendarState.deleteAll();
 		lastKnownCalendarState.putList(aEntries);
@@ -175,7 +175,7 @@ public class CalendarSyncTool {
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void writeToTargetCalendar(ArrayList<CalendarEntry> newEntries, ArrayList<CalendarEntry> obsoleteEntries) throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	private void writeToTargetCalendar(ArrayList<ICalendarEntry> newEntries, ArrayList<ICalendarEntry> obsoleteEntries) throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 			Exception {
 		String writeToClassName = configurator.getProperty("calendar.to", defaultWriteToClassName);
 		println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
@@ -184,8 +184,8 @@ public class CalendarSyncTool {
 		println("Initializing targetCalendar");
 		targetCalendar.init(configurator);
 
-		List<CalendarEntry> toBeDeletedList = new ArrayList<CalendarEntry>();
-		for (CalendarEntry calendarEntry : obsoleteEntries) {
+		List<ICalendarEntry> toBeDeletedList = new ArrayList<ICalendarEntry>();
+		for (ICalendarEntry calendarEntry : obsoleteEntries) {
 			if (!listHasEntryWithID(newEntries, calendarEntry)) {
 				toBeDeletedList.add(calendarEntry);
 			}
@@ -230,8 +230,8 @@ public class CalendarSyncTool {
 	 *            the unfiltered list of entries
 	 * @return The list of filtered entries after the filters have been applied.
 	 */
-	private ArrayList<CalendarEntry> runFilters(ArrayList<CalendarEntry> aUnfilteredList) {
-		ArrayList<CalendarEntry> filteredEntries = new ArrayList<CalendarEntry>();
+	private ArrayList<ICalendarEntry> runFilters(ArrayList<ICalendarEntry> aUnfilteredList) {
+		ArrayList<ICalendarEntry> filteredEntries = new ArrayList<ICalendarEntry>();
 		List<ICalendarFilter> allFilters = new ArrayList<ICalendarFilter>();
 
 		String filterScriptNames = configurator.getProperty("filters.scripts", "");
@@ -250,7 +250,7 @@ public class CalendarSyncTool {
 		// apply the fix location filters
 		allFilters.add(new FixLocationFilter(configurator));
 
-		for (CalendarEntry calendarEntry : aUnfilteredList) {
+		for (ICalendarEntry calendarEntry : aUnfilteredList) {
 			boolean skipThisEntry = false;
 
 			for (ICalendarFilter filter : allFilters) {
@@ -314,7 +314,7 @@ public class CalendarSyncTool {
 	 * @param aTargetList
 	 *            the last list
 	 */
-	private void copyList(ArrayList<CalendarEntry> aSourceList, ArrayList<CalendarEntry> aTargetList) {
+	private void copyList(ArrayList<ICalendarEntry> aSourceList, ArrayList<ICalendarEntry> aTargetList) {
 		aTargetList.clear();
 		for (ICalendarEntry calendarEntry : aSourceList) {
 			aTargetList.add(new CalendarEntry(calendarEntry));
@@ -331,9 +331,9 @@ public class CalendarSyncTool {
 	 *            the old list
 	 * @return the new entries
 	 */
-	private ArrayList<CalendarEntry> getNewEntries(ArrayList<CalendarEntry> aNewList, ArrayList<CalendarEntry> aOldList) {
-		ArrayList<CalendarEntry> newEntries = new ArrayList<CalendarEntry>();
-		for (CalendarEntry newEntry : aNewList) {
+	private ArrayList<ICalendarEntry> getNewEntries(ArrayList<ICalendarEntry> aNewList, ArrayList<ICalendarEntry> aOldList) {
+		ArrayList<ICalendarEntry> newEntries = new ArrayList<ICalendarEntry>();
+		for (ICalendarEntry newEntry : aNewList) {
 			if (!aOldList.contains(newEntry)) {
 				newEntries.add(newEntry);
 			}
@@ -351,9 +351,9 @@ public class CalendarSyncTool {
 	 *            the old list
 	 * @return the obsolete entries
 	 */
-	private ArrayList<CalendarEntry> getObsoleteEntries(ArrayList<CalendarEntry> aNewList, ArrayList<CalendarEntry> aOldList) {
-		ArrayList<CalendarEntry> obsoleteEntries = new ArrayList<CalendarEntry>();
-		for (CalendarEntry oldEntry : aOldList) {
+	private ArrayList<ICalendarEntry> getObsoleteEntries(ArrayList<ICalendarEntry> aNewList, ArrayList<ICalendarEntry> aOldList) {
+		ArrayList<ICalendarEntry> obsoleteEntries = new ArrayList<ICalendarEntry>();
+		for (ICalendarEntry oldEntry : aOldList) {
 			if (!aNewList.contains(oldEntry)) {
 				obsoleteEntries.add(oldEntry);
 			}
@@ -370,7 +370,7 @@ public class CalendarSyncTool {
 	 *            the entry
 	 * @return true, if successful
 	 */
-	private boolean listHasEntryWithID(ArrayList<CalendarEntry> aList, ICalendarEntry aEntry) {
+	private boolean listHasEntryWithID(ArrayList<ICalendarEntry> aList, ICalendarEntry aEntry) {
 		for (ICalendarEntry calendarEntry : aList) {
 			if (calendarEntry.getUniqueID().equals(aEntry.getUniqueID())) {
 				return true;
