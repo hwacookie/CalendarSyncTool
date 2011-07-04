@@ -10,9 +10,13 @@ package de.mbaaba.google;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -33,34 +37,35 @@ import com.google.gdata.util.ServiceException;
 
 import de.mbaaba.calendar.CalendarSyncTool;
 
-/**
- * This is a test template
- */
-
 public class ContactsConverter {
 
 	private String password;
 	private String username;
 
-	Properties vw = new Properties();
-	private List<String> allNumbers;
+	HashMap<String, String> areaCode2City;
 
 	public ContactsConverter(String aUsername, String aPassword) {
 		username = aUsername;
 		password = aPassword;
-		InputStream inStream = getClass().getClassLoader().getResourceAsStream(
-				"vorwahlen.txt");
+		areaCode2City = new HashMap<String, String>();
 		try {
-			vw.load(inStream);
-			inStream.close();
+			readPrefixes();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Set<Object> allKeys = vw.keySet();
-		allNumbers = new ArrayList<String>();
-		for (Object object : allKeys) {
-			allNumbers.add(object.toString());
+	}
+
+	private void readPrefixes() throws IOException {
+		InputStream inStream = getClass().getClassLoader().getResourceAsStream("vorwahlen.txt");
+
+		Reader reader = new InputStreamReader(inStream);
+		LineNumberReader lnr = new LineNumberReader(reader);
+		String number = lnr.readLine();
+		String place = lnr.readLine().trim();
+		while (number != null) {
+			areaCode2City.put(number, place);
+			number = lnr.readLine();
+			place = lnr.readLine().trim();
 		}
 	}
 
@@ -72,12 +77,9 @@ public class ContactsConverter {
 			myService.setUserCredentials(username, password);
 
 			// Get a list of all entries
-			URL metafeedUrl = new URL(
-					"http://www.google.com/m8/feeds/contacts/" + username
-							+ "/base");
+			URL metafeedUrl = new URL("http://www.google.com/m8/feeds/contacts/" + username + "/base");
 			CalendarSyncTool.println("Getting Contacts entries...\n");
-			ContactFeed resultFeed = myService.getFeed(metafeedUrl,
-					ContactFeed.class);
+			ContactFeed resultFeed = myService.getFeed(metafeedUrl, ContactFeed.class);
 
 			List<ContactEntry> entries = resultFeed.getEntries();
 			convertEntryBlock(entries);
@@ -100,8 +102,7 @@ public class ContactsConverter {
 		}
 	}
 
-	private void convertEntryBlock(List<ContactEntry> entries)
-			throws IOException, ServiceException {
+	private void convertEntryBlock(List<ContactEntry> entries) throws IOException, ServiceException {
 		for (ContactEntry contactEntry : entries) {
 
 			boolean fixed = fixTitle(contactEntry);
@@ -111,13 +112,8 @@ public class ContactsConverter {
 				contactEntry.update();
 			}
 
-			if (!((contactEntry.hasImAddresses())
-					|| contactEntry.hasPhoneNumbers()
-					|| contactEntry.hasPostalAddresses() || contactEntry
-					.hasEmailAddresses())) {
-				CalendarSyncTool.printerr("Contact \""
-						+ contactEntry.getTitle().getPlainText()
-						+ "\" contains no information whatsoever");
+			if (!((contactEntry.hasImAddresses()) || contactEntry.hasPhoneNumbers() || contactEntry.hasPostalAddresses() || contactEntry.hasEmailAddresses())) {
+				CalendarSyncTool.printerr("Contact \"" + contactEntry.getTitle().getPlainText() + "\" contains no information whatsoever");
 			}
 		}
 		CalendarSyncTool.println("\nTotal Entries: " + entries.size());
@@ -139,31 +135,26 @@ public class ContactsConverter {
 		String city = "";
 		String number = "";
 		String res = "";
-		String noCountry = s;
+		String areaCodeString = s;
 		if (s.startsWith("+49") && (s.length() > 3)) {
-			noCountry = s.substring(3).trim();
+			areaCodeString = s.substring(3).trim();
 		}
 
 		// remove "()"
-		if (noCountry.startsWith("(")) {
-			noCountry = noCountry.substring(1);
+		if (areaCodeString.startsWith("(")) {
+			areaCodeString = areaCodeString.substring(1);
 		}
-		int idx = noCountry.indexOf(")");
+		int idx = areaCodeString.indexOf(")");
 		if (idx > 0) {
-			noCountry = noCountry.substring(0, idx)
-					+ noCountry.substring(idx + 1);
+			areaCodeString = areaCodeString.substring(0, idx) + areaCodeString.substring(idx + 1);
 		}
 
-		if (!noCountry.startsWith("0")) {
-			noCountry = "0" + noCountry;
+		if (!areaCodeString.startsWith("0")) {
+			areaCodeString = "0" + areaCodeString;
 		}
-		for (String thisVw : allNumbers) {
-			if (noCountry.startsWith(thisVw)) {
-				number = noCountry.substring(thisVw.length());
-				city = thisVw.substring(1);
-				break;
-			}
-		}
+
+		city = areaCode2City.get(areaCodeString);
+
 		if (city.length() > 0) {
 			res = country.trim() + " " + city.trim() + " " + number.trim();
 		}
@@ -194,11 +185,8 @@ public class ContactsConverter {
 					}
 					newTitle = prettyTitle(full);
 				}
-				if ((newTitle != null)
-						&& (!newTitle.equals(title.getPlainText()))) {
-					CalendarSyncTool.println("Will replace title \""
-							+ title.getPlainText() + "\" with \"" + newTitle
-							+ "\"");
+				if ((newTitle != null) && (!newTitle.equals(title.getPlainText()))) {
+					CalendarSyncTool.println("Will replace title \"" + title.getPlainText() + "\" with \"" + newTitle + "\"");
 					setTitle(contactEntry, newTitle);
 					return true;
 				}
@@ -299,16 +287,8 @@ public class ContactsConverter {
 		System.getProperties().put("proxySet", "true");
 		System.getProperties().put("proxyHost", "10.0.13.240");
 		System.getProperties().put("proxyPort", "4834");
-		ContactsConverter contactsConverter = new ContactsConverter(args[0],
-				args[1]);
+		ContactsConverter contactsConverter = new ContactsConverter(args[0], args[1]);
 
 		contactsConverter.convertAll();
-
-		System.out.println(contactsConverter
-				.fixPhoneNumber("+49 (30) 72325773"));
-		System.out.println(contactsConverter.fixPhoneNumber("+493072325773"));
-		System.out.println(contactsConverter.fixPhoneNumber("03320323332"));
-		System.out.println(contactsConverter.fixPhoneNumber("033203 23332"));
-		// contactsConverter.convertAll();
 	}
 }
