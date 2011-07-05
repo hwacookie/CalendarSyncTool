@@ -233,4 +233,9 @@ public final class UtilityProperties {
 
 		return at;
 	}
+	
+	public static void main(String[] args) {
+		Wasneues1.main(args);
+	}
+	
 }

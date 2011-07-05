@@ -59,5 +59,6 @@ public interface Units {
 
 	/** number of bits in a byte */
 	public static final int BITS_IN_BYTE = 8;
+	
 }
 
