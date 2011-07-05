@@ -38,4 +38,6 @@ public final class ObjectUtil {
 		}
 		return aO1.equals(aO2);
 	}
+	
+	// linux macht auch was
 }
