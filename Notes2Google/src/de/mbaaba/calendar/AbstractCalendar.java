@@ -22,6 +22,7 @@ import de.mbaaba.util.Configurator;
  */
 public abstract class AbstractCalendar {
 
+	// himmelherrgott
 	/**
 	 * Initializes the calendar.
 	 * 
