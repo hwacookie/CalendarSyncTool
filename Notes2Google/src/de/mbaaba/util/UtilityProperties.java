@@ -235,7 +235,7 @@ public final class UtilityProperties {
 	}
 	
 	public static void main(String[] args) {
-		Wasneues1.main(args);
+		Wasneues2.main(args);
 	}
 	
 }
