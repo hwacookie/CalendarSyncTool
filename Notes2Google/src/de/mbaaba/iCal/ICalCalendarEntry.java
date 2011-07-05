@@ -12,6 +12,9 @@ import net.fortuna.ical4j.model.component.VEvent;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
 
+/**
+ * The Class ICalCalendarEntry.
+ */
 public class ICalCalendarEntry extends CalendarEntry {
 
 	public ICalCalendarEntry(ICalendarEntry aCalendarEntry) {

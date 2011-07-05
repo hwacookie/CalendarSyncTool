@@ -11,7 +11,6 @@ package de.mbaaba.calendar;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -24,6 +23,12 @@ import de.mbaaba.directions.Legs;
 import de.mbaaba.directions.Routes;
 import de.mbaaba.util.Configurator;
 
+/**
+ * The FixLocationFilter is used to fix the location of an event by looking up the given location at googles directions API.
+ * It normalizes the given location by using the end-address of the location.
+ * If the location is far away from the default location, an error is assumed (like, a room is given in the location field)
+ * In that case, a default location is used instead.  
+ */
 public class FixLocationFilter implements ICalendarFilter {
 
 	static final String DEFAULT_LOCATION = "default.location";
@@ -71,15 +76,16 @@ public class FixLocationFilter implements ICalendarFilter {
 		return true;
 	}
 
-	private String fixLocation(final String originalLocation, String defaultLocation) throws MalformedURLException, IOException {
+	private String fixLocation(final String aOriginalLocation, String aDefaultLocation) throws IOException {
 		String result;
-		if (cachedLocations.containsKey(originalLocation)) {
-			result = cachedLocations.get(originalLocation);
+		if (cachedLocations.containsKey(aOriginalLocation)) {
+			result = cachedLocations.get(aOriginalLocation);
 		} else {
-			result = defaultLocation;
-			if (originalLocation.length() >= SANITY_LENGTH) {
-				URL url = new URL("http://maps.google.de/maps/api/directions/json?origin=" + URLEncoder.encode(defaultLocation, "UTF-8") + "&destination=" + URLEncoder.encode(originalLocation, "")
-						+ "&sensor=true");
+			result = aDefaultLocation;
+			if (aOriginalLocation.length() >= SANITY_LENGTH) {
+				URL url = new URL("http://maps.google.de/maps/api/directions/json?origin="
+						+ URLEncoder.encode(aDefaultLocation, "UTF-8") + "&destination="
+						+ URLEncoder.encode(aOriginalLocation, "") + "&sensor=true");
 
 				Gson gson = new Gson(); // Or use new GsonBuilder().create();
 
@@ -92,30 +98,14 @@ public class FixLocationFilter implements ICalendarFilter {
 					Legs leg0 = route0.getLegs().get(0);
 					if (leg0.getDistance().getValue().longValue() > ONE_HUNDRED_KILOMETER.longValue()) {
 						// result is probably broken!
-						result = defaultLocation;
+						result = aDefaultLocation;
 					} else {
 						//TODO: check encoding problems
 						result = leg0.getEnd_address();
 					}
 				}
-
-				// String s = rd.readLine();
-				// while (s != null) {
-				// s = s.trim();
-				// if (s.contains("<status>NOT_FOUND</status>")) {
-				// // invalid location!
-				// break;
-				// } else {
-				// if (s.startsWith(START_ADDRESS)) {
-				// result = s.substring(START_ADDRESS.length());
-				// result = result.substring(0, result.indexOf("<"));
-				// break;
-				// }
-				// }
-				// s = rd.readLine();
-				// }
 			}
-			cachedLocations.put(originalLocation, result);
+			cachedLocations.put(aOriginalLocation, result);
 		}
 		return result;
 	}

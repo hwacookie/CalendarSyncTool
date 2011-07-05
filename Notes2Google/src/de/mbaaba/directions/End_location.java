@@ -6,24 +6,26 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.directions;
 
+public class End_location {
+	private Number lat;
 
-public class End_location{
-   	private Number lat;
-   	private Number lng;
+	private Number lng;
 
- 	public Number getLat(){
+	public Number getLat() {
 		return this.lat;
 	}
-	public void setLat(Number lat){
+
+	public void setLat(Number lat) {
 		this.lat = lat;
 	}
- 	public Number getLng(){
+
+	public Number getLng() {
 		return this.lng;
 	}
-	public void setLng(Number lng){
+
+	public void setLng(Number lng) {
 		this.lng = lng;
 	}
 }

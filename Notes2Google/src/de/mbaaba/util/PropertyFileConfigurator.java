@@ -53,7 +53,8 @@ public class PropertyFileConfigurator implements Configurator {
 			}
 		} catch (IOException e) {
 			CalendarSyncTool.printerr("The file " + propFileName + " could not be found!", e);
-			CalendarSyncTool.printerr("Copy the template-property file, make your changes and rename it to "+propFileName+".");
+			CalendarSyncTool
+					.printerr("Copy the template-property file, make your changes and rename it to " + propFileName + ".");
 			CalendarSyncTool.printerr("I will exit now.");
 			System.exit(1);
 		}
@@ -83,7 +84,7 @@ public class PropertyFileConfigurator implements Configurator {
 		try {
 			String s = props.getProperty(aPropertyName, "" + aDefaultValue);
 			if (s.startsWith("<setup-")) {
-				CalendarSyncTool.printerr("Missing a value for "+aPropertyName+" in the property file, please fix!");
+				CalendarSyncTool.printerr("Missing a value for " + aPropertyName + " in the property file, please fix!");
 				CalendarSyncTool.printerr("I will exit now.");
 				System.exit(1);
 			}

@@ -8,7 +8,15 @@
 
 package de.mbaaba.util;
 
+/**
+ * The Interface Units contains commonly used constants. 
+ */
 public interface Units {
+	
+	public static final int SATURDAY = 6;
+	public static final int SUNDAY = 0;
+
+	
 	/** one kilobyte */
 	public static final int KILOBYTE = 1024;
 
@@ -59,6 +67,5 @@ public interface Units {
 
 	/** number of bits in a byte */
 	public static final int BITS_IN_BYTE = 8;
-	
-}
 
+}

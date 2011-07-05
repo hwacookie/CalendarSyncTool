@@ -19,10 +19,13 @@ import com.google.gdata.data.extensions.Where;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
 
+/**
+ * The Class GoogleCalendarEntry.
+ */
 public class GoogleCalendarEntry extends CalendarEntry {
 
 	private String googleID;
-	
+
 	public GoogleCalendarEntry(ICalendarEntry aCalendarEntry) {
 		super(aCalendarEntry);
 	}
@@ -70,8 +73,8 @@ public class GoogleCalendarEntry extends CalendarEntry {
 		setUniqueID(notesID);
 	}
 
-	public void setGoogleID(String googleID) {
-		this.googleID = googleID;
+	public void setGoogleID(String aGoogleID) {
+		this.googleID = aGoogleID;
 	}
 
 	public String getGoogleID() {

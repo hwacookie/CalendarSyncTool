@@ -17,11 +17,8 @@ import org.apache.commons.logging.impl.LogFactoryImpl;
  * encapsulates the apache log4j API.
  *
  * @author     HWalden
- * @created    24. Juni 2002
  * @version    $Revision: 1.16 $
- * @review 16.09.2003 mbender, cboehmer
  */
-// TODO review comment: Javadocs
 public class Logger implements Log {
 	/** Decides whether to exit from the system in case of a fatal log */
 	private static boolean noExitOnFatal;
@@ -88,7 +85,7 @@ public class Logger implements Log {
 	public void debug(Object pObj) {
 		logger.debug(pObj);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Category#error()
@@ -156,7 +153,7 @@ public class Logger implements Log {
 	public void info(Object pObj) {
 		logger.info(pObj);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Category#warn()
@@ -180,7 +177,7 @@ public class Logger implements Log {
 	public void warn(Object pObj) {
 		logger.warn(pObj);
 	}
-	
+
 	/**
 	 * Sets the noExitOnFatal.
 	 * @param aNoExitOnFatal The noExitOnFatal to set
@@ -261,7 +258,7 @@ public class Logger implements Log {
 	 */
 	public void debug(Object pMessage, Throwable pT) {
 		logger.debug(pMessage, pT);
-		
+
 	}
 
 	/**
@@ -367,4 +364,3 @@ public class Logger implements Log {
 	}
 
 }
-

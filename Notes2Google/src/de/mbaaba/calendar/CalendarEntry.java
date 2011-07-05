@@ -6,7 +6,6 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.calendar;
 
 import java.text.DateFormat;
@@ -19,49 +18,55 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.mbaaba.util.Logger;
 import de.mbaaba.util.ObjectUtil;
 
 /**
  * The Class CalendarEntry.
  */
 public class CalendarEntry implements ICalendarEntry {
-	
+
+	/**
+	 * A logger for this class.
+	 */
+	private static final Logger LOG = new Logger(CalendarEntry.class);
+
 	/** The Constant sdf. */
-	private static final DateFormat sdf = SimpleDateFormat.getDateTimeInstance();
-	
+	private static final DateFormat SDF = SimpleDateFormat.getDateTimeInstance();
+
 	/** The Constant UNKNOWN_PERSON. */
 	private static final Person UNKNOWN_PERSON = new Person();
 
 	/** The subject. */
 	private String subject;
-	
+
 	/** The body. */
 	private String body;
-	
+
 	/** The chair. */
 	private Person chair;
-	
+
 	/** The location. */
 	private String location;
-	
+
 	/** The room. */
 	private String room;
-	
+
 	/** The attendees. */
 	private List<Person> attendees;
-	
+
 	/** The start dates. */
 	private ArrayList<Date> startDates;
-	
+
 	/** The end dates. */
 	private ArrayList<Date> endDates;
-	
+
 	/** The last modified. */
 	private Date lastModified;
-	
+
 	/** The unique id. */
 	private String uniqueID;
-	
+
 	/** The alarm time. */
 	private Date alarmTime;
 
@@ -155,16 +160,14 @@ public class CalendarEntry implements ICalendarEntry {
 	public CalendarEntry() {
 		startDates = new ArrayList<Date>();
 		endDates = new ArrayList<Date>();
-		sdf.setLenient(true);
+		SDF.setLenient(true);
 		attendees = new ArrayList<Person>();
 		setChair(UNKNOWN_PERSON);
 	}
 
-
 	public void setSubject(String aSubject) {
 		subject = aSubject;
 	}
-
 
 	public void addAttendee(String aAttendee, String aType) {
 		try {
@@ -173,6 +176,7 @@ public class CalendarEntry implements ICalendarEntry {
 				attendees.add(person2);
 			}
 		} catch (ItemNotFoundException localItemNotFoundException) {
+			LOG.warn("Problem while attaching an attendee", localItemNotFoundException);
 		}
 	}
 
@@ -182,16 +186,17 @@ public class CalendarEntry implements ICalendarEntry {
 			location = getLocation();
 		}
 		if ((getRoom() != null) && (getRoom().length() > 0)) {
-			if (location.length() > 0)
+			if (location.length() > 0) {
 				location = location + " [" + getRoom() + "]";
-			else {
+			} else {
 				location = getRoom();
 			}
 		}
 		String s = "---------------------------------------------\n";
 		s = s + "ID: " + getUniqueID() + "\n";
-		s = s + "Subject: " + getSubject() + "\n" + "StartDate: " + getStartDates() + "\n" + "EndDate: " + getEndDates() + "\n" + "Location: " + getLocation() + "\n"  
-				+ "\n" + "Chair: " + getChair().getPrettyMailAdress() + "\n" + "Attendees:\n";
+		s = s + "Subject: " + getSubject() + "\n" + "StartDate: " + getStartDates() + "\n" + "EndDate: " + getEndDates() + "\n"
+				+ "Location: " + getLocation() + "\n" + "\n" + "Chair: " + getChair().getPrettyMailAdress() + "\n"
+				+ "Attendees:\n";
 		for (Person attendee : attendees) {
 			s = s + attendee.getPrettyMailAdress() + "\n";
 		}
@@ -201,7 +206,6 @@ public class CalendarEntry implements ICalendarEntry {
 		}
 		return s;
 	}
-
 
 	public String getShortString() {
 		return "\"" + getSubject() + "\" (" + getUniqueID() + ")";
@@ -242,15 +246,13 @@ public class CalendarEntry implements ICalendarEntry {
 		setUniqueID(copy.getUniqueID());
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#setAlarmTime(java.util.Date)
 	 */
-	public void setAlarmTime(Date alarmOffset) {
-		alarmTime = alarmOffset;
+	public void setAlarmTime(Date aAlarmOffset) {
+		alarmTime = aAlarmOffset;
 	}
 
 	/*
@@ -272,16 +274,15 @@ public class CalendarEntry implements ICalendarEntry {
 			if (!uniqueID.equals(other.uniqueID)) {
 				return false;
 			}
-			boolean isEqual = ObjectUtil.objectEquals(lastModified, other.lastModified) && ObjectUtil.objectEquals(subject, other.subject) && ObjectUtil.objectEquals(body, other.body)
-					&& ObjectUtil.objectEquals(chair, other.chair) && ObjectUtil.objectEquals(location, other.location) && ObjectUtil.objectEquals(alarmTime, other.alarmTime)
-					&& ObjectUtil.objectEquals(room, other.room) && ObjectUtil.objectEquals( startDates, other.startDates) && ObjectUtil.objectEquals( endDates, other.endDates);
+			boolean isEqual = ObjectUtil.objectEquals(lastModified, other.lastModified)
+					&& ObjectUtil.objectEquals(subject, other.subject) && ObjectUtil.objectEquals(body, other.body)
+					&& ObjectUtil.objectEquals(chair, other.chair) && ObjectUtil.objectEquals(location, other.location)
+					&& ObjectUtil.objectEquals(alarmTime, other.alarmTime) && ObjectUtil.objectEquals(room, other.room)
+					&& ObjectUtil.objectEquals(startDates, other.startDates) && ObjectUtil.objectEquals(endDates, other.endDates);
 			return isEqual;
 		}
 		return false;
 	}
-
-
-
 
 	/**
 	 * Calculates the hashCode for this calendar entry, using the {@link HashCodeBuilder#reflectionHashCode(Object)} utility.

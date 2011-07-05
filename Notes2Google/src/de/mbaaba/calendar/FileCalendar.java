@@ -91,7 +91,7 @@ public class FileCalendar extends AbstractCalendar {
 	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
 		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
-		
+
 		return res;
 	}
 
@@ -122,7 +122,6 @@ public class FileCalendar extends AbstractCalendar {
 			}
 		}
 	}
-
 
 	/**
 	 * Delete all.

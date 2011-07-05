@@ -8,13 +8,10 @@
 
 package de.mbaaba.util;
 
-
-
 /**
  * The Class AdapterConfigurator contains functionality to configure the connection parameters for the {@link #Adapter()}.
  *
  * @author walden_h1
- * @created 18.03.2009
  */
 public interface Configurator {
 
@@ -35,7 +32,6 @@ public interface Configurator {
 	public String getProperty(String aPropertyName, String aDefaultValue);
 
 	public int getProperty(String aPropertyName, int aDefaultValue);
-
 
 	/**
 	 * Sets an arbitrary property. These values will NOT be persisted!

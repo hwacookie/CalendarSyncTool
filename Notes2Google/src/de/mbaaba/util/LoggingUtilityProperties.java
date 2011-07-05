@@ -8,22 +8,20 @@
 package de.mbaaba.util;
 
 /**
- * properties for utility.
- * @author seidelt_a1
+ * Utility class for the logging utility.
  */
-public final class UtilityProperties {
-
+public final class LoggingUtilityProperties {
 
 	/**
 	 * types of appender.
 	 */
 	public enum AppenderType {
-		/** normal appender */ 
-		STANDARD, 
+		/** normal appender */
+		STANDARD,
 		/** hub appender */
 		HUB,
 		/** async appender */
-		ASYNC, 
+		ASYNC,
 		/** no appender */
 		NONE
 	}
@@ -66,10 +64,10 @@ public final class UtilityProperties {
 
 	/** property */
 	private static final String ENHANCE_COMMONS_LOGGING = "utility.log.enhance_commons_logging";
-	
+
 	/** property */
 	private static final String ASYNC_BUFFER_SIZE = "utility.log.async_buffer_size";
-	
+
 	/** property */
 	private static final int DEFAULT_LOGPORT = 4445;
 
@@ -84,20 +82,20 @@ public final class UtilityProperties {
 
 	/** property */
 	private static final String DEFAULT_ENHANCE_COMMONS_LOGGING = "true";
-	
+
 	/** property */
 	private static final AppenderType DEFAULT_LOG_APPENDER = AppenderType.STANDARD;
 
 	/** property */
 	private static final String DEFAULT_LOG_PROPERTIES_FILE = "/log4j.properties";
-	
+
 	/** property */
 	private static final int DEFAULT_ASYNC_BUFFER_SIZE = 10000;
 
 	/**
 	 * inhibit instanciation
 	 */
-	private UtilityProperties() {
+	private LoggingUtilityProperties() {
 	}
 
 	/**
@@ -204,7 +202,7 @@ public final class UtilityProperties {
 		String s = PropertiesHelper.getProperty(ENHANCE_COMMONS_LOGGING, DEFAULT_ENHANCE_COMMONS_LOGGING);
 		return s.equalsIgnoreCase("true");
 	}
-	
+
 	/**
 	 * returns the async buffer size
 	 * @return the async buffer size
@@ -217,7 +215,7 @@ public final class UtilityProperties {
 			return DEFAULT_ASYNC_BUFFER_SIZE;
 		}
 	}
-	
+
 	/**
 	 * return the appender.
 	 * @return the appender.
@@ -233,9 +231,5 @@ public final class UtilityProperties {
 
 		return at;
 	}
-	
-	public static void main(String[] args) {
-		Wasneues2.main(args);
-	}
-	
+
 }

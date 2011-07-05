@@ -14,6 +14,9 @@ import com.google.gdata.data.calendar.EventWho;
 
 import de.mbaaba.calendar.Person;
 
+/**
+ * The Class GooglePerson.
+ */
 public class GooglePerson extends Person {
 
 	public GooglePerson(EventWho aEventWho) {

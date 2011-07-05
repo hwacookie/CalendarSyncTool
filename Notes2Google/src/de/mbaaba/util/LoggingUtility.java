@@ -6,7 +6,6 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.util;
 
 import java.io.File;
@@ -89,16 +88,13 @@ public final class LoggingUtility {
 	 * @throws IOException
 	 *             if the properties could not be loaded
 	 */
-	private static final void loadLog4JProperties(boolean pStartWatchdog)
-			throws IOException {
-		String log4jPropertiesFileName = UtilityProperties
-				.getLog4JPropertiesFile();
+	private static final void loadLog4JProperties(boolean pStartWatchdog) throws IOException {
+		String log4jPropertiesFileName = LoggingUtilityProperties.getLog4JPropertiesFile();
 
 		if (log4jPropertiesFileName != null) {
 			File file = new File(log4jPropertiesFileName);
 			if (!file.exists()) {
-				URL resource = LoggingUtility.class
-						.getResource(log4jPropertiesFileName);
+				URL resource = LoggingUtility.class.getResource(log4jPropertiesFileName);
 				if (resource != null) {
 					file = new File(resource.getFile());
 				}
@@ -106,8 +102,7 @@ public final class LoggingUtility {
 			if (file.exists()) {
 				if (pStartWatchdog) {
 					if (log4jPropertyWatchdog == null) {
-						log4jPropertyWatchdog = new Log4jPropertyWatchdog(
-								log4jPropertiesFileName);
+						log4jPropertyWatchdog = new Log4jPropertyWatchdog(log4jPropertiesFileName);
 						log4jPropertyWatchdog.setDelay(Units.MINUTE);
 						log4jPropertyWatchdog.start();
 					}
@@ -136,16 +131,14 @@ public final class LoggingUtility {
 			String staticName = "";
 
 			if (aName.startsWith("de.biotronik.")) {
-				categoryName = staticName
-						+ aName.substring("de.biotronik.".length());
+				categoryName = staticName + aName.substring("de.biotronik.".length());
 			} else {
 				categoryName = staticName + aName;
 			}
 
 		}
 		String customizedCategoryName = logID + "." + categoryName;
-		org.apache.log4j.Logger logger = org.apache.log4j.Logger
-				.getLogger(customizedCategoryName);
+		org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(customizedCategoryName);
 
 		return logger;
 	}
@@ -171,10 +164,10 @@ public final class LoggingUtility {
 	 */
 	private static final void initLog4J() throws IOException {
 		org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
-		String level = UtilityProperties.getLogLevel();
-		String host = UtilityProperties.getLoghost();
-		int port = UtilityProperties.getLogport();
-		createPrefix = UtilityProperties.isUsePrefix();
+		String level = LoggingUtilityProperties.getLogLevel();
+		String host = LoggingUtilityProperties.getLoghost();
+		int port = LoggingUtilityProperties.getLogport();
+		createPrefix = LoggingUtilityProperties.isUsePrefix();
 		root.setLevel(Level.toLevel(level));
 
 		try {
@@ -190,12 +183,11 @@ public final class LoggingUtility {
 		Appender appender = null;
 		if ((host.length() > 0) && (port > 0)) {
 
-			switch (UtilityProperties.getLogAppender()) {
+			switch (LoggingUtilityProperties.getLogAppender()) {
 
 			case ASYNC:
 				AsyncAppender asyncAppender = new AsyncAppender();
-				asyncAppender.setBufferSize(UtilityProperties
-						.getAsyncBufferSize());
+				asyncAppender.setBufferSize(LoggingUtilityProperties.getAsyncBufferSize());
 				asyncAppender.addAppender(new SocketAppender(host, port));
 				appender = asyncAppender;
 				break;
@@ -220,12 +212,11 @@ public final class LoggingUtility {
 		}
 
 		// append to logfile if wanted
-		String logfile = UtilityProperties.getLogfile();
+		String logfile = LoggingUtilityProperties.getLogfile();
 
 		if ((logfile != null) && (logfile.length() > 0)) {
 			try {
-				Layout layout = new PatternLayout(
-						"%d{DATE} [%p] %c %C{1} %m %n");
+				Layout layout = new PatternLayout("%d{DATE} [%p] %c %C{1} %m %n");
 				FileAppender fAppender = new FileAppender(layout, logfile);
 				root.addAppender(fAppender);
 			} catch (Exception e) {
@@ -234,7 +225,7 @@ public final class LoggingUtility {
 		}
 
 		// do syslog logging if enabled
-		String syslogHost = UtilityProperties.getSysloghost();
+		String syslogHost = LoggingUtilityProperties.getSysloghost();
 		try {
 			InetAddress.getByName(syslogHost);
 		} catch (UnknownHostException e1) {
@@ -245,7 +236,7 @@ public final class LoggingUtility {
 		if ((syslogHost != null) && (syslogHost.length() > 0)) {
 			SyslogAppender syslogAppender = new SyslogAppender();
 
-			String fac = UtilityProperties.getSyslogFacility();
+			String fac = LoggingUtilityProperties.getSyslogFacility();
 			if ((fac == null) || (fac.length() <= 0)) {
 				fac = "LOCAL0";
 			}
@@ -302,13 +293,10 @@ public final class LoggingUtility {
 		for (Object log4jCategoryObject : log4jProperties.keySet()) {
 			String log4jCategory = (String) log4jCategoryObject;
 			if (log4jCategory.startsWith(LOG4J_LOGGER_PREFIX)) {
-				String categoryName = log4jCategory
-						.substring(LOG4J_LOGGER_PREFIX.length());
-				Level level = Level.toLevel((String) log4jProperties
-						.get(log4jCategory));
+				String categoryName = log4jCategory.substring(LOG4J_LOGGER_PREFIX.length());
+				Level level = Level.toLevel((String) log4jProperties.get(log4jCategory));
 				Logger loggerOriginal = LogManager.getLogger(categoryName);
-				Logger loggerWithId = LogManager.getLogger(logID + "."
-						+ categoryName);
+				Logger loggerWithId = LogManager.getLogger(logID + "." + categoryName);
 				loggerOriginal.setLevel(level);
 				loggerWithId.setLevel(level);
 			}
@@ -345,14 +333,9 @@ public final class LoggingUtility {
 				try {
 					loadLog4JProperties(false);
 				} catch (IOException e) {
-					LogManager
-							.getRootLogger()
-							.error(
-									"Something bad happened while loading the log4j properties",
-									e);
+					LogManager.getRootLogger().error("Something bad happened while loading the log4j properties", e);
 				}
-				propertyConfigurator.doConfigure(filename, LogManager
-						.getLoggerRepository());
+				propertyConfigurator.doConfigure(filename, LogManager.getLoggerRepository());
 				// reset the level of each logger
 				setLog4jLevel();
 			}

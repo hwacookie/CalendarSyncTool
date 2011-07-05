@@ -15,11 +15,8 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,9 +34,15 @@ import com.google.gdata.util.ServiceException;
 
 import de.mbaaba.calendar.CalendarSyncTool;
 
+/**
+ * The Class ContactsConverter is used to normalize contacts (fixes phone numbers, creates names from eMail Adresses etc.)
+ */
 public class ContactsConverter {
 
+	private static final int THREE_CHARS = 3;
+
 	private String password;
+
 	private String username;
 
 	HashMap<String, String> areaCode2City;
@@ -102,8 +105,8 @@ public class ContactsConverter {
 		}
 	}
 
-	private void convertEntryBlock(List<ContactEntry> entries) throws IOException, ServiceException {
-		for (ContactEntry contactEntry : entries) {
+	private void convertEntryBlock(List<ContactEntry> aEntries) throws IOException, ServiceException {
+		for (ContactEntry contactEntry : aEntries) {
 
 			boolean fixed = fixTitle(contactEntry);
 			fixed = fixed || fixPhoneNumbers(contactEntry);
@@ -112,16 +115,18 @@ public class ContactsConverter {
 				contactEntry.update();
 			}
 
-			if (!((contactEntry.hasImAddresses()) || contactEntry.hasPhoneNumbers() || contactEntry.hasPostalAddresses() || contactEntry.hasEmailAddresses())) {
-				CalendarSyncTool.printerr("Contact \"" + contactEntry.getTitle().getPlainText() + "\" contains no information whatsoever");
+			if (!((contactEntry.hasImAddresses()) || contactEntry.hasPhoneNumbers() || contactEntry.hasPostalAddresses() || contactEntry
+					.hasEmailAddresses())) {
+				CalendarSyncTool.printerr("Contact \"" + contactEntry.getTitle().getPlainText()
+						+ "\" contains no information whatsoever");
 			}
 		}
-		CalendarSyncTool.println("\nTotal Entries: " + entries.size());
+		CalendarSyncTool.println("\nTotal Entries: " + aEntries.size());
 	}
 
-	private boolean fixPhoneNumbers(ContactEntry contactEntry) {
-		if (contactEntry.hasPhoneNumbers()) {
-			List<PhoneNumber> phoneNumbers = contactEntry.getPhoneNumbers();
+	private boolean fixPhoneNumbers(ContactEntry aContactEntry) {
+		if (aContactEntry.hasPhoneNumbers()) {
+			List<PhoneNumber> phoneNumbers = aContactEntry.getPhoneNumbers();
 			for (PhoneNumber phone : phoneNumbers) {
 				String s = phone.getPhoneNumber().trim();
 				s = fixPhoneNumber(s);
@@ -130,14 +135,14 @@ public class ContactsConverter {
 		return false;
 	}
 
-	private String fixPhoneNumber(String s) {
+	private String fixPhoneNumber(String aString) {
 		String country = "+49";
 		String city = "";
 		String number = "";
 		String res = "";
-		String areaCodeString = s;
-		if (s.startsWith("+49") && (s.length() > 3)) {
-			areaCodeString = s.substring(3).trim();
+		String areaCodeString = aString;
+		if (aString.startsWith("+49") && (aString.length() > THREE_CHARS)) {
+			areaCodeString = aString.substring(THREE_CHARS).trim();
 		}
 
 		// remove "()"
@@ -162,12 +167,12 @@ public class ContactsConverter {
 		return res;
 	}
 
-	private boolean fixTitle(ContactEntry contactEntry) {
-		if (contactEntry.hasEmailAddresses()) {
-			TextConstruct title = contactEntry.getTitle();
-			List<Email> emailAddresses = contactEntry.getEmailAddresses();
+	private boolean fixTitle(ContactEntry aContactEntry) {
+		if (aContactEntry.hasEmailAddresses()) {
+			TextConstruct title = aContactEntry.getTitle();
+			List<Email> emailAddresses = aContactEntry.getEmailAddresses();
 			for (Email email : emailAddresses) {
-				String s = email.getDisplayName();
+				//String s = email.getDisplayName();
 
 				String full = email.getAddress();
 				int atPos = full.indexOf("@");
@@ -187,7 +192,7 @@ public class ContactsConverter {
 				}
 				if ((newTitle != null) && (!newTitle.equals(title.getPlainText()))) {
 					CalendarSyncTool.println("Will replace title \"" + title.getPlainText() + "\" with \"" + newTitle + "\"");
-					setTitle(contactEntry, newTitle);
+					setTitle(aContactEntry, newTitle);
 					return true;
 				}
 			}
@@ -195,15 +200,15 @@ public class ContactsConverter {
 		return false;
 	}
 
-	private static void setTitle(ContactEntry contactEntry, String t2) {
-		TextConstruct title = TextConstruct.create(Type.TEXT, t2, null);
-		contactEntry.setTitle(title);
+	private static void setTitle(ContactEntry aContactEntry, String aTitle) {
+		TextConstruct title = TextConstruct.create(Type.TEXT, aTitle, null);
+		aContactEntry.setTitle(title);
 	}
 
-	private String prettyTitle(String address) {
-		address = convertCamelCase(address);
+	private String prettyTitle(String aAddress) {
+		aAddress = convertCamelCase(aAddress);
 		String res = "";
-		StringTokenizer tok = new StringTokenizer(address, ".-_ ");
+		StringTokenizer tok = new StringTokenizer(aAddress, ".-_ ");
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
 			token = uppercaseFirstChar(token);
@@ -212,7 +217,7 @@ public class ContactsConverter {
 			res = res + " " + token;
 		}
 		res = res.trim();
-		StringTokenizer tok2 = new StringTokenizer(address, ",");
+		StringTokenizer tok2 = new StringTokenizer(aAddress, ",");
 		if (tok2.hasMoreTokens()) {
 			String last = tok2.nextToken().trim();
 			if (tok2.hasMoreTokens()) {
@@ -224,17 +229,17 @@ public class ContactsConverter {
 		return res.trim();
 	}
 
-	private String removeNumbers(String token) {
+	private String removeNumbers(String aToken) {
 		String regex = "(\\d+)(.*)";
 		Pattern p = Pattern.compile(regex);
-		Matcher m = p.matcher(token);
-		String res = token;
+		Matcher m = p.matcher(aToken);
+		String res = aToken;
 		if (m.matches()) {
 			res = m.group(2);
 		} else {
 			regex = "(\\D+)(\\d*)";
 			p = Pattern.compile(regex);
-			m = p.matcher(token);
+			m = p.matcher(aToken);
 			if (m.matches()) {
 				res = m.group(1);
 			}
@@ -243,51 +248,51 @@ public class ContactsConverter {
 		return res;
 	}
 
-	private String uppercaseFirstChar(String first) {
-		if ("von".equals(first)) {
-			return first;
+	private String uppercaseFirstChar(String aString) {
+		if ("von".equals(aString)) {
+			return aString;
 		}
-		if (first.length() > 1) {
-			return first.substring(0, 1).toUpperCase() + first.substring(1);
-		} else if (first.length() == 1) {
-			return first.substring(0, 1).toUpperCase();
+		if (aString.length() > 1) {
+			return aString.substring(0, 1).toUpperCase() + aString.substring(1);
+		} else if (aString.length() == 1) {
+			return aString.substring(0, 1).toUpperCase();
 		} else {
 			return "";
 		}
 	}
 
-	private String addDotIfShort(String first) {
-		if (first.length() == 1) {
-			first = first + ".";
+	private String addDotIfShort(String aString) {
+		if (aString.length() == 1) {
+			aString = aString + ".";
 		}
-		return first;
+		return aString;
 	}
 
-	private String convertCamelCase(String full) {
+	private String convertCamelCase(String aFullName) {
 		String res = "";
-		char[] charArray = full.toCharArray();
+		char[] charArray = aFullName.toCharArray();
 		int lastI = 0;
 		for (int i = 1; i < charArray.length; i++) {
 			char c0 = charArray[i - 1];
 			char c1 = charArray[i];
 			if ((Character.isLowerCase(c0)) && (Character.isUpperCase(c1))) {
-				res = res + full.substring(lastI, i) + " ";
+				res = res + aFullName.substring(lastI, i) + " ";
 				lastI = i;
 			}
 		}
 		if (lastI > 0) {
-			res = res + full.substring(lastI);
+			res = res + aFullName.substring(lastI);
 		} else {
-			res = full;
+			res = aFullName;
 		}
 		return res;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] aArgs) {
 		System.getProperties().put("proxySet", "true");
 		System.getProperties().put("proxyHost", "10.0.13.240");
 		System.getProperties().put("proxyPort", "4834");
-		ContactsConverter contactsConverter = new ContactsConverter(args[0], args[1]);
+		ContactsConverter contactsConverter = new ContactsConverter(aArgs[0], aArgs[1]);
 
 		contactsConverter.convertAll();
 	}

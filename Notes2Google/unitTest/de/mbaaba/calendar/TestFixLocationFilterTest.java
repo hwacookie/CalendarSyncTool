@@ -15,7 +15,6 @@ import de.mbaaba.util.CommConfigUtil;
 public class TestFixLocationFilterTest extends TestCase {
 	private static final String SIEVERSUFER_7_12359_BERLIN_DEUTSCHLAND = "Sieversufer 7, 12359 Berlin, Deutschland";
 
-
 	public void setUp() {
 		ConfiguratorForTests configurator = new ConfiguratorForTests();
 		configurator.setProperty(FixLocationFilter.DEFAULT_LOCATION, SIEVERSUFER_7_12359_BERLIN_DEUTSCHLAND);
@@ -25,7 +24,6 @@ public class TestFixLocationFilterTest extends TestCase {
 
 	private FixLocationFilter filter;
 
-	
 	public void testMinimumLength() throws Exception {
 		ICalendarEntry aParamCalendarEntry = new NotesCalendarEntry();
 		String location = "4.23";
@@ -60,9 +58,9 @@ public class TestFixLocationFilterTest extends TestCase {
 		aParamCalendarEntry.setLocation(location);
 		filter.passes(aParamCalendarEntry);
 		assertEquals("Location calculation is broken", expected, aParamCalendarEntry.getLocation());
-		assertEquals("Room calculation is broken","4.30", aParamCalendarEntry.getRoom());
+		assertEquals("Room calculation is broken", "4.30", aParamCalendarEntry.getRoom());
 	}
-	
+
 	public void testSVU() throws Exception {
 		ICalendarEntry aParamCalendarEntry = new NotesCalendarEntry();
 		String location = "R. 0.08, SVU";
@@ -70,9 +68,9 @@ public class TestFixLocationFilterTest extends TestCase {
 		aParamCalendarEntry.setLocation(location);
 		filter.passes(aParamCalendarEntry);
 		assertEquals("Location calculation is broken", expected, aParamCalendarEntry.getLocation());
-		assertEquals("Room calculation is broken","R. 0.08, SVU", aParamCalendarEntry.getRoom());
+		assertEquals("Room calculation is broken", "R. 0.08, SVU", aParamCalendarEntry.getRoom());
 	}
-	
+
 	public void testZeuthen() throws Exception {
 		ICalendarEntry aParamCalendarEntry = new NotesCalendarEntry();
 		String location = "Seehotel Zeuthen, Fontaneallee 27/28, 15738 Zeuthen";
@@ -81,6 +79,5 @@ public class TestFixLocationFilterTest extends TestCase {
 		filter.passes(aParamCalendarEntry);
 		assertEquals("Location calculation is broken", expected, aParamCalendarEntry.getLocation());
 	}
-	
-	
+
 }

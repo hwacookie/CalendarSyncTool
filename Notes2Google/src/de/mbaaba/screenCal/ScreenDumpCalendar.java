@@ -16,6 +16,11 @@ import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.util.Configurator;
 
+/**
+ * The Class ScreenDumpCalendar just prints out all its entries on the screen. 
+ * 
+ * Makes sense for debugging, only.
+ */
 public class ScreenDumpCalendar extends AbstractCalendar {
 	public void init(Configurator aConfigurator) throws Exception {
 	}
@@ -35,7 +40,6 @@ public class ScreenDumpCalendar extends AbstractCalendar {
 	@Override
 	public void delete(ICalendarEntry aParamCalendarEntry) {
 	}
-
 
 	@Override
 	public void deleteList(List<ICalendarEntry> aList) {

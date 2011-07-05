@@ -8,7 +8,9 @@
 
 package de.mbaaba.calendar;
 
-public abstract interface ICalendarFilter
-{
-  public abstract boolean passes(ICalendarEntry paramCalendarEntry) throws Exception;
+/**
+ * The Interface ICalendarFilter describes the functionality that all filter classes must implement.
+ */
+public abstract interface ICalendarFilter {
+	public abstract boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception;
 }

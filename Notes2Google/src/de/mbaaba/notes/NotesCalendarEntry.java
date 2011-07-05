@@ -22,6 +22,9 @@ import de.mbaaba.calendar.Person;
 import de.mbaaba.calendar.PersonFactory;
 import de.mbaaba.calendar.PersonFactory.CalendarType;
 
+/**
+ * The Class NotesCalendarEntry.
+ */
 public class NotesCalendarEntry extends CalendarEntry {
 
 	private boolean confidential;
@@ -68,7 +71,7 @@ public class NotesCalendarEntry extends CalendarEntry {
 				Date javaDate = ((DateTime) object).toJavaDate();
 				addEndDate(javaDate);
 			}
-		} else if (itemName.equals("$alarmoffset")) {
+			//} else if (itemName.equals("$alarmoffset")) {
 			// DateTime thisAlarmOffset = aItem.getDateTimeValue();
 			// TODO: 5: Handle alarm settings
 			// http://github.com/hwacookie/CalendarSyncTool/issues/issue/5
@@ -86,9 +89,9 @@ public class NotesCalendarEntry extends CalendarEntry {
 					}
 				}
 			} catch (NotesException e) {
+				// TODO: check if the NotesException really occurs, and find a way to handle it properly
+				// ignore all problems related to attendees
 			}
-		} else {
-			// System.out.println(itemName+" = "+aItem.getDateTimeValue()+" "+aItem.getValueString());
 		}
 
 	}
@@ -97,8 +100,8 @@ public class NotesCalendarEntry extends CalendarEntry {
 		return confidential;
 	}
 
-	public void setConfidential(boolean confidential) {
-		this.confidential = confidential;
+	public void setConfidential(boolean aConfidential) {
+		confidential = aConfidential;
 	}
 
 	@Override

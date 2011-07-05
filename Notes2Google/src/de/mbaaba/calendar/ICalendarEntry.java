@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface ICalendarEntry.
  */
@@ -176,9 +175,9 @@ public interface ICalendarEntry {
 	/**
 	 * Sets the alarm time.
 	 *
-	 * @param alarmOffset the new alarm time
+	 * @param aAlarmOffset the new alarm time
 	 */
-	public abstract void setAlarmTime(Date alarmOffset);
+	public abstract void setAlarmTime(Date aAlarmOffset);
 
 	/**
 	 * Gets the alarm time.

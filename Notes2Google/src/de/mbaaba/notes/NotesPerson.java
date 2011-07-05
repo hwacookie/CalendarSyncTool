@@ -23,15 +23,18 @@ import lotus.domino.View;
 import de.mbaaba.calendar.ItemNotFoundException;
 import de.mbaaba.calendar.Person;
 
+/**
+ * The Class NotesPerson.
+ */
 public class NotesPerson extends Person {
 	private static Database addressDB;
 
-	public static void init(Session session) throws NotesException {
-		openAddressDB(session);
+	public static void init(Session aSession) throws NotesException {
+		openAddressDB(aSession);
 	}
-	
-	private static void openAddressDB(Session session) throws NotesException {
-		Vector<?> books = session.getAddressBooks();
+
+	private static void openAddressDB(Session aSession) throws NotesException {
+		Vector<?> books = aSession.getAddressBooks();
 		Enumeration<?> e = books.elements();
 		Database db2;
 		while (e.hasMoreElements()) {
@@ -44,10 +47,8 @@ public class NotesPerson extends Person {
 			}
 		}
 	}
-	
 
-	public static List<Person> findPerson(String aName)
-			throws ItemNotFoundException {
+	public static List<Person> findPerson(String aName) throws ItemNotFoundException {
 		List<Person> res = new ArrayList<Person>();
 		try {
 			View userView = addressDB.getView("($Users)");
@@ -57,8 +58,7 @@ public class NotesPerson extends Person {
 				aName = aName.substring(0, indexOf);
 			}
 
-			DocumentCollection allDocumentsByKey = userView
-					.getAllDocumentsByKey(aName);
+			DocumentCollection allDocumentsByKey = userView.getAllDocumentsByKey(aName);
 			Document firstDocument = allDocumentsByKey.getFirstDocument();
 			while (firstDocument != null) {
 				Vector<?> items = firstDocument.getItems();
@@ -73,8 +73,7 @@ public class NotesPerson extends Person {
 				firstDocument = allDocumentsByKey.getNextDocument();
 			}
 		} catch (NotesException e) {
-			throw new ItemNotFoundException(
-					"Person could not be found in Database.", e);
+			throw new ItemNotFoundException("Person could not be found in Database.", e);
 		}
 		return res;
 	}
@@ -92,19 +91,20 @@ public class NotesPerson extends Person {
 			setPhoneJob(aItem.getValueString());
 		} else if (itemName.equals("CellPhoneNumber")) {
 			setPhoneMobile(aItem.getValueString());
-		} else if (itemName.equals("Chair")) {
-		} else if (itemName.equals("INetRequiredNames")) {
-			try {
-				if (aItem.getValues() != null) {
-					Vector<?> v = aItem.getValues();
-					for (Object object : v) {
-						String s = object.toString();
-						if (s.matches(".+@(.*\\.)+.+")) {
-						}
-					}
-				}
-			} catch (NotesException e) {
-			}
+//		} else if (itemName.equals("Chair")) {
+//		} else if (itemName.equals("INetRequiredNames")) {
+//			try {
+//				if (aItem.getValues() != null) {
+//					Vector<?> v = aItem.getValues();
+//					for (Object object : v) {
+//						String s = object.toString();
+//						if (s.matches(".+@(.*\\.)+.+")) {
+//						}
+//					}
+//				}
+//			} catch (NotesException e) {
+//				// TODO: ignore Exceptions ??
+//			}
 		}
 
 	}

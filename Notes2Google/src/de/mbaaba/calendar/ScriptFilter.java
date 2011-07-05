@@ -18,14 +18,22 @@ import javax.script.ScriptEngineManager;
 
 import de.mbaaba.util.Configurator;
 
+/**
+ * A class that encapsulates some script that acts as a {@link ICalendarFilter}. 
+ */
 public class ScriptFilter implements ICalendarFilter {
 
+	/** The used scripting-engine. */
 	private ScriptEngine scriptEngine;
+
+	/** The file that contains the script. */
 	private File file;
+
+	/** The reader that is used to read the script. */
 	private FileReader reader;
 
-	public ScriptFilter(String scriptName, Configurator aConfigurator) throws FileNotFoundException {
-		file = new File(scriptName);
+	public ScriptFilter(String aScriptName, Configurator aConfigurator) throws FileNotFoundException {
+		file = new File(aScriptName);
 		reader = new FileReader(file);
 
 		String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
@@ -35,6 +43,11 @@ public class ScriptFilter implements ICalendarFilter {
 		scriptEngine.put("configurator", aConfigurator);
 	}
 
+	/**
+	 * This method runs the script and returns the scripts return value as its result.
+	 *
+	 * @see de.mbaaba.calendar.ICalendarFilter#passes(de.mbaaba.calendar.ICalendarEntry)
+	 */
 	public boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception {
 		scriptEngine.put("calendarEntry", aParamCalendarEntry);
 		scriptEngine.eval(reader);

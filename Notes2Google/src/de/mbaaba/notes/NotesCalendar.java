@@ -30,8 +30,16 @@ import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
+/**
+ * The Class NotesCalendar allows to access events within a Lotus-Notes calendar.
+ * Currently, the calendar is read only and does not allow to delete, add or change entries in the calendar.
+ */
 public class NotesCalendar extends AbstractCalendar {
 
+	/** The time that we wait for the data fetcher to finish its job. */
+	private static final long DATA_FETCHER_SLEEP_TIME = 100L;
+
+	/** Used for logging. */
 	private static final Logger LOG = new Logger(NotesCalendar.class);
 
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
@@ -40,8 +48,9 @@ public class NotesCalendar extends AbstractCalendar {
 		nt.start();
 		while (dataFetcher.isRunning()) {
 			try {
-				Thread.sleep(100L);
+				Thread.sleep(DATA_FETCHER_SLEEP_TIME);
 			} catch (InterruptedException localInterruptedException) {
+				// ignored
 			}
 		}
 		ArrayList<ICalendarEntry> entries = new ArrayList<ICalendarEntry>();
@@ -54,14 +63,38 @@ public class NotesCalendar extends AbstractCalendar {
 	public void init(Configurator aConfigurator) {
 	}
 
+	/** 
+	 * Nothing to close, yet.
+	 */
 	public void close() {
 	}
 
-	public class DataFetcher extends NotesCalendar.NotesRunnable {
-		private Date endDate;
-		private Date startDate;
-		public HashMap<String, NotesCalendarEntry> calendarEntries;
+	/**
+	 * A Notes-runnable that fetches the data from the Notes calendar.
+	 */
+	public class DataFetcher extends NotesCalendar.AbstractRunnable {
 
+		/** The Constant COL_START_DATE. */
+		private static final int COL_START_DATE = 8;
+
+		/** The Constant COL_END_DATE. */
+		private static final int COL_END_DATE = 10;
+
+		/** The end date. */
+		private Date endDate;
+
+		/** The start date. */
+		private Date startDate;
+
+		/** The calendar entries. */
+		private HashMap<String, NotesCalendarEntry> calendarEntries;
+
+		/**
+		 * Instantiates a new data fetcher.
+		 *
+		 * @param aStartDate the a start date
+		 * @param aEndDate the a end date
+		 */
 		public DataFetcher(Date aStartDate, Date aEndDate) {
 			super();
 			startDate = aStartDate;
@@ -100,9 +133,9 @@ public class NotesCalendar extends AbstractCalendar {
 								NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
 								calendarEntry.setUniqueID(universalID);
 
-								Object viewEntryStartDate = viewEntry.getColumnValues().get(8);
+								Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
 
-								Object viewEntryEndDate = viewEntry.getColumnValues().get(10);
+								Object viewEntryEndDate = viewEntry.getColumnValues().get(COL_END_DATE);
 
 								// only add if we have both a start and a
 								// endDate (i.e., this is not a ToDo)
@@ -115,11 +148,6 @@ public class NotesCalendar extends AbstractCalendar {
 										Item item = (Item) items.elementAt(j);
 										calendarEntry.mapItem(item);
 									}
-									// if (calendarEntry.getLastModified() ==
-									// null) {
-									// calendarEntry.setLastModified(new
-									// Date());
-									// }
 								}
 
 							}
@@ -136,6 +164,11 @@ public class NotesCalendar extends AbstractCalendar {
 			}
 		}
 
+		/**
+		 * Gets the calendar entries.
+		 *
+		 * @return the calendar entries
+		 */
 		public ArrayList<NotesCalendarEntry> getCalendarEntries() {
 			ArrayList<NotesCalendarEntry> res = new ArrayList<NotesCalendarEntry>();
 			for (NotesCalendarEntry entry : calendarEntries.values()) {
@@ -145,22 +178,47 @@ public class NotesCalendar extends AbstractCalendar {
 		}
 	}
 
-	public abstract class NotesRunnable implements Runnable {
+	/**
+	 * A simple class that extends {@link Runnable} and adds a field that indicates if the run method is still running.
+	 */
+	public abstract class AbstractRunnable implements Runnable {
+
+		/** The running. */
 		protected boolean running = true;
 
-		public NotesRunnable() {
+		/**
+		 * Instantiates a new notes runnable.
+		 */
+		public AbstractRunnable() {
 		}
 
+		/**
+		 * Checks if is running.
+		 *
+		 * @return true, if is running
+		 */
 		public boolean isRunning() {
 			return running;
 		}
 	}
 
+	/**
+	 * Adding calendar entries is not supported (yet?)
+	 *
+	 * @param aCalendarEntry the a calendar entry
+	 * @see de.mbaaba.calendar.AbstractCalendar#put(de.mbaaba.calendar.ICalendarEntry)
+	 */
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
 		throw new RuntimeException("Operation not yet supported!");
 	}
 
+	/**
+	 * Deleting calendar entries is not supported (yet?)
+	 *
+	 * @param aCalendarEntry the a calendar entry
+	 * @see de.mbaaba.calendar.AbstractCalendar#delete(de.mbaaba.calendar.ICalendarEntry)
+	 */
 	@Override
 	public void delete(ICalendarEntry aCalendarEntry) {
 		throw new RuntimeException("Operation not yet supported!");

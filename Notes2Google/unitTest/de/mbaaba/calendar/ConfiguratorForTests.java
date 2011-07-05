@@ -13,6 +13,9 @@ import java.util.Properties;
 import de.mbaaba.util.CommConfigUtil;
 import de.mbaaba.util.Configurator;
 
+/**
+ * The Class ConfiguratorForTests.
+ */
 public class ConfiguratorForTests implements Configurator {
 
 	Properties props = new Properties();

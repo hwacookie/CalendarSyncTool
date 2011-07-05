@@ -6,25 +6,28 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.directions;
 
 import java.util.List;
 
-public class GoogleDirections{
-   	private List<Routes> routes;
-   	private String status;
+public class GoogleDirections {
+	private List<Routes> routes;
 
- 	public List<Routes> getRoutes(){
+	private String status;
+
+	public List<Routes> getRoutes() {
 		return this.routes;
 	}
-	public void setRoutes(List<Routes> routes){
+
+	public void setRoutes(List<Routes> routes) {
 		this.routes = routes;
 	}
- 	public String getStatus(){
+
+	public String getStatus() {
 		return this.status;
 	}
-	public void setStatus(String status){
+
+	public void setStatus(String status) {
 		this.status = status;
 	}
 }

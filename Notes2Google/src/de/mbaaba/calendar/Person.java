@@ -6,34 +6,44 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.calendar;
+
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import de.mbaaba.util.ObjectUtil;
 
+/**
+ * The Class Person encapsulates all data of a person.
+ */
 public class Person {
 	private String firstName;
+
 	private String lastName;
+
 	private String iNetAdress;
+
 	private String phoneJob;
+
 	private String phoneMobile;
 
 	public Person() {
 
 	}
-	
-	
+
 	@Override
 	public boolean equals(Object aObj) {
 		if (aObj instanceof Person) {
 			Person other = (Person) aObj;
-			return ObjectUtil.objectEquals(firstName, other.firstName) &&
-			ObjectUtil.objectEquals(lastName, other.lastName) &&
-			ObjectUtil.objectEquals(iNetAdress, other.iNetAdress) &&
-			ObjectUtil.objectEquals(phoneJob, other.phoneJob) &&
-			ObjectUtil.objectEquals(phoneMobile, other.phoneMobile);
+			return ObjectUtil.objectEquals(firstName, other.firstName) && ObjectUtil.objectEquals(lastName, other.lastName)
+					&& ObjectUtil.objectEquals(iNetAdress, other.iNetAdress) && ObjectUtil.objectEquals(phoneJob, other.phoneJob)
+					&& ObjectUtil.objectEquals(phoneMobile, other.phoneMobile);
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	public String getFirstName() {
@@ -77,16 +87,13 @@ public class Person {
 	}
 
 	public String getPrettyMailAdress() {
-		return ((getFirstName()!=null)?getFirstName() + " ":"") + 
-			   ((getLastName()!=null)?getLastName()+" ":"") +
-			   "<" + getINetAdress()
-				+ ">";
+		return ((getFirstName() != null) ? getFirstName() + " " : "") + ((getLastName() != null) ? getLastName() + " " : "")
+				+ "<" + getINetAdress() + ">";
 	}
 
 	public String getShortContactInfo() {
 		return getINetAdress() + "," + getPhoneJob();
 	}
-
 
 	public String getURI() {
 		return "mailto:" + getINetAdress();

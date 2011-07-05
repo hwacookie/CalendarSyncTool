@@ -20,6 +20,14 @@ import de.mbaaba.util.PropertyFileConfigurator;
  * @author walden_h1
  */
 public final class ClearGoogle {
+
+	/**
+	 * No initialization.
+	 */
+	private ClearGoogle() {
+
+	}
+
 	public static void clearGoogle() throws Exception {
 		Configurator aConfigurator = new PropertyFileConfigurator("Notes2Google.properties");
 		CommConfigUtil.init(aConfigurator);
@@ -28,7 +36,7 @@ public final class ClearGoogle {
 		calendar.deleteAllEntries();
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] aArgs) throws Exception {
 		clearGoogle();
 	}
 }

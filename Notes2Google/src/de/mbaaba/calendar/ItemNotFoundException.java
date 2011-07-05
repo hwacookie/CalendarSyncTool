@@ -6,9 +6,11 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.calendar;
 
+/**
+ * The Class ItemNotFoundException is used to indicate that some item was not found.
+ */
 public class ItemNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;

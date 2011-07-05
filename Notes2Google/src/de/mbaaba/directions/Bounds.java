@@ -6,24 +6,27 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.directions;
 
+//CHECKSTYLE:OFF because this class was generated.
+public class Bounds {
+	private Northeast northeast;
 
-public class Bounds{
-   	private Northeast northeast;
-   	private Southwest southwest;
+	private Southwest southwest;
 
- 	public Northeast getNortheast(){
+	public Northeast getNortheast() {
 		return this.northeast;
 	}
-	public void setNortheast(Northeast northeast){
+
+	public void setNortheast(Northeast northeast) {
 		this.northeast = northeast;
 	}
- 	public Southwest getSouthwest(){
+
+	public Southwest getSouthwest() {
 		return this.southwest;
 	}
-	public void setSouthwest(Southwest southwest){
+
+	public void setSouthwest(Southwest southwest) {
 		this.southwest = southwest;
 	}
 }

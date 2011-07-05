@@ -6,24 +6,27 @@
  * --------------------------------------------------------------------------
  */
 
-
 package de.mbaaba.directions;
 
+//CHECKSTYLE:OFF because this class was generated.
+public class Distance {
+	private String text;
 
-public class Distance{
-   	private String text;
-   	private Number value;
+	private Number value;
 
- 	public String getText(){
+	public String getText() {
 		return this.text;
 	}
-	public void setText(String text){
+
+	public void setText(String text) {
 		this.text = text;
 	}
- 	public Number getValue(){
+
+	public Number getValue() {
 		return this.value;
 	}
-	public void setValue(Number value){
+
+	public void setValue(Number value) {
 		this.value = value;
 	}
 }

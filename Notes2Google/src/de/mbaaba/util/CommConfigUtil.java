@@ -12,7 +12,6 @@ package de.mbaaba.util;
  * Utility class that helps to configure proxy settings, SSL keys etc.
  * 
  * @author walden_h1
- * @created 27.03.2009
  */
 public final class CommConfigUtil {
 

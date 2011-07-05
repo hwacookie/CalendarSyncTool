@@ -47,11 +47,18 @@ import de.mbaaba.calendar.ICalendarEntry;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.util.Configurator;
 
+/**
+ * The Class ICalCalendar allows to access events within a iCal calendar.
+ * Currently, the calendar is does not allow to delete entries in the calendar.
+ */
 public class ICalCalendar extends AbstractCalendar {
 
 	private static final String ICAL_FILENAME = "ical.filename";
+
 	private String icsFilename;
+
 	private net.fortuna.ical4j.model.Calendar fortunaCalendar;
+
 	private boolean problem;
 
 	public void init(Configurator aConfigurator) {

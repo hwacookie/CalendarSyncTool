@@ -74,7 +74,7 @@ public final class SSLUtilities {
 
 		// Create a trust manager that does not validate certificate chains
 		if (trustManagers == null) {
-			trustManagers = new TrustManager[] { new FakeX509TrustManager() };
+			trustManagers = new TrustManager[]{new FakeX509TrustManager()};
 		}
 		// Install the all-trusting trust manager:
 		try {
@@ -120,7 +120,7 @@ public final class SSLUtilities {
 		/**
 		 * Empty array of certificate authority certificates.
 		 */
-		private static final X509Certificate[] ACCEPTED_ISSUERS = new X509Certificate[] {};
+		private static final X509Certificate[] ACCEPTED_ISSUERS = new X509Certificate[]{};
 
 		/**
 		 * Always trust for client SSL chain peer certificate chain with any

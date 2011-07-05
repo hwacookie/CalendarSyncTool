@@ -22,7 +22,6 @@ import de.mbaaba.util.Configurator;
  */
 public abstract class AbstractCalendar {
 
-	// himmelherrgott
 	/**
 	 * Initializes the calendar.
 	 * Neuer Kommentar!
@@ -74,7 +73,7 @@ public abstract class AbstractCalendar {
 	 *            the calendar entry to be put into the calendar.
 	 */
 	public abstract void put(ICalendarEntry aCalendarEntry);
-	
+
 	/**
 	 * Delete the given entry from the calendar.
 	 * 

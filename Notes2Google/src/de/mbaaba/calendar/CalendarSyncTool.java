@@ -27,7 +27,17 @@ import de.mbaaba.util.Units;
 /**
  * The Class Notes2GoogleExporter.
  */
-public class CalendarSyncTool {
+public final class CalendarSyncTool {
+
+	private static final int DEFAULT_OFFICEHOUR_END = 18;
+
+	private static final int DEFAULT_OFFICEHOUR_START = 8;
+
+	private static final int DEFAULT_REPEAT_EACH = 20;
+
+	private static final int DEFAULT_NUM_DAYS_INTO_FUTURE = 14;
+
+	private static final long TEN_SECONDS = Units.SECOND * 10;
 
 	/**
 	 * A logger for this class.
@@ -40,7 +50,7 @@ public class CalendarSyncTool {
 	private static DateFormat logDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 
 	/** Default target calendar type. */
-	public static final String defaultWriteToClassName = GoogleCalendar.class.getName();
+	private static final String DEFAULT_WRITETO_CLASSNAME = GoogleCalendar.class.getName();
 
 	/** Used to read configuration parameter. */
 	private PropertyFileConfigurator configurator;
@@ -53,7 +63,7 @@ public class CalendarSyncTool {
 	/**
 	 * Instantiates a calendar converter.
 	 */
-	public CalendarSyncTool() {
+	private CalendarSyncTool() {
 		configurator = new PropertyFileConfigurator("Notes2Google.properties");
 		lastKnownCalendarState = new FileCalendar();
 		lastKnownCalendarState.init(configurator);
@@ -81,7 +91,7 @@ public class CalendarSyncTool {
 				sourceCalendar.init(configurator);
 
 				long numDaysPast = configurator.getProperty("calendar.numDaysPast", 0);
-				long numDaysFuture = configurator.getProperty("calendar.numDaysFuture", 14);
+				long numDaysFuture = configurator.getProperty("calendar.numDaysFuture", DEFAULT_NUM_DAYS_INTO_FUTURE);
 				Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
 				Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
 
@@ -89,7 +99,7 @@ public class CalendarSyncTool {
 				try {
 					sourceEntriesUnfiltered = sourceCalendar.readCalendarEntries(startDate, endDate);
 				} catch (Exception e) {
-
+					LOG.warn("Error while reading entries from source calendar!", e);
 				}
 
 				// if we did not get a list of entries, something must have gone
@@ -110,16 +120,17 @@ public class CalendarSyncTool {
 					}
 				}
 
-				int repeatEach = configurator.getProperty("repeatEach", 20);
-				int officeHoursStart = configurator.getProperty("officeHours.start", 8);
-				int officeHoursEnd = configurator.getProperty("officeHours.end", 18);
+				int repeatEach = configurator.getProperty("repeatEach", DEFAULT_REPEAT_EACH);
+				int officeHoursStart = configurator.getProperty("officeHours.start", DEFAULT_OFFICEHOUR_START);
+				int officeHoursEnd = configurator.getProperty("officeHours.end", DEFAULT_OFFICEHOUR_END);
 				if (repeatEach > 0) {
 					Calendar now = new GregorianCalendar();
 					// TODO: 1: Handling of working-hours
 					// http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
 					int day = now.get(Calendar.DAY_OF_WEEK);
 					int hour = now.get(Calendar.HOUR_OF_DAY);
-					while ((day == 0) || (day == 6) || ((hour < officeHoursStart) || (hour >= officeHoursEnd))) {
+					while ((day == Units.SUNDAY) || (day == Units.SATURDAY)
+							|| ((hour < officeHoursStart) || (hour >= officeHoursEnd))) {
 						println("Not a working hour, sleeping for an hour!");
 						Thread.sleep(Units.HOUR * 1);
 						now = new GregorianCalendar();
@@ -129,7 +140,7 @@ public class CalendarSyncTool {
 					Thread.sleep(Units.MINUTE * numMinutes);
 				} else if (repeatEach == 0) {
 					println("Now sleeping for 10 seconds ...");
-					Thread.sleep(Units.SECOND * 10);
+					Thread.sleep(TEN_SECONDS);
 				} else if (repeatEach < 0) {
 					println("Exiting ...");
 					break;
@@ -143,7 +154,7 @@ public class CalendarSyncTool {
 				printerr("Some error occured, resuming loop anyway. I'm still here! Error: " + e.getMessage());
 				println("Now sleeping for 10 seconds ...");
 				try {
-					Thread.sleep(Units.SECOND * 10);
+					Thread.sleep(TEN_SECONDS);
 				} catch (InterruptedException e1) {
 					// ignore
 				}
@@ -167,23 +178,14 @@ public class CalendarSyncTool {
 
 	/**
 	 * Write to target calendar.
-	 * 
-	 * @param newEntries
-	 *            the new entries
-	 * @param obsoleteEntries
-	 *            the obsolete entries
-	 * @throws InstantiationException
-	 *             the instantiation exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws ClassNotFoundException
-	 *             the class not found exception
-	 * @throws Exception
-	 *             the exception
+	 *
+	 * @param aNewEntries the new entries to be added to the target calendar
+	 * @param aObsoleteEntries the obsolete entries that shall be removed from the target calendar
+	 * @throws Exception thrown if anything goes wrong.  
 	 */
-	private void writeToTargetCalendar(ArrayList<ICalendarEntry> newEntries, ArrayList<ICalendarEntry> obsoleteEntries) throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-			Exception {
-		String writeToClassName = configurator.getProperty("calendar.to", defaultWriteToClassName);
+	private void writeToTargetCalendar(ArrayList<ICalendarEntry> aNewEntries, ArrayList<ICalendarEntry> aObsoleteEntries)
+			throws Exception {
+		String writeToClassName = configurator.getProperty("calendar.to", DEFAULT_WRITETO_CLASSNAME);
 		println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
 
 		AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
@@ -191,18 +193,18 @@ public class CalendarSyncTool {
 		targetCalendar.init(configurator);
 
 		List<ICalendarEntry> toBeDeletedList = new ArrayList<ICalendarEntry>();
-		for (ICalendarEntry calendarEntry : obsoleteEntries) {
-			if (!listHasEntryWithID(newEntries, calendarEntry)) {
+		for (ICalendarEntry calendarEntry : aObsoleteEntries) {
+			if (!listHasEntryWithID(aNewEntries, calendarEntry)) {
 				toBeDeletedList.add(calendarEntry);
 			}
 		}
 		if (toBeDeletedList.size() > 0) {
-			println("Removing " + obsoleteEntries.size() + " entries ...");
+			println("Removing " + aObsoleteEntries.size() + " entries ...");
 			targetCalendar.deleteList(toBeDeletedList);
 		}
 
-		println("Adding/Updating " + newEntries.size() + " entries ...");
-		targetCalendar.putList(newEntries);
+		println("Adding/Updating " + aNewEntries.size() + " entries ...");
+		targetCalendar.putList(aNewEntries);
 
 		targetCalendar.close();
 	}
@@ -210,17 +212,12 @@ public class CalendarSyncTool {
 	/**
 	 * The main method.
 	 * 
-	 * @param args
+	 * @param arAgs
 	 *            the arguments
 	 * @throws Exception
 	 *             the exception
 	 */
-	public static void main(String[] args) throws Exception {
-		// if ((args.length > 0) && ("clear".equals(args[0]))) {
-		// ClearGoogle.clearGoogle();
-		// return;
-		// }
-
+	public static void main(String[] aAgs) throws Exception {
 		CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
 		notes2GoogleExporter.loop();
 
@@ -307,8 +304,8 @@ public class CalendarSyncTool {
 	 * @param aErrorMessage
 	 *            the string
 	 */
-	public static void printerr(String aErrorMessage, Throwable e) {
-		LOG.error(aErrorMessage, e);
+	public static void printerr(String aErrorMessage, Throwable aException) {
+		LOG.error(aErrorMessage, aException);
 		System.err.println(logDateFormatter.format(new Date()) + " | " + aErrorMessage);
 	}
 
