@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookmarks>
+   <site url="http://eclipse-cs.sourceforge.net/update" selected="true" name="Checkstyle"/>
+   <site url="http://download.eclipse.org/egit/updates-nightly" selected="true" name="EGit Nightly"/>
+   <site url="http://dgreen99.github.com/org.eclipse.mylyn.github/site" selected="true" name="GitHub"/>
+   <site url="http://jautodoc.sourceforge.net/update/" selected="true" name="JAutodoc"/>
+</bookmarks>
