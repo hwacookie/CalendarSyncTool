@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><templates><template autoinsert="true" context="javadoc" deleted="false" description="description of the DBException" enabled="true" name="DBException">@throws DBException if an error during database access occurs</template><template autoinsert="true" context="java" deleted="false" description="file comment used by the class and interface wizards" enabled="true" name="filecomment">/* --------------------------------------------------------------------------
+ * @author ${user}
+ * @created ${date}
+ * Copyright ${year} by Biotronik SE &amp; Co. KG
+ * All rights reserved.
+ * --------------------------------------------------------------------------
+ */</template><template autoinsert="true" context="java" deleted="false" description="" enabled="true" name="fix me">// FIX ME</template><template autoinsert="true" context="java" deleted="false" description="footer of a document" enabled="true" name="footer"></template><template autoinsert="true" context="java" deleted="false" description="creates a logging instance" enabled="true" name="logger">/** the logging instance */
+private static final de.biotronik.util.Logger LOG = new de.biotronik.util.Logger(${enclosing_type}.class);</template><template autoinsert="false" context="java" deleted="false" description="private method" enabled="true" id="org.eclipse.jdt.ui.templates.private_method" name="private_method">/**
+ * TODO: comment it!
+ */
+private ${return_type} ${name}(${}) {
+	${cursor}throw new UnsupportedOperationException("not yet implemented");
+}</template><template autoinsert="false" context="java" deleted="false" description="private static method" enabled="true" id="org.eclipse.jdt.ui.templates.private_static_method" name="private_static_method">/**
+ * TODO: comment it!
+ */
+private static ${return_type} ${name}(${}) {
+	${cursor}throw new UnsupportedOperationException("not yet implemented");
+}</template><template autoinsert="false" context="java" deleted="false" description="protected method" enabled="true" id="org.eclipse.jdt.ui.templates.protected_method" name="protected_method">/**
+ * TODO: comment it!
+ */
+protected ${return_type} ${name}(${}) {
+	${cursor}throw new UnsupportedOperationException("not yet implemented");
+}</template><template autoinsert="false" context="java" deleted="false" description="public method" enabled="true" id="org.eclipse.jdt.ui.templates.public_method" name="public_method">/** 
+ * TODO: comment it!
+ */
+public ${return_type} ${name}(${}) {
+	${cursor}throw new UnsupportedOperationException("not yet implemented");
+}</template><template autoinsert="true" context="javadoc" deleted="false" description="Description of the RemoteException" enabled="true" name="RemoteException">@throws RemoteException if an error on server side occurs</template>
+   <template autoinsert="true" context="javadoc" deleted="false" description="" enabled="true" name="review">@reviewed version ${cursor} by ${user}, ${date}</template>
+   <template autoinsert="true" context="javadoc" deleted="false"
+		description="Defined the title of a class, used in RTF export."
+		enabled="true" name="Title">
+		&lt;h3&gt;${enclosing_type}&lt;/h3&gt;
+	</template>
+</templates>
