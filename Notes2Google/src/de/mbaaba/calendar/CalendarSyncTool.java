@@ -11,7 +11,9 @@ package de.mbaaba.calendar;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -109,14 +111,18 @@ public class CalendarSyncTool {
 				}
 
 				int repeatEach = configurator.getProperty("repeatEach", 20);
+				int officeHoursStart = configurator.getProperty("officeHours.start", 8);
+				int officeHoursEnd = configurator.getProperty("officeHours.end", 18);
 				if (repeatEach > 0) {
-					Date now = new Date();
+					Calendar now = new GregorianCalendar();
 					// TODO: 1: Handling of working-hours
 					// http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
-					while ((now.getDay() == 0) || (now.getDay() == 6) || ((now.getHours() < 8) || (now.getHours() > 18))) {
+					int day = now.get(Calendar.DAY_OF_WEEK);
+					int hour = now.get(Calendar.HOUR_OF_DAY);
+					while ((day == 0) || (day == 6) || ((hour < officeHoursStart) || (hour >= officeHoursEnd))) {
 						println("Not a working hour, sleeping for an hour!");
 						Thread.sleep(Units.HOUR * 1);
-						now = new Date();
+						now = new GregorianCalendar();
 					}
 					int numMinutes = repeatEach;
 					println("Now sleeping for " + numMinutes + " minutes ...");
