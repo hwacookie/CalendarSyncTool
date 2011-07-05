@@ -24,6 +24,7 @@ public abstract class AbstractCalendar {
 
 	/**
 	 * Initializes the calendar.
+	 * Neuer Kommentar!
 	 * 
 	 * @param aConfigurator
 	 *            the {@link Configurator} that contains configuration
