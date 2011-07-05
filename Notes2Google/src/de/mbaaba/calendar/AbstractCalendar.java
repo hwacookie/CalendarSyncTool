@@ -25,6 +25,7 @@ public abstract class AbstractCalendar {
 	// himmelherrgott
 	/**
 	 * Initializes the calendar.
+	 * Neuer Kommentar!
 	 * 
 	 * @param aConfigurator
 	 *            the {@link Configurator} that contains configuration
