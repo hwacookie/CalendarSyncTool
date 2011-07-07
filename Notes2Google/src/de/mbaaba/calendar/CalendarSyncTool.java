@@ -129,7 +129,7 @@ public final class CalendarSyncTool {
 					// http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
 					int day = now.get(Calendar.DAY_OF_WEEK);
 					int hour = now.get(Calendar.HOUR_OF_DAY);
-					while ((day == Units.SUNDAY) || (day == Units.SATURDAY)
+					while ((day == Calendar.SUNDAY) || (day == Calendar.SATURDAY)
 							|| ((hour < officeHoursStart) || (hour >= officeHoursEnd))) {
 						println("Not a working hour, sleeping for an hour!");
 						Thread.sleep(Units.HOUR * 1);
