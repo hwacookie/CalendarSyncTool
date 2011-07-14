@@ -9,7 +9,6 @@
 package de.mbaaba.calendar;
 
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +22,7 @@ import de.mbaaba.util.Units;
 /**
  * The Class Notes2GoogleExporter.
  */
-public final class CalendarSyncTool {
+public class CalendarSyncTool {
 
 	/**
 	 * Encapsulates constants for configuration parameters and their default values.
@@ -58,10 +57,8 @@ public final class CalendarSyncTool {
 	private static final Logger LOG = new Logger(CalendarSyncTool.class);
 
 	/**
-	 * A formatter for dates. Used for println to the console.
+	 * A constant that is used as sleep time between two invocations of the sync-loop in case that an error occurs.
 	 */
-	private static DateFormat logDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-
 	private static final long TEN_SECONDS = Units.SECOND * 10;
 
 	/** Used to read configuration parameter. */
@@ -72,12 +69,15 @@ public final class CalendarSyncTool {
 	 */
 	private FileCalendar lastKnownCalendarState;
 
+	/**
+	 * Instance of a helper class that handles the sleep between two runs of the sync loop.
+	 */
 	private SleepUtililty sleepUtililty;
 
 	/**
 	 * Instantiates a calendar converter.
 	 */
-	CalendarSyncTool() {
+	public CalendarSyncTool() {
 		configurator = new PropertyFileConfigurator("Notes2Google.properties");
 		lastKnownCalendarState = new FileCalendar();
 		lastKnownCalendarState.init(configurator);
@@ -88,8 +88,9 @@ public final class CalendarSyncTool {
 	/**
 	 * This will perform the read/filter/write loop.
 	 */
-	private void loop() {
+	private void syncLoop() {
 
+		// initially, try to read all calendar entries that we know about from the last run. 
 		ArrayList<ICalendarEntry> oldSourceEntries = lastKnownCalendarState.readCalendarEntries(null, null);
 
 		while (true) {
@@ -102,7 +103,7 @@ public final class CalendarSyncTool {
 				String readFromClassName = configurator.getProperty(ConfigParameter.CALENDAR_FROM,
 						ConfigParameter.DEFAULT_CALENDAR_FROM);
 
-				println("Reading from calendar " + readFromClassName + " ... ");
+				OutputManager.println("Reading from calendar " + readFromClassName + " ... ");
 
 				AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
 				sourceCalendar.init(configurator);
@@ -136,7 +137,7 @@ public final class CalendarSyncTool {
 						copyList(sourceEntries, oldSourceEntries);
 						saveLastKnownCalendarState(sourceEntries);
 					} else {
-						println("... no changes found.");
+						OutputManager.println("... no changes found.");
 					}
 				}
 
@@ -147,8 +148,8 @@ public final class CalendarSyncTool {
 				// while reading/writing entries, we never want to break the
 				// while-true-loop.
 				LOG.error(e.getMessage(), e);
-				printerr("Some error occured, resuming loop anyway. I'm still here! Error: " + e.getMessage());
-				println("Now sleeping for 10 seconds ...");
+				OutputManager.printerr("Some error occured, resuming loop anyway. I'm still here! Error", e);
+				OutputManager.println("Now sleeping for 10 seconds ...");
 				try {
 					Thread.sleep(TEN_SECONDS);
 				} catch (InterruptedException e1) {
@@ -166,7 +167,7 @@ public final class CalendarSyncTool {
 	 *            the source entries
 	 */
 	private void saveLastKnownCalendarState(ArrayList<ICalendarEntry> aEntries) {
-		println("Persisting list of calendar entries.");
+		OutputManager.println("Persisting list of calendar entries.");
 		lastKnownCalendarState.deleteAll();
 		lastKnownCalendarState.putList(aEntries);
 		lastKnownCalendarState.close();
@@ -183,10 +184,10 @@ public final class CalendarSyncTool {
 			throws Exception {
 		String writeToClassName = configurator
 				.getProperty(ConfigParameter.CALENDAR_TO, ConfigParameter.DEFAULT_WRITETO_CLASSNAME);
-		println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
+		OutputManager.println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
 
 		AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
-		println("Initializing targetCalendar");
+		OutputManager.println("Initializing targetCalendar");
 		targetCalendar.init(configurator);
 
 		List<ICalendarEntry> toBeDeletedList = new ArrayList<ICalendarEntry>();
@@ -196,11 +197,11 @@ public final class CalendarSyncTool {
 			}
 		}
 		if (toBeDeletedList.size() > 0) {
-			println("Removing " + aObsoleteEntries.size() + " entries ...");
+			OutputManager.println("Removing " + aObsoleteEntries.size() + " entries ...");
 			targetCalendar.deleteList(toBeDeletedList);
 		}
 
-		println("Adding/Updating " + aNewEntries.size() + " entries ...");
+		OutputManager.println("Adding/Updating " + aNewEntries.size() + " entries ...");
 		targetCalendar.putList(aNewEntries);
 
 		targetCalendar.close();
@@ -216,7 +217,7 @@ public final class CalendarSyncTool {
 	 */
 	public static void main(String[] aAgs) throws Exception {
 		CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
-		notes2GoogleExporter.loop();
+		notes2GoogleExporter.syncLoop();
 
 	}
 
@@ -244,7 +245,7 @@ public final class CalendarSyncTool {
 				ScriptFilter filter = new ScriptFilter(scriptName, configurator);
 				allFilters.add(filter);
 			} catch (FileNotFoundException e) {
-				printerr("Found no script named \"" + scriptName + "\"", e);
+				OutputManager.printerr("Found no script named \"" + scriptName + "\"", e);
 			}
 		}
 
@@ -273,48 +274,6 @@ public final class CalendarSyncTool {
 			}
 		}
 		return filteredEntries;
-	}
-
-	/**
-	 * Prints a status message.
-	 * 
-	 * @param aMessage
-	 *            the string
-	 */
-	public static void print(String aMessage) {
-		System.out.print(logDateFormatter.format(new Date()) + " | " + aMessage);
-	}
-
-	/**
-	 * Prints a status message.
-	 * 
-	 * @param aMessage
-	 *            the string
-	 */
-	public static void println(String aMessage) {
-		System.out.println(logDateFormatter.format(new Date()) + " | " + aMessage);
-	}
-
-	/**
-	 * Prints a error message.
-	 * 
-	 * @param aErrorMessage
-	 *            the string
-	 */
-	public static void printerr(String aErrorMessage) {
-		LOG.error(aErrorMessage);
-		System.err.println(logDateFormatter.format(new Date()) + " | " + aErrorMessage);
-	}
-
-	/**
-	 * Prints a error message.
-	 * 
-	 * @param aErrorMessage
-	 *            the string
-	 */
-	public static void printerr(String aErrorMessage, Throwable aException) {
-		LOG.error(aErrorMessage, aException);
-		System.err.println(logDateFormatter.format(new Date()) + " | " + aErrorMessage);
 	}
 
 	/**

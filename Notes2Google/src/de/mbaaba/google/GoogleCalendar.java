@@ -41,8 +41,8 @@ import com.google.gdata.data.extensions.Who;
 import com.google.gdata.util.ServiceException;
 
 import de.mbaaba.calendar.AbstractCalendar;
-import de.mbaaba.calendar.CalendarSyncTool;
 import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.util.Configurator;
 
@@ -66,7 +66,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		CalendarEventFeed resultFeed = (CalendarEventFeed) this.calendarService.getFeed(myQuery, CalendarEventFeed.class);
 		if (resultFeed.getEntries().size() > 0) {
 			if (resultFeed.getEntries().size() > 1) {
-				CalendarSyncTool.printerr("Oops: More than one result for NOTES-ID=" + aNotesId + ", using first entry !");
+				OutputManager.printerr("Oops: More than one result for NOTES-ID=" + aNotesId + ", using first entry !");
 			}
 			CalendarEventEntry entry = (CalendarEventEntry) resultFeed.getEntries().get(0);
 			return entry;
@@ -91,11 +91,11 @@ public class GoogleCalendar extends AbstractCalendar {
 
 	private void createEvent(ICalendarEntry aCalendarEntry) throws ServiceException, IOException {
 		if (aCalendarEntry.getStartDates() == null) {
-			CalendarSyncTool.printerr("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
+			OutputManager.printerr("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
 			return;
 		}
 		if (aCalendarEntry.getEndDates() == null) {
-			CalendarSyncTool.printerr("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
+			OutputManager.printerr("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
 			return;
 		}
 
@@ -261,7 +261,7 @@ public class GoogleCalendar extends AbstractCalendar {
 				BatchUtils.setBatchOperationType(toDelete, BatchOperationType.DELETE);
 				batchRequest.getEntries().add(toDelete);
 			} else {
-				CalendarSyncTool.printerr("Ooops! Entry without ID cannot be deleted.");
+				OutputManager.printerr("Ooops! Entry without ID cannot be deleted.");
 			}
 		}
 
@@ -279,9 +279,9 @@ public class GoogleCalendar extends AbstractCalendar {
 				if (!BatchUtils.isSuccess(entry)) {
 					isSuccess = false;
 					BatchStatus status = BatchUtils.getBatchStatus(entry);
-					CalendarSyncTool.println("Delete of " + batchId + " failed: " + status.getReason());
+					OutputManager.println("Delete of " + batchId + " failed: " + status.getReason());
 				} else {
-					CalendarSyncTool.println("Deleted " + batchId + ".");
+					OutputManager.println("Deleted " + batchId + ".");
 				}
 			}
 		} catch (IOException e) {
@@ -290,7 +290,7 @@ public class GoogleCalendar extends AbstractCalendar {
 			e.printStackTrace();
 		}
 		if (isSuccess) {
-			CalendarSyncTool.println("Successfully deleted all events via batch request.");
+			OutputManager.println("Successfully deleted all events via batch request.");
 		}
 	}
 
@@ -299,7 +299,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		String password = aConfigurator.getProperty("google.pwd", "");
 		feedUrl = new URL(aConfigurator.getProperty("google.url", ""));
 
-		CalendarSyncTool.println("Using URL " + feedUrl);
+		OutputManager.println("Using URL " + feedUrl);
 		this.calendarService = new CalendarService("exampleCo-exampleApp-1");
 		this.calendarService.setUserCredentials(username, password);
 		this.calendarService.useSsl();
@@ -320,17 +320,17 @@ public class GoogleCalendar extends AbstractCalendar {
 	public void put(ICalendarEntry aCalendarEntry) {
 		try {
 			if (aCalendarEntry.getUniqueID() == null) {
-				CalendarSyncTool.printerr("Entry has no unique ID!");
+				OutputManager.printerr("Entry has no unique ID!");
 				return;
 			}
 			CalendarEventEntry googleEvent = getByNotesID(aCalendarEntry.getUniqueID());
 			if (googleEvent != null) {
-				CalendarSyncTool.println("Updating entry " + aCalendarEntry.getShortString() + ".");
+				OutputManager.println("Updating entry " + aCalendarEntry.getShortString() + ".");
 				copyFromInternalToGoogleStyle(aCalendarEntry, googleEvent);
 				googleEvent.delete();
 				createEvent(aCalendarEntry);
 			} else {
-				CalendarSyncTool.println("Adding entry " + aCalendarEntry.getShortString() + ".");
+				OutputManager.println("Adding entry " + aCalendarEntry.getShortString() + ".");
 				createEvent(aCalendarEntry);
 			}
 		} catch (Exception e) {

@@ -42,8 +42,8 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.Calendars;
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
-import de.mbaaba.calendar.CalendarSyncTool;
 import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.util.Configurator;
 
@@ -175,7 +175,7 @@ public class ICalCalendar extends AbstractCalendar {
 			if (object instanceof VEvent) {
 				VEvent storedEvent = (VEvent) object;
 				if (storedEvent.getUid().equals(aEvent.getUid())) {
-					CalendarSyncTool.println("replacing existing entry " + storedEvent.getUid());
+					OutputManager.println("replacing existing entry " + storedEvent.getUid());
 					fortunaCalendar.getComponents().remove(storedEvent);
 					fortunaCalendar.getComponents().add(aEvent);
 					return;
@@ -211,7 +211,7 @@ public class ICalCalendar extends AbstractCalendar {
 
 	public void close() {
 		if (problem) {
-			CalendarSyncTool.printerr("Had a problem while loading \"" + icsFilename + "\", will not overwrite current file!");
+			OutputManager.printerr("Had a problem while loading \"" + icsFilename + "\", will not overwrite current file!");
 			return;
 		}
 		try {
@@ -220,7 +220,7 @@ public class ICalCalendar extends AbstractCalendar {
 				try {
 					f.createNewFile();
 				} catch (IOException e) {
-					CalendarSyncTool.printerr("Cannot create new calendar file \"" + icsFilename + "\"");
+					OutputManager.printerr("Cannot create new calendar file \"" + icsFilename + "\"");
 				}
 			}
 			if (f.canWrite()) {
@@ -228,9 +228,9 @@ public class ICalCalendar extends AbstractCalendar {
 				CalendarOutputter outputter = new CalendarOutputter();
 				outputter.output(fortunaCalendar, fout);
 				fout.close();
-				CalendarSyncTool.println("Wrote calendar to " + icsFilename);
+				OutputManager.println("Wrote calendar to " + icsFilename);
 			} else {
-				CalendarSyncTool.printerr("Cannot write to " + icsFilename);
+				OutputManager.printerr("Cannot write to " + icsFilename);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

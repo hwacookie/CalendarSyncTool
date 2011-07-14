@@ -1,3 +1,10 @@
+/* --------------------------------------------------------------------------
+ * @author Hauke Walden
+ * @created 28.06.2011 
+ * Copyright 2011 by Hauke Walden 
+ * All rights reserved.
+ * --------------------------------------------------------------------------
+ */
 package de.mbaaba.calendar;
 
 import java.util.Calendar;
@@ -6,8 +13,14 @@ import java.util.GregorianCalendar;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Units;
 
+/**
+ * A utility class that handles the sleep between invocations of the sync loop.
+ */
 public class SleepUtililty {
 
+	/**
+	 * This class encapsulates configuration parameters and their default values.
+	 */
 	class ConfigParameter {
 		private static final String OFFICE_HOURS_END = "officeHours.end";
 
@@ -28,7 +41,7 @@ public class SleepUtililty {
 		private static final int DEFAULT_REPEAT_EACH_NONOFFICEHOURS = 120;
 
 		private static final String DEFAULT_OFFICE_HOURS_WORKDAYS = "1 2 3 4 5";
-		
+
 		private void dumpConfig() {
 			dumpValue(ConfigParameter.OFFICE_HOURS_START);
 			dumpValue(ConfigParameter.OFFICE_HOURS_END);
@@ -38,8 +51,8 @@ public class SleepUtililty {
 		}
 
 		private void dumpValue(String aParamName) {
-			CalendarSyncTool.println(aParamName+"="+configurator.getProperty(aParamName, "<set-value-for-"+aParamName+">"));
-		}		
+			OutputManager.println(aParamName + "=" + configurator.getProperty(aParamName, "<set-value-for-" + aParamName + ">"));
+		}
 	}
 
 	private static final long TEN_SECONDS = Units.SECOND * 10;
@@ -50,8 +63,6 @@ public class SleepUtililty {
 		configurator = aConfigurator;
 		new ConfigParameter().dumpConfig();
 	}
-
-
 
 	void sleepUntilNextRun() {
 
@@ -67,7 +78,7 @@ public class SleepUtililty {
 		// Now, wait some time until we run again
 		long lastrun = System.currentTimeMillis();
 
-		CalendarSyncTool.print("Sleeping until next run in approx. " + nextRunInMinutes + " minutes ");
+		OutputManager.print("Sleeping until next run in approx. " + nextRunInMinutes + " minutes ");
 
 		// sleep-loop
 		while (true) {

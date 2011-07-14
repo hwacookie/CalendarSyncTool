@@ -9,17 +9,17 @@ import de.mbaaba.util.Units;
 public class TestSleepUtility extends TestCase {
 
 	protected boolean passed;
-	
+
 	private Thread guardTimer(final int aTimeout) {
-		System.out.println("WARNING: This test runs for approximatly "+aTimeout+" seconds!");
-		
+		System.out.println("WARNING: This test runs for approximatly " + aTimeout + " seconds!");
+
 		final Thread parent = Thread.currentThread();
-		
+
 		Thread guard = new Thread(new Runnable() {
 
 			public void run() {
 				try {
-					Thread.sleep(aTimeout*Units.SECOND);
+					Thread.sleep(aTimeout * Units.SECOND);
 					System.err.println("The test has failed, the sleep took too long!");
 					passed = false;
 					parent.interrupt();
@@ -31,7 +31,6 @@ public class TestSleepUtility extends TestCase {
 		guard.start();
 		return guard;
 	}
-	
 
 	public void testIsOfficehour() {
 		ConfiguratorForTests configurator = new ConfiguratorForTests();
@@ -80,7 +79,6 @@ public class TestSleepUtility extends TestCase {
 
 	}
 
-
 	private void stopGuardTimer(Thread guard) {
 		if (!guard.isInterrupted()) {
 			guard.interrupt();
@@ -88,7 +86,6 @@ public class TestSleepUtility extends TestCase {
 			fail("The test has failed, the sleep took too long!");
 		}
 	}
-
 
 	public void testSleepUntilOnNonWorkdays() {
 		ConfiguratorForTests configurator = new ConfiguratorForTests();
@@ -100,9 +97,6 @@ public class TestSleepUtility extends TestCase {
 
 		SleepUtililty sleepUtililty = new SleepUtililty(configurator);
 
-		
-
-
 		// make sure we are not in an offcehour
 		if (cal.get(Calendar.DAY_OF_WEEK) == 0) {
 			configurator.setProperty("officeHours.workdays", "1");
@@ -111,7 +105,7 @@ public class TestSleepUtility extends TestCase {
 		}
 
 		Thread guard = guardTimer(123);
-		
+
 		long start = System.currentTimeMillis();
 		sleepUtililty.sleepUntilNextRun();
 		long duration = System.currentTimeMillis() - start;

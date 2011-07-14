@@ -91,20 +91,20 @@ public class NotesPerson extends Person {
 			setPhoneJob(aItem.getValueString());
 		} else if (itemName.equals("CellPhoneNumber")) {
 			setPhoneMobile(aItem.getValueString());
-//		} else if (itemName.equals("Chair")) {
-//		} else if (itemName.equals("INetRequiredNames")) {
-//			try {
-//				if (aItem.getValues() != null) {
-//					Vector<?> v = aItem.getValues();
-//					for (Object object : v) {
-//						String s = object.toString();
-//						if (s.matches(".+@(.*\\.)+.+")) {
-//						}
-//					}
-//				}
-//			} catch (NotesException e) {
-//				// TODO: ignore Exceptions ??
-//			}
+			//		} else if (itemName.equals("Chair")) {
+			//		} else if (itemName.equals("INetRequiredNames")) {
+			//			try {
+			//				if (aItem.getValues() != null) {
+			//					Vector<?> v = aItem.getValues();
+			//					for (Object object : v) {
+			//						String s = object.toString();
+			//						if (s.matches(".+@(.*\\.)+.+")) {
+			//						}
+			//					}
+			//				}
+			//			} catch (NotesException e) {
+			//				// TODO: ignore Exceptions ??
+			//			}
 		}
 
 	}

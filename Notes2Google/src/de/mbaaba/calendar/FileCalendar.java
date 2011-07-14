@@ -59,7 +59,7 @@ public class FileCalendar extends AbstractCalendar {
 			xStream.toXML(allEntries, new FileOutputStream(fileName));
 		} catch (FileNotFoundException e) {
 			LOG.error("Warning: " + fileName + " could not be written!", e);
-			CalendarSyncTool.printerr("Warning: " + fileName + " could not be written!");
+			OutputManager.printerr("Warning: " + fileName + " could not be written!");
 		}
 	}
 
@@ -76,7 +76,7 @@ public class FileCalendar extends AbstractCalendar {
 			allEntries = (ArrayList<CalendarEntry>) xStream.fromXML(new FileInputStream(fileName));
 		} catch (Throwable e) {
 			LOG.error("Warning: " + fileName + " could not be opened for reading, using empty list!", e);
-			CalendarSyncTool.printerr("Warning: " + fileName + " could not be opened for reading, using empty list!");
+			OutputManager.printerr("Warning: " + fileName + " could not be opened for reading, using empty list!");
 			allEntries = new ArrayList<CalendarEntry>();
 		}
 	}

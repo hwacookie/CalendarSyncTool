@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import de.mbaaba.calendar.CalendarSyncTool;
+import de.mbaaba.calendar.OutputManager;
 
 /**
  * The Class AdapterConfigurator contains functionality to configure the
@@ -52,10 +52,9 @@ public class PropertyFileConfigurator implements Configurator {
 				props.load(resourceStream);
 			}
 		} catch (IOException e) {
-			CalendarSyncTool.printerr("The file " + propFileName + " could not be found!", e);
-			CalendarSyncTool
-					.printerr("Copy the template-property file, make your changes and rename it to " + propFileName + ".");
-			CalendarSyncTool.printerr("I will exit now.");
+			OutputManager.printerr("The file " + propFileName + " could not be found!", e);
+			OutputManager.printerr("Copy the template-property file, make your changes and rename it to " + propFileName + ".");
+			OutputManager.printerr("I will exit now.");
 			System.exit(1);
 		}
 	}
@@ -84,8 +83,8 @@ public class PropertyFileConfigurator implements Configurator {
 		try {
 			String s = props.getProperty(aPropertyName, "" + aDefaultValue);
 			if (s.startsWith("<setup-")) {
-				CalendarSyncTool.printerr("Missing a value for " + aPropertyName + " in the property file, please fix!");
-				CalendarSyncTool.printerr("I will exit now.");
+				OutputManager.printerr("Missing a value for " + aPropertyName + " in the property file, please fix!");
+				OutputManager.printerr("I will exit now.");
 				System.exit(1);
 			}
 			Integer res = Integer.parseInt(s);
