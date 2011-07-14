@@ -8,6 +8,7 @@
 
 package de.mbaaba.directions;
 
+//CHECKSTYLE:OFF because this class was generated.
 public class End_location {
 	private Number lat;
 

@@ -10,6 +10,7 @@ package de.mbaaba.directions;
 
 import java.util.List;
 
+//CHECKSTYLE:OFF because this class was generated.
 public class GoogleDirections {
 	private List<Routes> routes;
 
