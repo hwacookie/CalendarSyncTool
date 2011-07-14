@@ -11,14 +11,10 @@ package de.mbaaba.calendar;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de.mbaaba.google.GoogleCalendar;
-import de.mbaaba.notes.NotesCalendar;
 import de.mbaaba.util.CommConfigUtil;
 import de.mbaaba.util.Logger;
 import de.mbaaba.util.PropertyFileConfigurator;
@@ -29,15 +25,32 @@ import de.mbaaba.util.Units;
  */
 public final class CalendarSyncTool {
 
-	private static final int DEFAULT_OFFICEHOUR_END = 18;
+	/**
+	 * Encapsulates constants for configuration parameters and their default values.
+	 */
+	class ConfigParameter {
+		private static final String CALENDAR_FROM = "calendar.from";
 
-	private static final int DEFAULT_OFFICEHOUR_START = 8;
+		private static final String DEFAULT_CALENDAR_FROM = "de.mbaaba.notes.NotesCalendar";
 
-	private static final int DEFAULT_REPEAT_EACH = 20;
+		private static final String CALENDAR_NUM_DAYS_FUTURE = "calendar.numDaysFuture";
 
-	private static final int DEFAULT_NUM_DAYS_INTO_FUTURE = 14;
+		private static final int DEFAULT_CALENDAR_NUM_DAYS_FUTURE = 14;
 
-	private static final long TEN_SECONDS = Units.SECOND * 10;
+		private static final String CALENDAR_NUM_DAYS_PAST = "calendar.numDaysPast";
+
+		private static final int DEFAULT_CALENDAR_NUM_DAYS_PAST = 0;
+
+		private static final String CALENDAR_TO = "calendar.to";
+
+		/** Default target calendar type. */
+		private static final String DEFAULT_WRITETO_CLASSNAME = "de.mbaaba.google.GoogleCalendar";
+
+		private static final String FILTERS_SCRIPTS = "filters.scripts";
+
+		private static final String DEFAULT_FILTERS_SCRIPTS = "";
+
+	}
 
 	/**
 	 * A logger for this class.
@@ -49,8 +62,7 @@ public final class CalendarSyncTool {
 	 */
 	private static DateFormat logDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 
-	/** Default target calendar type. */
-	private static final String DEFAULT_WRITETO_CLASSNAME = GoogleCalendar.class.getName();
+	private static final long TEN_SECONDS = Units.SECOND * 10;
 
 	/** Used to read configuration parameter. */
 	private PropertyFileConfigurator configurator;
@@ -60,13 +72,17 @@ public final class CalendarSyncTool {
 	 */
 	private FileCalendar lastKnownCalendarState;
 
+	private SleepUtililty sleepUtililty;
+
 	/**
 	 * Instantiates a calendar converter.
 	 */
-	private CalendarSyncTool() {
+	CalendarSyncTool() {
 		configurator = new PropertyFileConfigurator("Notes2Google.properties");
 		lastKnownCalendarState = new FileCalendar();
 		lastKnownCalendarState.init(configurator);
+		sleepUtililty = new SleepUtililty(configurator);
+
 	}
 
 	/**
@@ -83,15 +99,19 @@ public final class CalendarSyncTool {
 				configurator = new PropertyFileConfigurator("Notes2Google.properties");
 				CommConfigUtil.init(configurator);
 
-				String readFromClassName = configurator.getProperty("calendar.from", NotesCalendar.class.getName());
+				String readFromClassName = configurator.getProperty(ConfigParameter.CALENDAR_FROM,
+						ConfigParameter.DEFAULT_CALENDAR_FROM);
 
 				println("Reading from calendar " + readFromClassName + " ... ");
 
 				AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
 				sourceCalendar.init(configurator);
 
-				long numDaysPast = configurator.getProperty("calendar.numDaysPast", 0);
-				long numDaysFuture = configurator.getProperty("calendar.numDaysFuture", DEFAULT_NUM_DAYS_INTO_FUTURE);
+				long numDaysPast = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_PAST,
+						ConfigParameter.DEFAULT_CALENDAR_NUM_DAYS_PAST);
+				long numDaysFuture = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_FUTURE,
+						ConfigParameter.DEFAULT_CALENDAR_NUM_DAYS_FUTURE);
+
 				Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
 				Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
 
@@ -120,31 +140,7 @@ public final class CalendarSyncTool {
 					}
 				}
 
-				int repeatEach = configurator.getProperty("repeatEach", DEFAULT_REPEAT_EACH);
-				int officeHoursStart = configurator.getProperty("officeHours.start", DEFAULT_OFFICEHOUR_START);
-				int officeHoursEnd = configurator.getProperty("officeHours.end", DEFAULT_OFFICEHOUR_END);
-				if (repeatEach > 0) {
-					Calendar now = new GregorianCalendar();
-					// TODO: 1: Handling of working-hours
-					// http://github.com/hwacookie/CalendarSyncTool/issues/issue/1
-					int day = now.get(Calendar.DAY_OF_WEEK);
-					int hour = now.get(Calendar.HOUR_OF_DAY);
-					while ((day == Calendar.SUNDAY) || (day == Calendar.SATURDAY)
-							|| ((hour < officeHoursStart) || (hour >= officeHoursEnd))) {
-						println("Not a working hour, sleeping for an hour!");
-						Thread.sleep(Units.HOUR * 1);
-						now = new GregorianCalendar();
-					}
-					int numMinutes = repeatEach;
-					println("Now sleeping for " + numMinutes + " minutes ...");
-					Thread.sleep(Units.MINUTE * numMinutes);
-				} else if (repeatEach == 0) {
-					println("Now sleeping for 10 seconds ...");
-					Thread.sleep(TEN_SECONDS);
-				} else if (repeatEach < 0) {
-					println("Exiting ...");
-					break;
-				}
+				sleepUtililty.sleepUntilNextRun();
 
 			} catch (Throwable e) {
 				// catch all exceptions because even if something goes wrong
@@ -185,7 +181,8 @@ public final class CalendarSyncTool {
 	 */
 	private void writeToTargetCalendar(ArrayList<ICalendarEntry> aNewEntries, ArrayList<ICalendarEntry> aObsoleteEntries)
 			throws Exception {
-		String writeToClassName = configurator.getProperty("calendar.to", DEFAULT_WRITETO_CLASSNAME);
+		String writeToClassName = configurator
+				.getProperty(ConfigParameter.CALENDAR_TO, ConfigParameter.DEFAULT_WRITETO_CLASSNAME);
 		println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
 
 		AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
@@ -237,7 +234,8 @@ public final class CalendarSyncTool {
 		ArrayList<ICalendarEntry> filteredEntries = new ArrayList<ICalendarEntry>();
 		List<ICalendarFilter> allFilters = new ArrayList<ICalendarFilter>();
 
-		String filterScriptNames = configurator.getProperty("filters.scripts", "");
+		String filterScriptNames = configurator.getProperty(ConfigParameter.FILTERS_SCRIPTS,
+				ConfigParameter.DEFAULT_FILTERS_SCRIPTS);
 
 		StringTokenizer tok = new StringTokenizer(filterScriptNames, ",");
 		while (tok.hasMoreTokens()) {
@@ -275,6 +273,16 @@ public final class CalendarSyncTool {
 			}
 		}
 		return filteredEntries;
+	}
+
+	/**
+	 * Prints a status message.
+	 * 
+	 * @param aMessage
+	 *            the string
+	 */
+	public static void print(String aMessage) {
+		System.out.print(logDateFormatter.format(new Date()) + " | " + aMessage);
 	}
 
 	/**

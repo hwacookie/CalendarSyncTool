@@ -74,7 +74,7 @@ public class FileCalendar extends AbstractCalendar {
 		XStream xStream = new XStream();
 		try {
 			allEntries = (ArrayList<CalendarEntry>) xStream.fromXML(new FileInputStream(fileName));
-		} catch (FileNotFoundException e) {
+		} catch (Throwable e) {
 			LOG.error("Warning: " + fileName + " could not be opened for reading, using empty list!", e);
 			CalendarSyncTool.printerr("Warning: " + fileName + " could not be opened for reading, using empty list!");
 			allEntries = new ArrayList<CalendarEntry>();
