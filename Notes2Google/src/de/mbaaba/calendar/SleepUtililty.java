@@ -25,9 +25,21 @@ public class SleepUtililty {
 
 		private static final int DEFAULT_REPEAT_EACH_OFFICEHOURS = 20;
 
-		private static final int DEFAULT_REPEAT_EACH_NONOFFICEHOURS = 20;
+		private static final int DEFAULT_REPEAT_EACH_NONOFFICEHOURS = 120;
 
 		private static final String DEFAULT_OFFICE_HOURS_WORKDAYS = "1 2 3 4 5";
+		
+		private void dumpConfig() {
+			dumpValue(ConfigParameter.OFFICE_HOURS_START);
+			dumpValue(ConfigParameter.OFFICE_HOURS_END);
+			dumpValue(ConfigParameter.OFFICE_HOURS_WORKDAYS);
+			dumpValue(ConfigParameter.REPEAT_EACH_OFFICEHOURS);
+			dumpValue(ConfigParameter.REPEAT_EACH_NONOFFICEHOURS);
+		}
+
+		private void dumpValue(String aParamName) {
+			CalendarSyncTool.println(aParamName+"="+configurator.getProperty(aParamName, "<set-value-for-"+aParamName+">"));
+		}		
 	}
 
 	private static final long TEN_SECONDS = Units.SECOND * 10;
@@ -36,7 +48,10 @@ public class SleepUtililty {
 
 	public SleepUtililty(Configurator aConfigurator) {
 		configurator = aConfigurator;
+		new ConfigParameter().dumpConfig();
 	}
+
+
 
 	void sleepUntilNextRun() {
 
