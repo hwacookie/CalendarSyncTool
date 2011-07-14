@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 import de.mbaaba.notes.NotesCalendarEntry;
 import de.mbaaba.util.CommConfigUtil;
 
+//CHECKSTYLE:OFF  ... show some mercy on hacked unit-tests.
 public class TestFixLocationFilterTest extends TestCase {
 	private static final String SIEVERSUFER_7_12359_BERLIN_DEUTSCHLAND = "Sieversufer 7, 12359 Berlin, Deutschland";
 

@@ -16,7 +16,7 @@ import de.mbaaba.notes.NotesPerson;
 /**
  * A factory for finding Person objects.
  */
-public final class PersonFactory {
+public abstract class PersonFactory {
 
 	/** 
 	 * No initialization.

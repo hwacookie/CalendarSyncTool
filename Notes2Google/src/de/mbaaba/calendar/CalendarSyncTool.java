@@ -22,7 +22,7 @@ import de.mbaaba.util.Units;
 /**
  * The Class Notes2GoogleExporter.
  */
-public class CalendarSyncTool {
+public final class CalendarSyncTool {
 
 	/**
 	 * Encapsulates constants for configuration parameters and their default values.
@@ -77,7 +77,7 @@ public class CalendarSyncTool {
 	/**
 	 * Instantiates a calendar converter.
 	 */
-	public CalendarSyncTool() {
+	private CalendarSyncTool() {
 		configurator = new PropertyFileConfigurator("Notes2Google.properties");
 		lastKnownCalendarState = new FileCalendar();
 		lastKnownCalendarState.init(configurator);
@@ -208,20 +208,6 @@ public class CalendarSyncTool {
 	}
 
 	/**
-	 * The main method.
-	 * 
-	 * @param arAgs
-	 *            the arguments
-	 * @throws Exception
-	 *             the exception
-	 */
-	public static void main(String[] aAgs) throws Exception {
-		CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
-		notes2GoogleExporter.syncLoop();
-
-	}
-
-	/**
 	 * Runs all filters given in the configuration file.
 	 * 
 	 * These filters will either remove entries completely, or they may change
@@ -349,4 +335,16 @@ public class CalendarSyncTool {
 		return false;
 	}
 
+	/**
+	 * The main method.
+	 * 
+	 * @param arAgs
+	 *            the arguments
+	 * @throws Exception
+	 *             the exception
+	 */
+	public static void main(String[] aAgs) throws Exception {
+		CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
+		notes2GoogleExporter.syncLoop();
+	}
 }

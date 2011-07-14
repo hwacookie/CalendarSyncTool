@@ -1,3 +1,10 @@
+/* --------------------------------------------------------------------------
+ * @author Hauke Walden
+ * @created 28.06.2011 
+ * Copyright 2011 by Hauke Walden 
+ * All rights reserved.
+ * --------------------------------------------------------------------------
+ */
 package de.mbaaba.calendar;
 
 import java.util.Calendar;
@@ -6,6 +13,7 @@ import java.util.GregorianCalendar;
 import junit.framework.TestCase;
 import de.mbaaba.util.Units;
 
+//CHECKSTYLE:OFF  ... show some mercy on hacked unit-tests.
 public class TestSleepUtility extends TestCase {
 
 	protected boolean passed;

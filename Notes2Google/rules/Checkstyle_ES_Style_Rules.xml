@@ -153,6 +153,7 @@
   </module>
   <module name="Header">
     <property name="header" value="/* --------------------------------------------------------------------------"/>
+    <property name="fileExtensions" value="*.java"/>
   </module>
   <module name="Translation">
     <property name="severity" value="ignore"/>
