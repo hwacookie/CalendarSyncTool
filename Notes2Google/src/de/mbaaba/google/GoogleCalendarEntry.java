@@ -32,32 +32,32 @@ public class GoogleCalendarEntry extends CalendarEntry {
 
 	public GoogleCalendarEntry(CalendarEventEntry aEntry) {
 
-		Date lastModified = new Date(aEntry.getUpdated().getValue());
+		final Date lastModified = new Date(aEntry.getUpdated().getValue());
 		setLastModified(lastModified);
-		List<EventWho> participants = aEntry.getParticipants();
-		for (EventWho eventWho : participants) {
+		final List<EventWho> participants = aEntry.getParticipants();
+		for (final EventWho eventWho : participants) {
 			getAttendees().add(new GooglePerson(eventWho));
 		}
 		setBody(aEntry.getPlainTextContent());
 
-		List<com.google.gdata.data.Person> list = aEntry.getAuthors();
+		final List<com.google.gdata.data.Person> list = aEntry.getAuthors();
 		if ((list != null) && (list.size() > 0)) {
-			com.google.gdata.data.Person firstAuthor = list.get(0);
+			final com.google.gdata.data.Person firstAuthor = list.get(0);
 			if (firstAuthor != null) {
 				setChair(new GooglePerson(firstAuthor));
 			}
 		}
 
-		for (When when : aEntry.getTimes()) {
+		for (final When when : aEntry.getTimes()) {
 			if (when != null) {
 				addStartDate(new Date(when.getStartTime().getValue()));
 				addEndDate(new Date(when.getEndTime().getValue()));
 			}
 		}
 
-		List<Where> locations = aEntry.getLocations();
+		final List<Where> locations = aEntry.getLocations();
 		if ((locations != null) && (locations.size() > 0)) {
-			Where where = locations.get(0);
+			final Where where = locations.get(0);
 			if (where != null) {
 				setLocation(where.getValueString());
 			}
@@ -69,7 +69,7 @@ public class GoogleCalendarEntry extends CalendarEntry {
 			setSubject("No Summary");
 		}
 		setGoogleID(aEntry.getId());
-		String notesID = "";
+		final String notesID = "";
 		setUniqueID(notesID);
 	}
 

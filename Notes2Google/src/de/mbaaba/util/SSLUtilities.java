@@ -80,7 +80,7 @@ public final class SSLUtilities {
 		try {
 			context = SSLContext.getInstance("SSL");
 			context.init(null, trustManagers, new SecureRandom());
-		} catch (GeneralSecurityException gse) {
+		} catch (final GeneralSecurityException gse) {
 			throw new IllegalStateException(gse.getMessage());
 		} // catch
 		HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
@@ -104,6 +104,7 @@ public final class SSLUtilities {
 		 *            the SSL session used on the connection to host.
 		 * @return the true boolean value indicating the host name is trusted.
 		 */
+		@Override
 		public boolean verify(String aHostname, javax.net.ssl.SSLSession aSession) {
 			return (true);
 		}
@@ -131,6 +132,7 @@ public final class SSLUtilities {
 		 * @param aAuthType
 		 *            the authentication type based on the client certificate.
 		 */
+		@Override
 		public void checkClientTrusted(X509Certificate[] aChain, String aAuthType) {
 		}
 
@@ -143,6 +145,7 @@ public final class SSLUtilities {
 		 * @param aAuthType
 		 *            the key exchange algorithm used.
 		 */
+		@Override
 		public void checkServerTrusted(X509Certificate[] aChain, String aAuthType) {
 		}
 
@@ -152,6 +155,7 @@ public final class SSLUtilities {
 		 * 
 		 * @return a empty array of issuer certificates.
 		 */
+		@Override
 		public X509Certificate[] getAcceptedIssuers() {
 			return (ACCEPTED_ISSUERS);
 		}

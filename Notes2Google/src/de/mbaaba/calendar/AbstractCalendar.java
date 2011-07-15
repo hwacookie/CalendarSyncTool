@@ -60,7 +60,7 @@ public abstract class AbstractCalendar {
 	 *            the calendar entries to be added.
 	 */
 	public final void putList(List<ICalendarEntry> aCalendarEntries) {
-		for (ICalendarEntry calendarEntry : aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
 			put(calendarEntry);
 		}
 	}
@@ -90,7 +90,7 @@ public abstract class AbstractCalendar {
 	 *            the list of entries to be deleted.
 	 */
 	public void deleteList(List<ICalendarEntry> aCalendarEntries) {
-		for (ICalendarEntry calendarEntry : aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
 			delete(calendarEntry);
 		}
 	}

@@ -103,7 +103,7 @@ public final class LoggingUtilityProperties {
 	 * @return state repository startup.
 	 */
 	public static boolean exitOnFatal() {
-		String s = PropertiesHelper.getProperty(LOG_EXIT_ON_FATAL, DEFAULT_LOG_EXIT_ON_FATAL);
+		final String s = PropertiesHelper.getProperty(LOG_EXIT_ON_FATAL, DEFAULT_LOG_EXIT_ON_FATAL);
 		return s.equalsIgnoreCase("true");
 	}
 
@@ -112,7 +112,7 @@ public final class LoggingUtilityProperties {
 	 * @return the logmode, <code>true</code> for devel-mode (the old mode) and <code>false</code> for admin-mode.
 	 */
 	public static boolean isDevelLogMode() {
-		String s = PropertiesHelper.getProperty(LOG_MODE, DEFAULT_LOGMODE);
+		final String s = PropertiesHelper.getProperty(LOG_MODE, DEFAULT_LOGMODE);
 		return s.equalsIgnoreCase("true");
 	}
 
@@ -147,7 +147,7 @@ public final class LoggingUtilityProperties {
 	public static int getLogport() {
 		try {
 			return Integer.parseInt(PropertiesHelper.getProperty(LOG_PORT, String.valueOf(DEFAULT_LOGPORT)));
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			System.out.println("illegal logport specified, using default " + DEFAULT_LOGPORT);
 			return DEFAULT_LOGPORT;
 		}
@@ -190,7 +190,7 @@ public final class LoggingUtilityProperties {
 	 * @return true, if prefixes shall be used for logger names.
 	 */
 	public static boolean isUsePrefix() {
-		String s = PropertiesHelper.getProperty(LOG_CREATE_PREFIX, DEFAULT_LOG_CREATE_PREFIX);
+		final String s = PropertiesHelper.getProperty(LOG_CREATE_PREFIX, DEFAULT_LOG_CREATE_PREFIX);
 		return s.equalsIgnoreCase("true");
 	}
 
@@ -199,7 +199,7 @@ public final class LoggingUtilityProperties {
 	 * @return true, if commons logging shall be enhanced.
 	 */
 	public static boolean isEnhanceCommonsLogging() {
-		String s = PropertiesHelper.getProperty(ENHANCE_COMMONS_LOGGING, DEFAULT_ENHANCE_COMMONS_LOGGING);
+		final String s = PropertiesHelper.getProperty(ENHANCE_COMMONS_LOGGING, DEFAULT_ENHANCE_COMMONS_LOGGING);
 		return s.equalsIgnoreCase("true");
 	}
 
@@ -210,7 +210,7 @@ public final class LoggingUtilityProperties {
 	public static int getAsyncBufferSize() {
 		try {
 			return Integer.parseInt(PropertiesHelper.getProperty(ASYNC_BUFFER_SIZE, String.valueOf(DEFAULT_ASYNC_BUFFER_SIZE)));
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			System.out.println("illegal async buffer size specified, using default " + DEFAULT_ASYNC_BUFFER_SIZE);
 			return DEFAULT_ASYNC_BUFFER_SIZE;
 		}
@@ -224,7 +224,7 @@ public final class LoggingUtilityProperties {
 		AppenderType at;
 		try {
 			at = AppenderType.valueOf(PropertiesHelper.getProperty(LOG_APPENDER, AppenderType.STANDARD.name()).toUpperCase());
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			System.out.println("illegal appender specified, using default " + DEFAULT_LOG_APPENDER.name());
 			return DEFAULT_LOG_APPENDER;
 		}

@@ -58,6 +58,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Logger#isDebugEnabled()
 	 */
+	@Override
 	public boolean isDebugEnabled() {
 		return logger.isDebugEnabled();
 	}
@@ -82,6 +83,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#debug(java.lang.Object)
 	 */
+	@Override
 	public void debug(Object pObj) {
 		logger.debug(pObj);
 	}
@@ -126,6 +128,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Logger#isInfoEnabled()
 	 */
+	@Override
 	public boolean isInfoEnabled() {
 		return logger.isInfoEnabled();
 	}
@@ -150,6 +153,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Category#info()
 	 */
+	@Override
 	public void info(Object pObj) {
 		logger.info(pObj);
 	}
@@ -174,6 +178,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.log4j.Category#warn()
 	 */
+	@Override
 	public void warn(Object pObj) {
 		logger.warn(pObj);
 	}
@@ -194,7 +199,7 @@ public class Logger implements Log {
 	 * @return the interpolated string if the given object was a string, the object otherwise
 	 */
 	private Object interpolate(Object pObject, Object... pParams) {
-		if (pObject instanceof String && pParams != null) {
+		if ((pObject instanceof String) && (pParams != null)) {
 			return interpolate((String) pObject, pParams);
 		} else {
 			return pObject;
@@ -228,12 +233,12 @@ public class Logger implements Log {
 	 * @return  the interpolated string
 	 */
 	private String interpolateParameters(String pString, Object... pParams) {
-		StringTokenizer tokens = new StringTokenizer(pString, "#{}", true);
-		StringBuilder builder = new StringBuilder(pString.length());
+		final StringTokenizer tokens = new StringTokenizer(pString, "#{}", true);
+		final StringBuilder builder = new StringBuilder(pString.length());
 		while (tokens.hasMoreTokens()) {
-			String tok = tokens.nextToken();
+			final String tok = tokens.nextToken();
 			if ("#".equals(tok) && tokens.hasMoreTokens()) {
-				String nextTok = tokens.nextToken();
+				final String nextTok = tokens.nextToken();
 				int index;
 				try {
 					index = Integer.parseInt(nextTok.substring(0, 1));
@@ -242,7 +247,7 @@ public class Logger implements Log {
 					} else {
 						builder.append(pParams[index]).append(nextTok.substring(1));
 					}
-				} catch (NumberFormatException nfe) {
+				} catch (final NumberFormatException nfe) {
 					builder.append("#").append(nextTok);
 				}
 			} else {
@@ -256,6 +261,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#debug(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void debug(Object pMessage, Throwable pT) {
 		logger.debug(pMessage, pT);
 
@@ -265,6 +271,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#error(java.lang.Object)
 	 */
+	@Override
 	public void error(Object pMessage) {
 		logger.error(pMessage);
 	}
@@ -273,6 +280,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#error(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void error(Object pMessage, Throwable pT) {
 		logger.error(pMessage, pT);
 	}
@@ -281,6 +289,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#fatal(java.lang.Object)
 	 */
+	@Override
 	public void fatal(Object pMessage) {
 		logger.fatal(pMessage);
 		if (!noExitOnFatal) {
@@ -292,6 +301,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#fatal(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void fatal(Object pMessage, Throwable pT) {
 		logger.fatal(pMessage, pT);
 		if (!noExitOnFatal) {
@@ -303,6 +313,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#info(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void info(Object pMessage, Throwable pT) {
 		logger.info(pMessage, pT);
 	}
@@ -311,6 +322,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#isErrorEnabled()
 	 */
+	@Override
 	public boolean isErrorEnabled() {
 		return true;
 	}
@@ -319,6 +331,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#isFatalEnabled()
 	 */
+	@Override
 	public boolean isFatalEnabled() {
 		return true;
 	}
@@ -327,6 +340,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#isTraceEnabled()
 	 */
+	@Override
 	public boolean isTraceEnabled() {
 		return logger.isTraceEnabled();
 	}
@@ -335,6 +349,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#isWarnEnabled()
 	 */
+	@Override
 	public boolean isWarnEnabled() {
 		return true;
 	}
@@ -343,6 +358,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#trace(java.lang.Object)
 	 */
+	@Override
 	public void trace(Object pMessage) {
 		logger.trace(pMessage);
 	}
@@ -351,6 +367,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#trace(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void trace(Object pMessage, Throwable pT) {
 		logger.trace(pMessage, pT);
 	}
@@ -359,6 +376,7 @@ public class Logger implements Log {
 	 * {@inheritDoc}
 	 * @see org.apache.commons.logging.Log#warn(java.lang.Object, java.lang.Throwable)
 	 */
+	@Override
 	public void warn(Object pMessage, Throwable pT) {
 		logger.warn(pMessage, pT);
 	}

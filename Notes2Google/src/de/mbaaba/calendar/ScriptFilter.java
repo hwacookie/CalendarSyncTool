@@ -36,9 +36,9 @@ public class ScriptFilter implements ICalendarFilter {
 		file = new File(aScriptName);
 		reader = new FileReader(file);
 
-		String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
+		final String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
 
-		ScriptEngineManager manager = new ScriptEngineManager();
+		final ScriptEngineManager manager = new ScriptEngineManager();
 		scriptEngine = manager.getEngineByExtension(extension);
 		scriptEngine.put("configurator", aConfigurator);
 	}
@@ -48,11 +48,12 @@ public class ScriptFilter implements ICalendarFilter {
 	 *
 	 * @see de.mbaaba.calendar.ICalendarFilter#passes(de.mbaaba.calendar.ICalendarEntry)
 	 */
+	@Override
 	public boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception {
 		scriptEngine.put("calendarEntry", aParamCalendarEntry);
 		scriptEngine.eval(reader);
 
-		boolean returnValue = (Boolean) ((Invocable) scriptEngine).invokeFunction("filter");
+		final boolean returnValue = (Boolean) ((Invocable) scriptEngine).invokeFunction("filter");
 		return returnValue;
 	}
 

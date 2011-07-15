@@ -22,18 +22,22 @@ import de.mbaaba.util.Configurator;
  * Makes sense for debugging, only.
  */
 public class ScreenDumpCalendar extends AbstractCalendar {
+	@Override
 	public void init(Configurator aConfigurator) throws Exception {
 	}
 
+	@Override
 	public void close() {
 	}
 
+	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
 		return new ArrayList<ICalendarEntry>();
 	}
 
+	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
-		String string = aCalendarEntry.toString();
+		final String string = aCalendarEntry.toString();
 		System.out.println(string);
 	}
 

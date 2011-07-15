@@ -34,8 +34,8 @@ public class NotesPerson extends Person {
 	}
 
 	private static void openAddressDB(Session aSession) throws NotesException {
-		Vector<?> books = aSession.getAddressBooks();
-		Enumeration<?> e = books.elements();
+		final Vector<?> books = aSession.getAddressBooks();
+		final Enumeration<?> e = books.elements();
 		Database db2;
 		while (e.hasMoreElements()) {
 			db2 = (Database) e.nextElement();
@@ -49,30 +49,30 @@ public class NotesPerson extends Person {
 	}
 
 	public static List<Person> findPerson(String aName) throws ItemNotFoundException {
-		List<Person> res = new ArrayList<Person>();
+		final List<Person> res = new ArrayList<Person>();
 		try {
-			View userView = addressDB.getView("($Users)");
+			final View userView = addressDB.getView("($Users)");
 
-			int indexOf = aName.indexOf("/");
+			final int indexOf = aName.indexOf("/");
 			if (indexOf > 0) {
 				aName = aName.substring(0, indexOf);
 			}
 
-			DocumentCollection allDocumentsByKey = userView.getAllDocumentsByKey(aName);
+			final DocumentCollection allDocumentsByKey = userView.getAllDocumentsByKey(aName);
 			Document firstDocument = allDocumentsByKey.getFirstDocument();
 			while (firstDocument != null) {
-				Vector<?> items = firstDocument.getItems();
-				NotesPerson person = new NotesPerson();
-				for (Object item : items) {
+				final Vector<?> items = firstDocument.getItems();
+				final NotesPerson person = new NotesPerson();
+				for (final Object item : items) {
 					if (item instanceof Item) {
-						Item item2 = (Item) item;
+						final Item item2 = (Item) item;
 						person.mapItem(item2);
 					}
 				}
 				res.add(person);
 				firstDocument = allDocumentsByKey.getNextDocument();
 			}
-		} catch (NotesException e) {
+		} catch (final NotesException e) {
 			throw new ItemNotFoundException("Person could not be found in Database.", e);
 		}
 		return res;
@@ -80,7 +80,7 @@ public class NotesPerson extends Person {
 
 	private void mapItem(Item aItem) throws NotesException {
 
-		String itemName = aItem.getName();
+		final String itemName = aItem.getName();
 		if (itemName.equals("FirstName")) {
 			setFirstName(aItem.getValueString());
 		} else if (itemName.equals("LastName")) {

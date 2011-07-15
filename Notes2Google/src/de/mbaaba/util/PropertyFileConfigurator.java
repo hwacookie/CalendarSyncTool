@@ -51,7 +51,7 @@ public class PropertyFileConfigurator implements Configurator {
 			if (resourceStream != null) {
 				props.load(resourceStream);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			OutputManager.printerr("The file " + propFileName + " could not be found!", e);
 			OutputManager.printerr("Copy the template-property file, make your changes and rename it to " + propFileName + ".");
 			OutputManager.printerr("I will exit now.");
@@ -65,6 +65,7 @@ public class PropertyFileConfigurator implements Configurator {
 	 * @see de.biotronik.Configurator.adapter.AdapterConfigurator#getProperty(java.lang.String,
 	 *      java.lang.String)
 	 */
+	@Override
 	public String getProperty(String aPropertyName, String aDefaultValue) {
 		return props.getProperty(aPropertyName, aDefaultValue);
 	}
@@ -75,21 +76,23 @@ public class PropertyFileConfigurator implements Configurator {
 	 * @see de.biotronik.Configurator.adapter.AdapterConfigurator#setProperty(java.lang.String,
 	 *      java.lang.String)
 	 */
+	@Override
 	public void setProperty(String aPropertyName, String aValue) {
 		props.setProperty(aPropertyName, aValue);
 	}
 
+	@Override
 	public int getProperty(String aPropertyName, int aDefaultValue) {
 		try {
-			String s = props.getProperty(aPropertyName, "" + aDefaultValue);
+			final String s = props.getProperty(aPropertyName, "" + aDefaultValue);
 			if (s.startsWith("<setup-")) {
 				OutputManager.printerr("Missing a value for " + aPropertyName + " in the property file, please fix!");
 				OutputManager.printerr("I will exit now.");
 				System.exit(1);
 			}
-			Integer res = Integer.parseInt(s);
+			final Integer res = Integer.parseInt(s);
 			return res.intValue();
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			return aDefaultValue;
 		}
 	}

@@ -24,7 +24,7 @@ public final class PropertiesHelper {
 	 * @return string stored in property.
 	 */
 	protected static String getProperty(String pKey, String pDef) {
-		String str = System.getProperty(pKey, pDef);
+		final String str = System.getProperty(pKey, pDef);
 		if (str != null) {
 			return str.trim();
 		} else {

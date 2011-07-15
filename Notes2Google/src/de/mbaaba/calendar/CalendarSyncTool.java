@@ -91,7 +91,7 @@ public final class CalendarSyncTool {
 	private void syncLoop() {
 
 		// initially, try to read all calendar entries that we know about from the last run. 
-		ArrayList<ICalendarEntry> oldSourceEntries = lastKnownCalendarState.readCalendarEntries(null, null);
+		final ArrayList<ICalendarEntry> oldSourceEntries = lastKnownCalendarState.readCalendarEntries(null, null);
 
 		while (true) {
 
@@ -100,26 +100,26 @@ public final class CalendarSyncTool {
 				configurator = new PropertyFileConfigurator("Notes2Google.properties");
 				CommConfigUtil.init(configurator);
 
-				String readFromClassName = configurator.getProperty(ConfigParameter.CALENDAR_FROM,
+				final String readFromClassName = configurator.getProperty(ConfigParameter.CALENDAR_FROM,
 						ConfigParameter.DEFAULT_CALENDAR_FROM);
 
 				OutputManager.println("Reading from calendar " + readFromClassName + " ... ");
 
-				AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
+				final AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
 				sourceCalendar.init(configurator);
 
-				long numDaysPast = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_PAST,
+				final long numDaysPast = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_PAST,
 						ConfigParameter.DEFAULT_CALENDAR_NUM_DAYS_PAST);
-				long numDaysFuture = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_FUTURE,
+				final long numDaysFuture = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_FUTURE,
 						ConfigParameter.DEFAULT_CALENDAR_NUM_DAYS_FUTURE);
 
-				Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
-				Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
+				final Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
+				final Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
 
 				ArrayList<ICalendarEntry> sourceEntriesUnfiltered = null;
 				try {
 					sourceEntriesUnfiltered = sourceCalendar.readCalendarEntries(startDate, endDate);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					LOG.warn("Error while reading entries from source calendar!", e);
 				}
 
@@ -127,10 +127,10 @@ public final class CalendarSyncTool {
 				// wrong. In that case, do not write anything to the target
 				// calendar
 				if (sourceEntriesUnfiltered != null) {
-					ArrayList<ICalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
+					final ArrayList<ICalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
 
-					ArrayList<ICalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
-					ArrayList<ICalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
+					final ArrayList<ICalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
+					final ArrayList<ICalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
 
 					if ((newEntries.size() > 0) || (obsoleteEntries.size() > 0)) {
 						writeToTargetCalendar(newEntries, obsoleteEntries);
@@ -143,7 +143,7 @@ public final class CalendarSyncTool {
 
 				sleepUtililty.sleepUntilNextRun();
 
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				// catch all exceptions because even if something goes wrong
 				// while reading/writing entries, we never want to break the
 				// while-true-loop.
@@ -152,7 +152,7 @@ public final class CalendarSyncTool {
 				OutputManager.println("Now sleeping for 10 seconds ...");
 				try {
 					Thread.sleep(TEN_SECONDS);
-				} catch (InterruptedException e1) {
+				} catch (final InterruptedException e1) {
 					// ignore
 				}
 			}
@@ -182,16 +182,16 @@ public final class CalendarSyncTool {
 	 */
 	private void writeToTargetCalendar(ArrayList<ICalendarEntry> aNewEntries, ArrayList<ICalendarEntry> aObsoleteEntries)
 			throws Exception {
-		String writeToClassName = configurator
+		final String writeToClassName = configurator
 				.getProperty(ConfigParameter.CALENDAR_TO, ConfigParameter.DEFAULT_WRITETO_CLASSNAME);
 		OutputManager.println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
 
-		AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
+		final AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
 		OutputManager.println("Initializing targetCalendar");
 		targetCalendar.init(configurator);
 
-		List<ICalendarEntry> toBeDeletedList = new ArrayList<ICalendarEntry>();
-		for (ICalendarEntry calendarEntry : aObsoleteEntries) {
+		final List<ICalendarEntry> toBeDeletedList = new ArrayList<ICalendarEntry>();
+		for (final ICalendarEntry calendarEntry : aObsoleteEntries) {
 			if (!listHasEntryWithID(aNewEntries, calendarEntry)) {
 				toBeDeletedList.add(calendarEntry);
 			}
@@ -218,19 +218,19 @@ public final class CalendarSyncTool {
 	 * @return The list of filtered entries after the filters have been applied.
 	 */
 	private ArrayList<ICalendarEntry> runFilters(ArrayList<ICalendarEntry> aUnfilteredList) {
-		ArrayList<ICalendarEntry> filteredEntries = new ArrayList<ICalendarEntry>();
-		List<ICalendarFilter> allFilters = new ArrayList<ICalendarFilter>();
+		final ArrayList<ICalendarEntry> filteredEntries = new ArrayList<ICalendarEntry>();
+		final List<ICalendarFilter> allFilters = new ArrayList<ICalendarFilter>();
 
-		String filterScriptNames = configurator.getProperty(ConfigParameter.FILTERS_SCRIPTS,
+		final String filterScriptNames = configurator.getProperty(ConfigParameter.FILTERS_SCRIPTS,
 				ConfigParameter.DEFAULT_FILTERS_SCRIPTS);
 
-		StringTokenizer tok = new StringTokenizer(filterScriptNames, ",");
+		final StringTokenizer tok = new StringTokenizer(filterScriptNames, ",");
 		while (tok.hasMoreTokens()) {
-			String scriptName = tok.nextToken();
+			final String scriptName = tok.nextToken();
 			try {
-				ScriptFilter filter = new ScriptFilter(scriptName, configurator);
+				final ScriptFilter filter = new ScriptFilter(scriptName, configurator);
 				allFilters.add(filter);
-			} catch (FileNotFoundException e) {
+			} catch (final FileNotFoundException e) {
 				OutputManager.printerr("Found no script named \"" + scriptName + "\"", e);
 			}
 		}
@@ -238,16 +238,16 @@ public final class CalendarSyncTool {
 		// apply the fix location filters
 		allFilters.add(new FixLocationFilter(configurator));
 
-		for (ICalendarEntry calendarEntry : aUnfilteredList) {
+		for (final ICalendarEntry calendarEntry : aUnfilteredList) {
 			boolean skipThisEntry = false;
 
-			for (ICalendarFilter filter : allFilters) {
+			for (final ICalendarFilter filter : allFilters) {
 				try {
 					if (!filter.passes(calendarEntry)) {
 						skipThisEntry = true;
 						break;
 					}
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					LOG.error(e.getMessage(), e);
 					skipThisEntry = true;
 					break;
@@ -272,7 +272,7 @@ public final class CalendarSyncTool {
 	 */
 	private void copyList(ArrayList<ICalendarEntry> aSourceList, ArrayList<ICalendarEntry> aTargetList) {
 		aTargetList.clear();
-		for (ICalendarEntry calendarEntry : aSourceList) {
+		for (final ICalendarEntry calendarEntry : aSourceList) {
 			aTargetList.add(new CalendarEntry(calendarEntry));
 		}
 	}
@@ -288,8 +288,8 @@ public final class CalendarSyncTool {
 	 * @return the new entries
 	 */
 	private ArrayList<ICalendarEntry> getNewEntries(ArrayList<ICalendarEntry> aNewList, ArrayList<ICalendarEntry> aOldList) {
-		ArrayList<ICalendarEntry> newEntries = new ArrayList<ICalendarEntry>();
-		for (ICalendarEntry newEntry : aNewList) {
+		final ArrayList<ICalendarEntry> newEntries = new ArrayList<ICalendarEntry>();
+		for (final ICalendarEntry newEntry : aNewList) {
 			if (!aOldList.contains(newEntry)) {
 				newEntries.add(newEntry);
 			}
@@ -308,8 +308,8 @@ public final class CalendarSyncTool {
 	 * @return the obsolete entries
 	 */
 	private ArrayList<ICalendarEntry> getObsoleteEntries(ArrayList<ICalendarEntry> aNewList, ArrayList<ICalendarEntry> aOldList) {
-		ArrayList<ICalendarEntry> obsoleteEntries = new ArrayList<ICalendarEntry>();
-		for (ICalendarEntry oldEntry : aOldList) {
+		final ArrayList<ICalendarEntry> obsoleteEntries = new ArrayList<ICalendarEntry>();
+		for (final ICalendarEntry oldEntry : aOldList) {
 			if (!aNewList.contains(oldEntry)) {
 				obsoleteEntries.add(oldEntry);
 			}
@@ -327,7 +327,7 @@ public final class CalendarSyncTool {
 	 * @return true, if successful
 	 */
 	private boolean listHasEntryWithID(ArrayList<ICalendarEntry> aList, ICalendarEntry aEntry) {
-		for (ICalendarEntry calendarEntry : aList) {
+		for (final ICalendarEntry calendarEntry : aList) {
 			if (calendarEntry.getUniqueID().equals(aEntry.getUniqueID())) {
 				return true;
 			}
@@ -344,7 +344,7 @@ public final class CalendarSyncTool {
 	 *             the exception
 	 */
 	public static void main(String[] aAgs) throws Exception {
-		CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
+		final CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
 		notes2GoogleExporter.syncLoop();
 	}
 }

@@ -23,15 +23,16 @@ public class TestSleepUtility extends TestCase {
 
 		final Thread parent = Thread.currentThread();
 
-		Thread guard = new Thread(new Runnable() {
+		final Thread guard = new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(aTimeout * Units.SECOND);
 					System.err.println("The test has failed, the sleep took too long!");
 					passed = false;
 					parent.interrupt();
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					passed = true;
 				}
 			}
@@ -41,16 +42,16 @@ public class TestSleepUtility extends TestCase {
 	}
 
 	public void testIsOfficehour() {
-		ConfiguratorForTests configurator = new ConfiguratorForTests();
-		GregorianCalendar cal = new GregorianCalendar();
+		final ConfiguratorForTests configurator = new ConfiguratorForTests();
+		final GregorianCalendar cal = new GregorianCalendar();
 
 		configurator.setProperty("officeHours.start", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
 		configurator.setProperty("officeHours.end", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
 		configurator.setProperty("officeHours.workdays", "" + cal.get(Calendar.DAY_OF_WEEK));
 
-		SleepUtililty sleepUtililty = new SleepUtililty(configurator);
+		final SleepUtililty sleepUtililty = new SleepUtililty(configurator);
 
-		long workdate = cal.getTimeInMillis();
+		final long workdate = cal.getTimeInMillis();
 		boolean inOfficehour = sleepUtililty.isInOfficehour(workdate);
 		assertTrue("This should be an officehour!", inOfficehour);
 
@@ -63,8 +64,8 @@ public class TestSleepUtility extends TestCase {
 
 	public void testSleepUntilOnWorkdays() {
 
-		ConfiguratorForTests configurator = new ConfiguratorForTests();
-		GregorianCalendar cal = new GregorianCalendar();
+		final ConfiguratorForTests configurator = new ConfiguratorForTests();
+		final GregorianCalendar cal = new GregorianCalendar();
 
 		configurator.setProperty("officeHours.start", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
 		configurator.setProperty("officeHours.end", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
@@ -72,13 +73,13 @@ public class TestSleepUtility extends TestCase {
 		configurator.setProperty("repeatEach.officehours", "1");
 		configurator.setProperty("repeatEach.nonofficehours", "2");
 
-		SleepUtililty sleepUtililty = new SleepUtililty(configurator);
+		final SleepUtililty sleepUtililty = new SleepUtililty(configurator);
 
-		Thread guard = guardTimer(63);
+		final Thread guard = guardTimer(63);
 
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 		sleepUtililty.sleepUntilNextRun();
-		long duration = System.currentTimeMillis() - start;
+		final long duration = System.currentTimeMillis() - start;
 
 		stopGuardTimer(guard);
 
@@ -96,14 +97,14 @@ public class TestSleepUtility extends TestCase {
 	}
 
 	public void testSleepUntilOnNonWorkdays() {
-		ConfiguratorForTests configurator = new ConfiguratorForTests();
-		GregorianCalendar cal = new GregorianCalendar();
+		final ConfiguratorForTests configurator = new ConfiguratorForTests();
+		final GregorianCalendar cal = new GregorianCalendar();
 
 		configurator.setProperty("officeHours.start", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
 		configurator.setProperty("officeHours.end", String.valueOf(cal.get(Calendar.HOUR_OF_DAY)));
 		configurator.setProperty("repeatEach.nonofficehours", "2");
 
-		SleepUtililty sleepUtililty = new SleepUtililty(configurator);
+		final SleepUtililty sleepUtililty = new SleepUtililty(configurator);
 
 		// make sure we are not in an offcehour
 		if (cal.get(Calendar.DAY_OF_WEEK) == 0) {
@@ -112,11 +113,11 @@ public class TestSleepUtility extends TestCase {
 			configurator.setProperty("officeHours.workdays", "0");
 		}
 
-		Thread guard = guardTimer(123);
+		final Thread guard = guardTimer(123);
 
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 		sleepUtililty.sleepUntilNextRun();
-		long duration = System.currentTimeMillis() - start;
+		final long duration = System.currentTimeMillis() - start;
 
 		stopGuardTimer(guard);
 

@@ -29,9 +29,9 @@ public final class ClearGoogle {
 	}
 
 	public static void clearGoogle() throws Exception {
-		Configurator aConfigurator = new PropertyFileConfigurator("Notes2Google.properties");
+		final Configurator aConfigurator = new PropertyFileConfigurator("Notes2Google.properties");
 		CommConfigUtil.init(aConfigurator);
-		GoogleCalendar calendar = new GoogleCalendar();
+		final GoogleCalendar calendar = new GoogleCalendar();
 		calendar.init(aConfigurator);
 		calendar.deleteAllEntries();
 	}

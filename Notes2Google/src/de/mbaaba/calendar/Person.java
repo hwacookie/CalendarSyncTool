@@ -33,7 +33,7 @@ public class Person {
 	@Override
 	public boolean equals(Object aObj) {
 		if (aObj instanceof Person) {
-			Person other = (Person) aObj;
+			final Person other = (Person) aObj;
 			return ObjectUtil.objectEquals(firstName, other.firstName) && ObjectUtil.objectEquals(lastName, other.lastName)
 					&& ObjectUtil.objectEquals(iNetAdress, other.iNetAdress) && ObjectUtil.objectEquals(phoneJob, other.phoneJob)
 					&& ObjectUtil.objectEquals(phoneMobile, other.phoneMobile);

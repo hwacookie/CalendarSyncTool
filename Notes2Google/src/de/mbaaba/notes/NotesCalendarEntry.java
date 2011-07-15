@@ -37,7 +37,7 @@ public class NotesCalendarEntry extends CalendarEntry {
 	}
 
 	public void mapItem(Item aItem) throws NotesException {
-		String itemName = aItem.getName().toLowerCase();
+		final String itemName = aItem.getName().toLowerCase();
 		// System.out.println(itemName + " = " + aItem.getDateTimeValue() + " "
 		// + aItem.getValueString());
 		if (itemName.equals("subject")) {
@@ -46,11 +46,11 @@ public class NotesCalendarEntry extends CalendarEntry {
 			setBody(aItem.getValueString());
 		} else if (itemName.equals("chair")) {
 			try {
-				List<Person> findPerson = PersonFactory.findPerson(CalendarType.Notes, aItem.getValueString());
+				final List<Person> findPerson = PersonFactory.findPerson(CalendarType.Notes, aItem.getValueString());
 				if ((findPerson != null) && (findPerson.size() > 0)) {
 					setChair(findPerson.get(0));
 				}
-			} catch (ItemNotFoundException e) {
+			} catch (final ItemNotFoundException e) {
 				// chair not found in DB
 			}
 		} else if (itemName.equals("location")) {
@@ -60,15 +60,15 @@ public class NotesCalendarEntry extends CalendarEntry {
 		} else if (itemName.equals("orgconfidential")) {
 			setConfidential(aItem.getValueString().equals("1"));
 		} else if (itemName.equals("startdatetime")) {
-			Vector<?> dates = aItem.getValueDateTimeArray();
-			for (Object object : dates) {
-				Date javaDate = ((DateTime) object).toJavaDate();
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				final Date javaDate = ((DateTime) object).toJavaDate();
 				addStartDate(javaDate);
 			}
 		} else if (itemName.equals("enddatetime")) {
-			Vector<?> dates = aItem.getValueDateTimeArray();
-			for (Object object : dates) {
-				Date javaDate = ((DateTime) object).toJavaDate();
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				final Date javaDate = ((DateTime) object).toJavaDate();
 				addEndDate(javaDate);
 			}
 			//} else if (itemName.equals("$alarmoffset")) {
@@ -80,15 +80,15 @@ public class NotesCalendarEntry extends CalendarEntry {
 		} else if (itemName.equals("requiredattendees") || itemName.equals("optionalattendees")) {
 			try {
 				if (aItem.getValues() != null) {
-					Vector<?> v = aItem.getValues();
-					for (Object object : v) {
-						String s = object.toString();
+					final Vector<?> v = aItem.getValues();
+					for (final Object object : v) {
+						final String s = object.toString();
 						if (s.matches(".+@.+")) {
 							addAttendee(s, itemName);
 						}
 					}
 				}
-			} catch (NotesException e) {
+			} catch (final NotesException e) {
 				// TODO: check if the NotesException really occurs, and find a way to handle it properly
 				// ignore all problems related to attendees
 			}

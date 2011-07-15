@@ -64,7 +64,7 @@ public final class LoggingUtility {
 	static {
 		try {
 			initLog4J();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -89,12 +89,12 @@ public final class LoggingUtility {
 	 *             if the properties could not be loaded
 	 */
 	private static final void loadLog4JProperties(boolean pStartWatchdog) throws IOException {
-		String log4jPropertiesFileName = LoggingUtilityProperties.getLog4JPropertiesFile();
+		final String log4jPropertiesFileName = LoggingUtilityProperties.getLog4JPropertiesFile();
 
 		if (log4jPropertiesFileName != null) {
 			File file = new File(log4jPropertiesFileName);
 			if (!file.exists()) {
-				URL resource = LoggingUtility.class.getResource(log4jPropertiesFileName);
+				final URL resource = LoggingUtility.class.getResource(log4jPropertiesFileName);
 				if (resource != null) {
 					file = new File(resource.getFile());
 				}
@@ -128,7 +128,7 @@ public final class LoggingUtility {
 		String categoryName = aName;
 		if (createPrefix) {
 
-			String staticName = "";
+			final String staticName = "";
 
 			if (aName.startsWith("de.biotronik.")) {
 				categoryName = staticName + aName.substring("de.biotronik.".length());
@@ -137,8 +137,8 @@ public final class LoggingUtility {
 			}
 
 		}
-		String customizedCategoryName = logID + "." + categoryName;
-		org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(customizedCategoryName);
+		final String customizedCategoryName = logID + "." + categoryName;
+		final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(customizedCategoryName);
 
 		return logger;
 	}
@@ -163,16 +163,16 @@ public final class LoggingUtility {
 	 *             if the properties could not be loaded
 	 */
 	private static final void initLog4J() throws IOException {
-		org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
-		String level = LoggingUtilityProperties.getLogLevel();
+		final org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
+		final String level = LoggingUtilityProperties.getLogLevel();
 		String host = LoggingUtilityProperties.getLoghost();
-		int port = LoggingUtilityProperties.getLogport();
+		final int port = LoggingUtilityProperties.getLogport();
 		createPrefix = LoggingUtilityProperties.isUsePrefix();
 		root.setLevel(Level.toLevel(level));
 
 		try {
 			InetAddress.getByName(host);
-		} catch (UnknownHostException e1) {
+		} catch (final UnknownHostException e1) {
 			System.err.println("Unknown host: " + host);
 			System.err.println("The socket appender will be disabled");
 			host = "";
@@ -186,7 +186,7 @@ public final class LoggingUtility {
 			switch (LoggingUtilityProperties.getLogAppender()) {
 
 			case ASYNC:
-				AsyncAppender asyncAppender = new AsyncAppender();
+				final AsyncAppender asyncAppender = new AsyncAppender();
 				asyncAppender.setBufferSize(LoggingUtilityProperties.getAsyncBufferSize());
 				asyncAppender.addAppender(new SocketAppender(host, port));
 				appender = asyncAppender;
@@ -212,14 +212,14 @@ public final class LoggingUtility {
 		}
 
 		// append to logfile if wanted
-		String logfile = LoggingUtilityProperties.getLogfile();
+		final String logfile = LoggingUtilityProperties.getLogfile();
 
 		if ((logfile != null) && (logfile.length() > 0)) {
 			try {
-				Layout layout = new PatternLayout("%d{DATE} [%p] %c %C{1} %m %n");
-				FileAppender fAppender = new FileAppender(layout, logfile);
+				final Layout layout = new PatternLayout("%d{DATE} [%p] %c %C{1} %m %n");
+				final FileAppender fAppender = new FileAppender(layout, logfile);
 				root.addAppender(fAppender);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -228,13 +228,13 @@ public final class LoggingUtility {
 		String syslogHost = LoggingUtilityProperties.getSysloghost();
 		try {
 			InetAddress.getByName(syslogHost);
-		} catch (UnknownHostException e1) {
+		} catch (final UnknownHostException e1) {
 			System.err.println("Unknown host: " + syslogHost);
 			System.err.println("The SysLog appender will be disabled");
 			syslogHost = null;
 		}
 		if ((syslogHost != null) && (syslogHost.length() > 0)) {
-			SyslogAppender syslogAppender = new SyslogAppender();
+			final SyslogAppender syslogAppender = new SyslogAppender();
 
 			String fac = LoggingUtilityProperties.getSyslogFacility();
 			if ((fac == null) || (fac.length() <= 0)) {
@@ -245,11 +245,11 @@ public final class LoggingUtility {
 			syslogAppender.setName("syslog-" + fac);
 			syslogAppender.setSyslogHost(syslogHost);
 
-			Layout layout = new PatternLayout("%d{DATE} [%p] %c %C{1} %m %n");
+			final Layout layout = new PatternLayout("%d{DATE} [%p] %c %C{1} %m %n");
 			syslogAppender.setLayout(layout);
 
-			if (appender != null && appender instanceof AsyncAppender) {
-				AsyncAppender asyncAppender = (AsyncAppender) appender;
+			if ((appender != null) && (appender instanceof AsyncAppender)) {
+				final AsyncAppender asyncAppender = (AsyncAppender) appender;
 				asyncAppender.addAppender(syslogAppender);
 			} else {
 				root.addAppender(syslogAppender);
@@ -290,13 +290,13 @@ public final class LoggingUtility {
 	 * 
 	 */
 	private static void setLog4jLevel() {
-		for (Object log4jCategoryObject : log4jProperties.keySet()) {
-			String log4jCategory = (String) log4jCategoryObject;
+		for (final Object log4jCategoryObject : log4jProperties.keySet()) {
+			final String log4jCategory = (String) log4jCategoryObject;
 			if (log4jCategory.startsWith(LOG4J_LOGGER_PREFIX)) {
-				String categoryName = log4jCategory.substring(LOG4J_LOGGER_PREFIX.length());
-				Level level = Level.toLevel((String) log4jProperties.get(log4jCategory));
-				Logger loggerOriginal = LogManager.getLogger(categoryName);
-				Logger loggerWithId = LogManager.getLogger(logID + "." + categoryName);
+				final String categoryName = log4jCategory.substring(LOG4J_LOGGER_PREFIX.length());
+				final Level level = Level.toLevel((String) log4jProperties.get(log4jCategory));
+				final Logger loggerOriginal = LogManager.getLogger(categoryName);
+				final Logger loggerWithId = LogManager.getLogger(logID + "." + categoryName);
 				loggerOriginal.setLevel(level);
 				loggerWithId.setLevel(level);
 			}
@@ -328,11 +328,11 @@ public final class LoggingUtility {
 		protected void doOnChange() {
 
 			if (initialized) {
-				PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
+				final PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
 				// reload configuration
 				try {
 					loadLog4JProperties(false);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					LogManager.getRootLogger().error("Something bad happened while loading the log4j properties", e);
 				}
 				propertyConfigurator.doConfigure(filename, LogManager.getLoggerRepository());

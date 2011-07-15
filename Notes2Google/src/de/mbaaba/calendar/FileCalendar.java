@@ -54,10 +54,10 @@ public class FileCalendar extends AbstractCalendar {
 	@Override
 	public void close() {
 		// save to file
-		XStream xStream = new XStream();
+		final XStream xStream = new XStream();
 		try {
 			xStream.toXML(allEntries, new FileOutputStream(fileName));
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			LOG.error("Warning: " + fileName + " could not be written!", e);
 			OutputManager.printerr("Warning: " + fileName + " could not be written!");
 		}
@@ -71,10 +71,10 @@ public class FileCalendar extends AbstractCalendar {
 	@Override
 	public void init(Configurator aConfigurator) {
 		fileName = aConfigurator.getProperty(FILECAL_FILENAME_PROPERTY_TAG, "fileCal.xml");
-		XStream xStream = new XStream();
+		final XStream xStream = new XStream();
 		try {
 			allEntries = (ArrayList<CalendarEntry>) xStream.fromXML(new FileInputStream(fileName));
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			LOG.error("Warning: " + fileName + " could not be opened for reading, using empty list!", e);
 			OutputManager.printerr("Warning: " + fileName + " could not be opened for reading, using empty list!");
 			allEntries = new ArrayList<CalendarEntry>();
@@ -90,7 +90,7 @@ public class FileCalendar extends AbstractCalendar {
 	 */
 	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
+		final ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
 
 		return res;
 	}
@@ -104,7 +104,7 @@ public class FileCalendar extends AbstractCalendar {
 	 */
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
-		for (CalendarEntry calendarEntry : allEntries) {
+		for (final CalendarEntry calendarEntry : allEntries) {
 			if (calendarEntry.getUniqueID().equals(aCalendarEntry.getUniqueID())) {
 				calendarEntry.copyFrom(aCalendarEntry);
 				return;
@@ -115,7 +115,7 @@ public class FileCalendar extends AbstractCalendar {
 
 	@Override
 	public void delete(ICalendarEntry aCalendarEntry) {
-		for (CalendarEntry calendarEntry : allEntries) {
+		for (final CalendarEntry calendarEntry : allEntries) {
 			if (calendarEntry.getUniqueID().equals(aCalendarEntry.getUniqueID())) {
 				allEntries.remove(calendarEntry);
 				return;

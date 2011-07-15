@@ -76,7 +76,7 @@ public class SleepUtililty {
 		}
 
 		// Now, wait some time until we run again
-		long lastrun = System.currentTimeMillis();
+		final long lastrun = System.currentTimeMillis();
 
 		OutputManager.print("Sleeping until next run in approx. " + nextRunInMinutes + " minutes ");
 
@@ -86,20 +86,20 @@ public class SleepUtililty {
 			try {
 				System.out.print(".");
 				Thread.sleep(TEN_SECONDS);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				break;
 			}
 
 			// get current time
-			long now = System.currentTimeMillis();
+			final long now = System.currentTimeMillis();
 
 			// how much time has passed since the last run?
-			long timePassedSinceLastRun = now - lastrun;
+			final long timePassedSinceLastRun = now - lastrun;
 
 			// are we in an office hour now?
 			if (isInOfficehour(now)) {
 				// re-read configuration parameter
-				int repeatEachDuringOfficehours = configurator.getProperty(ConfigParameter.REPEAT_EACH_OFFICEHOURS,
+				final int repeatEachDuringOfficehours = configurator.getProperty(ConfigParameter.REPEAT_EACH_OFFICEHOURS,
 						ConfigParameter.DEFAULT_REPEAT_EACH_OFFICEHOURS);
 				if (timePassedSinceLastRun > (repeatEachDuringOfficehours * Units.MINUTE)) {
 					// break the sleep-loop if it's time to run again
@@ -108,7 +108,7 @@ public class SleepUtililty {
 			} else {
 				// we are not in an officehour
 				// re-read configuration parameter
-				int repeatEachDuringNonOfficehours = configurator.getProperty(ConfigParameter.REPEAT_EACH_NONOFFICEHOURS,
+				final int repeatEachDuringNonOfficehours = configurator.getProperty(ConfigParameter.REPEAT_EACH_NONOFFICEHOURS,
 						ConfigParameter.DEFAULT_REPEAT_EACH_NONOFFICEHOURS);
 				if (timePassedSinceLastRun > (repeatEachDuringNonOfficehours * Units.MINUTE)) {
 					// break the sleep-loop if it's time to run again
@@ -127,16 +127,16 @@ public class SleepUtililty {
 	 * @return true, if the given time is within office hours.
 	 */
 	boolean isInOfficehour(long aDate) {
-		String workdays = configurator.getProperty(ConfigParameter.OFFICE_HOURS_WORKDAYS,
+		final String workdays = configurator.getProperty(ConfigParameter.OFFICE_HOURS_WORKDAYS,
 				ConfigParameter.DEFAULT_OFFICE_HOURS_WORKDAYS);
-		int officeHoursStart = configurator.getProperty(ConfigParameter.OFFICE_HOURS_START,
+		final int officeHoursStart = configurator.getProperty(ConfigParameter.OFFICE_HOURS_START,
 				ConfigParameter.DEFAULT_OFFICE_HOURS_START);
-		int officeHoursEnd = configurator.getProperty(ConfigParameter.OFFICE_HOURS_END, ConfigParameter.DEFAULT_OFFICE_HOURS_END);
+		final int officeHoursEnd = configurator.getProperty(ConfigParameter.OFFICE_HOURS_END, ConfigParameter.DEFAULT_OFFICE_HOURS_END);
 
-		Calendar now = new GregorianCalendar();
+		final Calendar now = new GregorianCalendar();
 		now.setTimeInMillis(aDate);
-		int day = now.get(Calendar.DAY_OF_WEEK);
-		int hour = now.get(Calendar.HOUR_OF_DAY);
+		final int day = now.get(Calendar.DAY_OF_WEEK);
+		final int hour = now.get(Calendar.HOUR_OF_DAY);
 		return ((workdays.indexOf(String.valueOf(day)) >= 0) && (hour >= officeHoursStart) && (hour <= officeHoursEnd));
 	}
 }

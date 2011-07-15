@@ -8,8 +8,6 @@
 
 package de.mbaaba.calendar;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,9 +28,6 @@ public class CalendarEntry implements ICalendarEntry {
 	 * A logger for this class.
 	 */
 	private static final Logger LOG = new Logger(CalendarEntry.class);
-
-	/** The Constant sdf. */
-	private static final DateFormat SDF = SimpleDateFormat.getDateTimeInstance();
 
 	/** The Constant UNKNOWN_PERSON. */
 	private static final Person UNKNOWN_PERSON = new Person();
@@ -75,6 +70,7 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#getBody()
 	 */
+	@Override
 	public String getBody() {
 		return body;
 	}
@@ -82,74 +78,92 @@ public class CalendarEntry implements ICalendarEntry {
 	/* (non-Javadoc)
 	 * @see de.mbaaba.calendar.ICalendarEntry#setBody(java.lang.String)
 	 */
+	@Override
 	public void setBody(String aBody) {
 		body = aBody;
 	}
 
+	@Override
 	public Person getChair() {
 		return chair;
 	}
 
+	@Override
 	public void setChair(Person aChair) {
 		chair = aChair;
 	}
 
+	@Override
 	public String getLocation() {
 		return location;
 	}
 
+	@Override
 	public void setLocation(String aLocation) {
 		location = aLocation;
 	}
 
+	@Override
 	public String getRoom() {
 		return room;
 	}
 
+	@Override
 	public void setRoom(String aRoom) {
 		room = aRoom;
 	}
 
+	@Override
 	public List<Person> getAttendees() {
 		return attendees;
 	}
 
+	@Override
 	public void setAttendees(List<Person> aAttendees) {
 		attendees = aAttendees;
 	}
 
+	@Override
 	public ArrayList<Date> getStartDates() {
 		return startDates;
 	}
 
+	@Override
 	public void addStartDate(Date aStartDate) {
 		startDates.add(aStartDate);
 	}
 
+	@Override
 	public ArrayList<Date> getEndDates() {
 		return endDates;
 	}
 
+	@Override
 	public void addEndDate(Date aEndDate) {
 		endDates.add(aEndDate);
 	}
 
+	@Override
 	public Date getLastModified() {
 		return lastModified;
 	}
 
+	@Override
 	public void setLastModified(Date aLastModified) {
 		lastModified = aLastModified;
 	}
 
+	@Override
 	public String getUniqueID() {
 		return uniqueID;
 	}
 
+	@Override
 	public void setUniqueID(String aUniqueID) {
 		uniqueID = aUniqueID;
 	}
 
+	@Override
 	public String getSubject() {
 		return subject;
 	}
@@ -160,36 +174,38 @@ public class CalendarEntry implements ICalendarEntry {
 	public CalendarEntry() {
 		startDates = new ArrayList<Date>();
 		endDates = new ArrayList<Date>();
-		SDF.setLenient(true);
 		attendees = new ArrayList<Person>();
 		setChair(UNKNOWN_PERSON);
 	}
 
+	@Override
 	public void setSubject(String aSubject) {
 		subject = aSubject;
 	}
 
+	@Override
 	public void addAttendee(String aAttendee, String aType) {
 		try {
-			List<Person> persons = PersonFactory.findPerson(PersonFactory.CalendarType.Notes, aAttendee);
-			for (Person person2 : persons) {
+			final List<Person> persons = PersonFactory.findPerson(PersonFactory.CalendarType.Notes, aAttendee);
+			for (final Person person2 : persons) {
 				attendees.add(person2);
 			}
-		} catch (ItemNotFoundException localItemNotFoundException) {
+		} catch (final ItemNotFoundException localItemNotFoundException) {
 			LOG.warn("Problem while attaching an attendee", localItemNotFoundException);
 		}
 	}
 
+	@Override
 	public String toString() {
-		String location = "";
+		String toStringLocation = "";
 		if (getLocation() != null) {
-			location = getLocation();
+			toStringLocation = getLocation();
 		}
 		if ((getRoom() != null) && (getRoom().length() > 0)) {
-			if (location.length() > 0) {
-				location = location + " [" + getRoom() + "]";
+			if (toStringLocation.length() > 0) {
+				toStringLocation = toStringLocation + " [" + getRoom() + "]";
 			} else {
-				location = getRoom();
+				toStringLocation = getRoom();
 			}
 		}
 		String s = "---------------------------------------------\n";
@@ -197,7 +213,7 @@ public class CalendarEntry implements ICalendarEntry {
 		s = s + "Subject: " + getSubject() + "\n" + "StartDate: " + getStartDates() + "\n" + "EndDate: " + getEndDates() + "\n"
 				+ "Location: " + getLocation() + "\n" + "\n" + "Chair: " + getChair().getPrettyMailAdress() + "\n"
 				+ "Attendees:\n";
-		for (Person attendee : attendees) {
+		for (final Person attendee : attendees) {
 			s = s + attendee.getPrettyMailAdress() + "\n";
 		}
 		s = s + "---------------------------------------------\n";
@@ -207,6 +223,7 @@ public class CalendarEntry implements ICalendarEntry {
 		return s;
 	}
 
+	@Override
 	public String getShortString() {
 		return "\"" + getSubject() + "\" (" + getUniqueID() + ")";
 	}
@@ -227,16 +244,16 @@ public class CalendarEntry implements ICalendarEntry {
 	 * @param aCalendarEntry the calendar entry
 	 */
 	public void copyFrom(ICalendarEntry aCalendarEntry) {
-		XStream xStream = new XStream();
-		String xml = xStream.toXML(aCalendarEntry);
-		CalendarEntry copy = (CalendarEntry) xStream.fromXML(xml);
+		final XStream xStream = new XStream();
+		final String xml = xStream.toXML(aCalendarEntry);
+		final CalendarEntry copy = (CalendarEntry) xStream.fromXML(xml);
 		setAttendees(copy.getAttendees());
 		setBody(copy.getBody());
 		setChair(copy.getChair());
-		for (Date date : copy.getEndDates()) {
+		for (final Date date : copy.getEndDates()) {
 			addEndDate(date);
 		}
-		for (Date date : copy.getStartDates()) {
+		for (final Date date : copy.getStartDates()) {
 			addStartDate(date);
 		}
 		setLastModified(copy.getLastModified());
@@ -251,6 +268,7 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#setAlarmTime(java.util.Date)
 	 */
+	@Override
 	public void setAlarmTime(Date aAlarmOffset) {
 		alarmTime = aAlarmOffset;
 	}
@@ -260,6 +278,7 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#getAlarmTime()
 	 */
+	@Override
 	public Date getAlarmTime() {
 		return alarmTime;
 	}
@@ -270,11 +289,11 @@ public class CalendarEntry implements ICalendarEntry {
 	@Override
 	public boolean equals(Object aObj) {
 		if (aObj instanceof CalendarEntry) {
-			CalendarEntry other = (CalendarEntry) aObj;
+			final CalendarEntry other = (CalendarEntry) aObj;
 			if (!uniqueID.equals(other.uniqueID)) {
 				return false;
 			}
-			boolean isEqual = ObjectUtil.objectEquals(lastModified, other.lastModified)
+			final boolean isEqual = ObjectUtil.objectEquals(lastModified, other.lastModified)
 					&& ObjectUtil.objectEquals(subject, other.subject) && ObjectUtil.objectEquals(body, other.body)
 					&& ObjectUtil.objectEquals(chair, other.chair) && ObjectUtil.objectEquals(location, other.location)
 					&& ObjectUtil.objectEquals(alarmTime, other.alarmTime) && ObjectUtil.objectEquals(room, other.room)

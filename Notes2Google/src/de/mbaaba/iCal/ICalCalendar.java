@@ -61,6 +61,7 @@ public class ICalCalendar extends AbstractCalendar {
 
 	private boolean problem;
 
+	@Override
 	public void init(Configurator aConfigurator) {
 		icsFilename = aConfigurator.getProperty(ICAL_FILENAME, "calendar.ics");
 		if (icsFilename.startsWith("\"")) {
@@ -73,27 +74,28 @@ public class ICalCalendar extends AbstractCalendar {
 		fortunaCalendar.getProperties().add(Version.VERSION_2_0);
 		fortunaCalendar.getProperties().add(new ProdId("-//mbaaba.de//Notes2Google 1.0//EN"));
 		try {
-			File file = new File(icsFilename);
+			final File file = new File(icsFilename);
 			if (file.exists()) {
 				loadCalendar();
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			problem = true;
 			e.printStackTrace();
-		} catch (ParserException e) {
+		} catch (final ParserException e) {
 			problem = true;
 			e.printStackTrace();
 		}
 	}
 
+	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
-		ComponentList components = fortunaCalendar.getComponents();
+		final ArrayList<ICalendarEntry> res = new ArrayList<ICalendarEntry>();
+		final ComponentList components = fortunaCalendar.getComponents();
 		for (int i = 0; i < components.size(); i++) {
-			Object object = components.get(i);
+			final Object object = components.get(i);
 			if (object instanceof VEvent) {
-				VEvent vEvent = (VEvent) object;
-				CalendarEntry newEntry = new ICalCalendarEntry(vEvent);
+				final VEvent vEvent = (VEvent) object;
+				final CalendarEntry newEntry = new ICalCalendarEntry(vEvent);
 				res.add(newEntry);
 			}
 		}
@@ -101,15 +103,15 @@ public class ICalCalendar extends AbstractCalendar {
 	}
 
 	public VEvent convertToVEvent(ICalendarEntry aCalendarEntry) {
-		VEvent vEvent = new VEvent();
+		final VEvent vEvent = new VEvent();
 		if (aCalendarEntry.getStartDates() != null) {
-			for (Date date : aCalendarEntry.getStartDates()) {
+			for (final Date date : aCalendarEntry.getStartDates()) {
 				vEvent.getProperties().add(new DtStart(new DateTime(date)));
 			}
 		}
 
 		if (aCalendarEntry.getEndDates() != null) {
-			for (Date date : aCalendarEntry.getEndDates()) {
+			for (final Date date : aCalendarEntry.getEndDates()) {
 				vEvent.getProperties().add(new DtEnd(new DateTime(date)));
 			}
 		}
@@ -119,7 +121,7 @@ public class ICalCalendar extends AbstractCalendar {
 
 		}
 		if (aCalendarEntry.getLastModified() != null) {
-			net.fortuna.ical4j.model.DateTime endDate = new net.fortuna.ical4j.model.DateTime(aCalendarEntry.getLastModified());
+			final net.fortuna.ical4j.model.DateTime endDate = new net.fortuna.ical4j.model.DateTime(aCalendarEntry.getLastModified());
 			vEvent.getProperties().add(new LastModified(endDate));
 		}
 		vEvent.getProperties().add(new Summary(aCalendarEntry.getSubject()));
@@ -134,9 +136,9 @@ public class ICalCalendar extends AbstractCalendar {
 			description = description + "\n" + "----------------------\n";
 		}
 		description = description + aCalendarEntry.getChair().getShortContactInfo() + "\n";
-		List<Person> attendees2 = aCalendarEntry.getAttendees();
+		final List<Person> attendees2 = aCalendarEntry.getAttendees();
 		if (attendees2.size() > 0) {
-			for (Person person : attendees2) {
+			for (final Person person : attendees2) {
 				description = description + person.getShortContactInfo() + "\n";
 			}
 		}
@@ -155,12 +157,12 @@ public class ICalCalendar extends AbstractCalendar {
 		}
 
 		vEvent.getProperties().add(new Location(location));
-		Property organizer = convertToProperty(aCalendarEntry.getChair(), Role.CHAIR);
+		final Property organizer = convertToProperty(aCalendarEntry.getChair(), Role.CHAIR);
 		if (organizer != null) {
 			vEvent.getProperties().add(organizer);
 		}
-		for (Person person : aCalendarEntry.getAttendees()) {
-			Property attendee = convertToProperty(person, Role.REQ_PARTICIPANT);
+		for (final Person person : aCalendarEntry.getAttendees()) {
+			final Property attendee = convertToProperty(person, Role.REQ_PARTICIPANT);
 			if (attendee != null) {
 				vEvent.getProperties().add(attendee);
 			}
@@ -168,12 +170,13 @@ public class ICalCalendar extends AbstractCalendar {
 		return vEvent;
 	}
 
+	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
-		VEvent aEvent = convertToVEvent(aCalendarEntry);
-		ComponentList components = fortunaCalendar.getComponents(Component.VEVENT);
-		for (Object object : components) {
+		final VEvent aEvent = convertToVEvent(aCalendarEntry);
+		final ComponentList components = fortunaCalendar.getComponents(Component.VEVENT);
+		for (final Object object : components) {
 			if (object instanceof VEvent) {
-				VEvent storedEvent = (VEvent) object;
+				final VEvent storedEvent = (VEvent) object;
 				if (storedEvent.getUid().equals(aEvent.getUid())) {
 					OutputManager.println("replacing existing entry " + storedEvent.getUid());
 					fortunaCalendar.getComponents().remove(storedEvent);
@@ -193,14 +196,14 @@ public class ICalCalendar extends AbstractCalendar {
 			} else {
 				res = new Attendee(aPerson.getURI());
 			}
-		} catch (URISyntaxException e) {
+		} catch (final URISyntaxException e) {
 			return null;
 		}
 
-		Cn cn = new Cn(aPerson.getFirstName() + " " + aPerson.getLastName());
+		final Cn cn = new Cn(aPerson.getFirstName() + " " + aPerson.getLastName());
 		res.getParameters().add(cn);
-		String roleText = aRole.getValue();
-		Role roleParam = new Role(roleText);
+		final String roleText = aRole.getValue();
+		final Role roleParam = new Role(roleText);
 		res.getParameters().add(roleParam);
 		return res;
 	}
@@ -209,36 +212,37 @@ public class ICalCalendar extends AbstractCalendar {
 		fortunaCalendar = Calendars.load(icsFilename);
 	}
 
+	@Override
 	public void close() {
 		if (problem) {
 			OutputManager.printerr("Had a problem while loading \"" + icsFilename + "\", will not overwrite current file!");
 			return;
 		}
 		try {
-			File f = new File(icsFilename);
+			final File f = new File(icsFilename);
 			if (!f.exists()) {
 				try {
 					f.createNewFile();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					OutputManager.printerr("Cannot create new calendar file \"" + icsFilename + "\"");
 				}
 			}
 			if (f.canWrite()) {
-				FileOutputStream fout = new FileOutputStream(icsFilename);
-				CalendarOutputter outputter = new CalendarOutputter();
+				final FileOutputStream fout = new FileOutputStream(icsFilename);
+				final CalendarOutputter outputter = new CalendarOutputter();
 				outputter.output(fortunaCalendar, fout);
 				fout.close();
 				OutputManager.println("Wrote calendar to " + icsFilename);
 			} else {
 				OutputManager.printerr("Cannot write to " + icsFilename);
 			}
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ValidationException e) {
+		} catch (final ValidationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

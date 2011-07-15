@@ -49,9 +49,10 @@ public class FixLocationFilter implements ICalendarFilter {
 
 	}
 
+	@Override
 	public boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception {
 
-		String defaultLocation = configurator.getProperty(DEFAULT_LOCATION, "");
+		final String defaultLocation = configurator.getProperty(DEFAULT_LOCATION, "");
 
 		String room = aParamCalendarEntry.getRoom();
 		if (room == null) {
@@ -83,19 +84,19 @@ public class FixLocationFilter implements ICalendarFilter {
 		} else {
 			result = aDefaultLocation;
 			if (aOriginalLocation.length() >= SANITY_LENGTH) {
-				URL url = new URL("http://maps.google.de/maps/api/directions/json?origin="
+				final URL url = new URL("http://maps.google.de/maps/api/directions/json?origin="
 						+ URLEncoder.encode(aDefaultLocation, "UTF-8") + "&destination="
 						+ URLEncoder.encode(aOriginalLocation, "") + "&sensor=true");
 
-				Gson gson = new Gson(); // Or use new GsonBuilder().create();
+				final Gson gson = new Gson(); // Or use new GsonBuilder().create();
 
-				URLConnection conn = url.openConnection();
-				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				GoogleDirections directions = gson.fromJson(rd, GoogleDirections.class);
+				final URLConnection conn = url.openConnection();
+				final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				final GoogleDirections directions = gson.fromJson(rd, GoogleDirections.class);
 
 				if ((directions.getStatus().equals("OK"))) {
-					Routes route0 = directions.getRoutes().get(0);
-					Legs leg0 = route0.getLegs().get(0);
+					final Routes route0 = directions.getRoutes().get(0);
+					final Legs leg0 = route0.getLegs().get(0);
 					if (leg0.getDistance().getValue().longValue() > ONE_HUNDRED_KILOMETER.longValue()) {
 						// result is probably broken!
 						result = aDefaultLocation;

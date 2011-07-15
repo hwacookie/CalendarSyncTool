@@ -65,17 +65,17 @@ public final class CommConfigUtil {
 	 */
 	public static void init(Configurator aConfigurator) {
 		configurator = aConfigurator;
-		boolean trustAllHostnames = Boolean.valueOf(configurator.getProperty(PROP_TRUST_ALL_HOSTNAMES, "false"));
+		final boolean trustAllHostnames = Boolean.valueOf(configurator.getProperty(PROP_TRUST_ALL_HOSTNAMES, "false"));
 		if (trustAllHostnames) {
 			SSLUtilities.trustAllHostnames();
 		}
-		boolean trustAllHttpsCertificates = Boolean.valueOf(configurator.getProperty(PROP_TRUST_ALL_HTTPS_CERTIFICATES, "false"));
+		final boolean trustAllHttpsCertificates = Boolean.valueOf(configurator.getProperty(PROP_TRUST_ALL_HTTPS_CERTIFICATES, "false"));
 		if (trustAllHttpsCertificates) {
 			SSLUtilities.trustAllHttpsCertificates();
 		}
 
-		String keystorePwd = configurator.getProperty(PROP_KEYSTORE_PWD, "");
-		String keystoreLocation = configurator.getProperty(PROP_KEYSTORE_LOCATION, "");
+		final String keystorePwd = configurator.getProperty(PROP_KEYSTORE_PWD, "");
+		final String keystoreLocation = configurator.getProperty(PROP_KEYSTORE_LOCATION, "");
 
 		// configure ssl
 		LOG.debug("Using keystore from " + keystoreLocation);
@@ -84,22 +84,22 @@ public final class CommConfigUtil {
 
 		// configure proxy settings
 
-		String propProxySet = configurator.getProperty(PROP_PROXY_SET, "");
+		final String propProxySet = configurator.getProperty(PROP_PROXY_SET, "");
 		System.setProperty(PROP_PROXY_SET, propProxySet);
 
-		String propHttpProxyHost = configurator.getProperty(PROP_HTTP_PROXY_HOST, "");
+		final String propHttpProxyHost = configurator.getProperty(PROP_HTTP_PROXY_HOST, "");
 		System.setProperty(PROP_HTTP_PROXY_HOST, propHttpProxyHost);
 
-		String propHttpProxyPort = configurator.getProperty(PROP_HTTP_PROXY_PORT, "");
+		final String propHttpProxyPort = configurator.getProperty(PROP_HTTP_PROXY_PORT, "");
 		System.setProperty(PROP_HTTP_PROXY_PORT, propHttpProxyPort);
 
-		String propHttpsProxyHost = configurator.getProperty(PROP_HTTPS_PROXY_HOST, "");
+		final String propHttpsProxyHost = configurator.getProperty(PROP_HTTPS_PROXY_HOST, "");
 		System.setProperty(PROP_HTTPS_PROXY_HOST, propHttpsProxyHost);
 
-		String propHttpsProxyPort = configurator.getProperty(PROP_HTTPS_PROXY_PORT, "");
+		final String propHttpsProxyPort = configurator.getProperty(PROP_HTTPS_PROXY_PORT, "");
 		System.setProperty(PROP_HTTPS_PROXY_PORT, propHttpsProxyPort);
 
-		String propHttpNonProxyHosts = configurator.getProperty(PROP_HTTP_NON_PROXY_HOSTS, "");
+		final String propHttpNonProxyHosts = configurator.getProperty(PROP_HTTP_NON_PROXY_HOSTS, "");
 		System.setProperty(PROP_HTTP_NON_PROXY_HOSTS, propHttpNonProxyHosts);
 
 	}

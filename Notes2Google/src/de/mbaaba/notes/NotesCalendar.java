@@ -42,30 +42,33 @@ public class NotesCalendar extends AbstractCalendar {
 	/** Used for logging. */
 	private static final Logger LOG = new Logger(NotesCalendar.class);
 
+	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
-		DataFetcher dataFetcher = new DataFetcher(aStartDate, aEndDate);
-		NotesThread nt = new NotesThread(dataFetcher);
+		final DataFetcher dataFetcher = new DataFetcher(aStartDate, aEndDate);
+		final NotesThread nt = new NotesThread(dataFetcher);
 		nt.start();
 		while (dataFetcher.isRunning()) {
 			try {
 				Thread.sleep(DATA_FETCHER_SLEEP_TIME);
-			} catch (InterruptedException localInterruptedException) {
+			} catch (final InterruptedException localInterruptedException) {
 				// ignored
 			}
 		}
-		ArrayList<ICalendarEntry> entries = new ArrayList<ICalendarEntry>();
-		for (CalendarEntry calendarEntry : dataFetcher.getCalendarEntries()) {
+		final ArrayList<ICalendarEntry> entries = new ArrayList<ICalendarEntry>();
+		for (final CalendarEntry calendarEntry : dataFetcher.getCalendarEntries()) {
 			entries.add(calendarEntry);
 		}
 		return entries;
 	}
 
+	@Override
 	public void init(Configurator aConfigurator) {
 	}
 
 	/** 
 	 * Nothing to close, yet.
 	 */
+	@Override
 	public void close() {
 	}
 
@@ -102,50 +105,51 @@ public class NotesCalendar extends AbstractCalendar {
 			calendarEntries = new HashMap<String, NotesCalendarEntry>();
 		}
 
+		@Override
 		public void run() {
 			try {
-				Session session = NotesFactory.createSession();
+				final Session session = NotesFactory.createSession();
 				NotesPerson.init(session);
 
-				String p = session.getPlatform();
+				final String p = session.getPlatform();
 				NotesCalendar.LOG.debug("Platform is " + p);
 
 				Database mailDB = session.getDatabase("", "names.nsf");
 				if (mailDB != null) {
-					DbDirectory dir = session.getDbDirectory(null);
+					final DbDirectory dir = session.getDbDirectory(null);
 					mailDB = dir.openMailDatabase();
 
 					if (!mailDB.isOpen()) {
 						mailDB.open();
 					}
 					if (mailDB.isOpen()) {
-						View view = mailDB.getView("($Calendar)");
+						final View view = mailDB.getView("($Calendar)");
 
-						DateRange dr = session.createDateRange(startDate, endDate);
+						final DateRange dr = session.createDateRange(startDate, endDate);
 
-						ViewEntryCollection collection = view.getAllEntriesByKey(dr, true);
+						final ViewEntryCollection collection = view.getAllEntriesByKey(dr, true);
 
 						ViewEntry viewEntry = collection.getFirstEntry();
 
 						while (viewEntry != null) {
-							String universalID = viewEntry.getUniversalID();
+							final String universalID = viewEntry.getUniversalID();
 							if (!calendarEntries.containsKey(universalID)) {
-								NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
+								final NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
 								calendarEntry.setUniqueID(universalID);
 
-								Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
+								final Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
 
-								Object viewEntryEndDate = viewEntry.getColumnValues().get(COL_END_DATE);
+								final Object viewEntryEndDate = viewEntry.getColumnValues().get(COL_END_DATE);
 
 								// only add if we have both a start and a
 								// endDate (i.e., this is not a ToDo)
 								if ((viewEntryStartDate != null) && (viewEntryEndDate != null)) {
 									calendarEntries.put(universalID, calendarEntry);
 									// now parse the document for details
-									Document doc = viewEntry.getDocument();
-									Vector<?> items = doc.getItems();
+									final Document doc = viewEntry.getDocument();
+									final Vector<?> items = doc.getItems();
 									for (int j = 0; j < items.size(); j++) {
-										Item item = (Item) items.elementAt(j);
+										final Item item = (Item) items.elementAt(j);
 										calendarEntry.mapItem(item);
 									}
 								}
@@ -158,7 +162,7 @@ public class NotesCalendar extends AbstractCalendar {
 					}
 				}
 
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				running = false;
 				e.printStackTrace();
 			}
@@ -170,8 +174,8 @@ public class NotesCalendar extends AbstractCalendar {
 		 * @return the calendar entries
 		 */
 		public ArrayList<NotesCalendarEntry> getCalendarEntries() {
-			ArrayList<NotesCalendarEntry> res = new ArrayList<NotesCalendarEntry>();
-			for (NotesCalendarEntry entry : calendarEntries.values()) {
+			final ArrayList<NotesCalendarEntry> res = new ArrayList<NotesCalendarEntry>();
+			for (final NotesCalendarEntry entry : calendarEntries.values()) {
 				res.add(entry);
 			}
 			return res;

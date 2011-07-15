@@ -25,12 +25,20 @@ public class GooglePerson extends Person {
 	}
 
 	public GooglePerson(com.google.gdata.data.Person aPerson) {
-		String fn = aPerson.getName();
+		final String fn = aPerson.getName();
 		setFirstName(fn);
 		setLastName(fn);
 		setINetAdress(aPerson.getEmail());
 	}
 
+	/**
+	 * 
+	 * Returns list with Person found for the given name 
+	 *
+	 * @param aPerson name of the Person to find
+	 * 
+	 * @return list with Person found for the given name 
+	 */
 	public static List<Person> findPerson(String aPerson) {
 		return null;
 	}
