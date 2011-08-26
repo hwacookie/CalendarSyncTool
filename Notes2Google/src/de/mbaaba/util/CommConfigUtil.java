@@ -77,7 +77,7 @@ public final class CommConfigUtil {
 		final String keystorePwd = configurator.getProperty(PROP_KEYSTORE_PWD, "");
 		final String keystoreLocation = configurator.getProperty(PROP_KEYSTORE_LOCATION, "");
 
-		// configure SSL
+		// configure ssl
 		LOG.debug("Using keystore from " + keystoreLocation);
 		System.setProperty("javax.net.ssl.trustStore", keystoreLocation);
 		System.setProperty("javax.net.ssl.trustStorePassword", keystorePwd);
