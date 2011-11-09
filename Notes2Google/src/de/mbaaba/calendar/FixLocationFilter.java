@@ -81,7 +81,8 @@ public class FixLocationFilter implements ICalendarFilter {
 			String fixedLocation = fixLocation(location, defaultLocation);
 			aParamCalendarEntry.setLocation(fixedLocation);
 		} catch (IOException e) {
-			LOG.error("Could not check location \""+location+"\" for entry \""+aParamCalendarEntry.getSubject()+"\": "+e.getMessage(), e);
+			LOG.error("Could not check location \"" + location + "\" for entry \"" + aParamCalendarEntry.getSubject() + "\": "
+					+ e.getMessage(), e);
 		}
 		// Let this entry pass regardless of whether the location could be fixed.
 		return true;
@@ -96,7 +97,7 @@ public class FixLocationFilter implements ICalendarFilter {
 			if (aOriginalLocation.length() >= SANITY_LENGTH) {
 				final URL url = new URL("http://maps.google.de/maps/api/directions/json?origin="
 						+ URLEncoder.encode(aDefaultLocation, "UTF-8") + "&destination="
-						+ URLEncoder.encode(aOriginalLocation, "") + "&sensor=true");
+						+ URLEncoder.encode(aOriginalLocation, "UTF-8") + "&sensor=true");
 
 				final Gson gson = new Gson(); // Or use new GsonBuilder().create();
 
