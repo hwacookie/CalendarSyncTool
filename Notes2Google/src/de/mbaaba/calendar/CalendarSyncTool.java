@@ -182,8 +182,8 @@ public final class CalendarSyncTool {
 	 */
 	private void writeToTargetCalendar(ArrayList<ICalendarEntry> aNewEntries, ArrayList<ICalendarEntry> aObsoleteEntries)
 			throws Exception {
-		final String writeToClassName = configurator
-				.getProperty(ConfigParameter.CALENDAR_TO, ConfigParameter.DEFAULT_WRITETO_CLASSNAME);
+		final String writeToClassName = configurator.getProperty(ConfigParameter.CALENDAR_TO,
+				ConfigParameter.DEFAULT_WRITETO_CLASSNAME);
 		OutputManager.println("Some entries have changed, writing to calendar " + writeToClassName + ", ");
 
 		final AbstractCalendar targetCalendar = (AbstractCalendar) Class.forName(writeToClassName).newInstance();
@@ -242,17 +242,10 @@ public final class CalendarSyncTool {
 			boolean skipThisEntry = false;
 
 			for (final ICalendarFilter filter : allFilters) {
-				try {
-					if (!filter.passes(calendarEntry)) {
-						skipThisEntry = true;
-						break;
-					}
-				} catch (final Exception e) {
-					LOG.error(e.getMessage(), e);
+				if (!filter.passes(calendarEntry)) {
 					skipThisEntry = true;
 					break;
 				}
-
 			}
 
 			if (!skipThisEntry) {

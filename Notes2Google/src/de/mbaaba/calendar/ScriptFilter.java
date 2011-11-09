@@ -15,13 +15,20 @@ import java.io.FileReader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import de.mbaaba.util.Configurator;
+import de.mbaaba.util.Logger;
 
 /**
  * A class that encapsulates some script that acts as a {@link ICalendarFilter}. 
  */
 public class ScriptFilter implements ICalendarFilter {
+
+	/**
+	 * A logger for this class.
+	 */
+	private static final Logger LOG = new Logger(ScriptFilter.class);
 
 	/** The used scripting-engine. */
 	private ScriptEngine scriptEngine;
@@ -32,7 +39,14 @@ public class ScriptFilter implements ICalendarFilter {
 	/** The reader that is used to read the script. */
 	private FileReader reader;
 
+	/**
+	* if set to "yes", failures (exceptions) within a script will be ignored and the entry will be synced.
+	* if set to "no", all failures will lead to a non-sync of the entry. 	 
+	* */
+	private boolean ignoreFailures;
+
 	public ScriptFilter(String aScriptName, Configurator aConfigurator) throws FileNotFoundException {
+		ignoreFailures = aConfigurator.getProperty("filters.ignoreFailures", "yes").equals("yes");
 		file = new File(aScriptName);
 		reader = new FileReader(file);
 
@@ -49,12 +63,20 @@ public class ScriptFilter implements ICalendarFilter {
 	 * @see de.mbaaba.calendar.ICalendarFilter#passes(de.mbaaba.calendar.ICalendarEntry)
 	 */
 	@Override
-	public boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception {
+	public boolean passes(ICalendarEntry aParamCalendarEntry) {
 		scriptEngine.put("calendarEntry", aParamCalendarEntry);
-		scriptEngine.eval(reader);
+		boolean returnValue;
 
-		final boolean returnValue = (Boolean) ((Invocable) scriptEngine).invokeFunction("filter");
+		try {
+			scriptEngine.eval(reader);
+			returnValue = (Boolean) ((Invocable) scriptEngine).invokeFunction("filter");
+		} catch (ScriptException e) {
+			LOG.error("Error while executing script " + file.getAbsolutePath() + ": " + e.getMessage(), e);
+			return ignoreFailures;
+		} catch (NoSuchMethodException e) {
+			LOG.error("Error while executing script " + file.getAbsolutePath() + ": " + e.getMessage(), e);
+			return ignoreFailures;
+		}
 		return returnValue;
 	}
-
 }

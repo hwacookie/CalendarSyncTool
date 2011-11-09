@@ -22,6 +22,7 @@ import de.mbaaba.directions.GoogleDirections;
 import de.mbaaba.directions.Legs;
 import de.mbaaba.directions.Routes;
 import de.mbaaba.util.Configurator;
+import de.mbaaba.util.Logger;
 
 /**
  * The FixLocationFilter is used to fix the location of an event by looking up the given location at googles directions API.
@@ -30,6 +31,11 @@ import de.mbaaba.util.Configurator;
  * In that case, a default location is used instead.  
  */
 public class FixLocationFilter implements ICalendarFilter {
+
+	/**
+	 * A logger for this class.
+	 */
+	private static final Logger LOG = new Logger(FixLocationFilter.class);
 
 	static final String DEFAULT_LOCATION = "default.location";
 
@@ -50,7 +56,7 @@ public class FixLocationFilter implements ICalendarFilter {
 	}
 
 	@Override
-	public boolean passes(ICalendarEntry aParamCalendarEntry) throws Exception {
+	public boolean passes(ICalendarEntry aParamCalendarEntry) {
 
 		final String defaultLocation = configurator.getProperty(DEFAULT_LOCATION, "");
 
@@ -71,9 +77,13 @@ public class FixLocationFilter implements ICalendarFilter {
 			}
 		}
 
-		location = fixLocation(location, defaultLocation);
-
-		aParamCalendarEntry.setLocation(location);
+		try {
+			String fixedLocation = fixLocation(location, defaultLocation);
+			aParamCalendarEntry.setLocation(fixedLocation);
+		} catch (IOException e) {
+			LOG.error("Could not check location for this entry: "+e.getMessage(), e);
+		}
+		// Let this entry pass regardless of whether the location could be fixed.
 		return true;
 	}
 
