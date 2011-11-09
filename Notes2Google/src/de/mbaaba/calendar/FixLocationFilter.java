@@ -81,7 +81,7 @@ public class FixLocationFilter implements ICalendarFilter {
 			String fixedLocation = fixLocation(location, defaultLocation);
 			aParamCalendarEntry.setLocation(fixedLocation);
 		} catch (IOException e) {
-			LOG.error("Could not check location for this entry: "+e.getMessage(), e);
+			LOG.error("Could not check location \""+location+"\" for entry \""+aParamCalendarEntry.getSubject()+"\": "+e.getMessage(), e);
 		}
 		// Let this entry pass regardless of whether the location could be fixed.
 		return true;

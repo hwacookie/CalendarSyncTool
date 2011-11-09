@@ -55,6 +55,7 @@ public class ScriptFilter implements ICalendarFilter {
 		final ScriptEngineManager manager = new ScriptEngineManager();
 		scriptEngine = manager.getEngineByExtension(extension);
 		scriptEngine.put("configurator", aConfigurator);
+		scriptEngine.put("LOG", LOG);
 	}
 
 	/**
