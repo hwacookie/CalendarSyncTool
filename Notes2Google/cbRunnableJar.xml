@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Notes2Google">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="P:/Notes2GoogleTest/Notes2Google.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="de.mbaaba.calendar.CalendarSyncTool"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/target/classes"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-core-1.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-client-meta-1.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-client-1.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-calendar-meta-2.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-calendar-2.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-contacts-meta-3.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-contacts-3.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-maps-meta-2.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gdata-maps-2.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/google-collect-1.0-rc1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/jdom.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/log4j-1.2.14.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/xpp3-1.1.3.4.O-sources.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/xpp3-1.1.3.4.O.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/xstream-1.2.2-sources.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/xstream-1.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/commons-codec-1.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/commons-lang-2.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/commons-logging-1.1.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/ical4j-1.0-rc3-SNAPSHOT.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/backport-util-concurrent-3.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/jsr305.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/Notes.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/junit-3.8.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/cygwin-home/git/CalendarSyncTool/Notes2Google/lib/gson-1.7.1.jar"/>
+        </jar>
+    </target>
+</project>
