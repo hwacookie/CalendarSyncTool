@@ -35,6 +35,7 @@ import com.google.gdata.data.extensions.FullName;
 import com.google.gdata.data.extensions.GivenName;
 import com.google.gdata.data.extensions.PhoneNumber;
 import com.google.gdata.data.extensions.PhoneNumber.Rel;
+import com.google.gdata.data.extensions.Recurrence;
 import com.google.gdata.data.extensions.When;
 import com.google.gdata.data.extensions.Where;
 import com.google.gdata.data.extensions.Who;
@@ -133,14 +134,16 @@ public class GoogleCalendar extends AbstractCalendar {
 		aGoogleCalendarEventEntry.getTimes().clear();
 
 		final int numDates = aCalendarEntry.getStartDates().size();
+		
+		// if number of dates is more than 1 so handle recurrence
+		// if number of dates is 1 so handle single date event
+		if (numDates == 1) {
+			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
 
-		final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
-		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
-
-		for (int ctr = 0; ctr < numDates; ctr++) {
-			final Date start = aCalendarEntry.getStartDates().get(ctr);
-			final Date end = aCalendarEntry.getEndDates().get(ctr);
+			final Date start = aCalendarEntry.getStartDates().get(0);
+			final Date end = aCalendarEntry.getEndDates().get(0);
 			final boolean allDayEvent = isAllDayEvent(start, end);
 			
 			DateTime startTime = DateTime.parseDateTime(sdf.format(start));  // Time value is irrelevant 
@@ -159,6 +162,31 @@ public class GoogleCalendar extends AbstractCalendar {
 			eventTimes.setStartTime(startTime);
 			eventTimes.setEndTime(endTime);
 			aGoogleCalendarEventEntry.addTime(eventTimes);
+		} else if (numDates > 1) {
+			final String pattern = "yyyyMMdd'T'HHmmss";
+			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+
+			final Recurrence rr = new Recurrence();
+			String rrS = "";
+			for (int ctr = 0; ctr < numDates; ctr++) {
+				final Date start = aCalendarEntry.getStartDates().get(ctr);
+				final Date end = aCalendarEntry.getEndDates().get(ctr);
+
+				if (ctr == 0) {
+					rrS = "DTSTART;TZID=\"W. Europe\":" + sdf.format(start) + NEWLINE + "DTEND;TZID=\"W. Europe\":" + sdf.format(end)
+							+ NEWLINE + "TRANSP:OPAQUE" + NEWLINE + "RDATE;VALUE=PERIOD:";
+				}
+
+				rrS = rrS + sdf.format(start) + "Z/" + sdf.format(end) + "Z,";
+			}
+			rrS = rrS.substring(0, rrS.length() - 1);
+			if (aCalendarEntry.getLastModified() != null) {
+				rrS = rrS + NEWLINE + "DTSTAMP:" + sdf.format(aCalendarEntry.getLastModified());
+			}
+
+			rr.setValue(rrS);
+			aGoogleCalendarEventEntry.setRecurrence(rr);
 		}
 
 		final List<Person> attendees = aCalendarEntry.getAttendees();
