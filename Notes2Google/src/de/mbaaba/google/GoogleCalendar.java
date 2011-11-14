@@ -378,13 +378,4 @@ public class GoogleCalendar extends AbstractCalendar {
 
 }
 
-// DateTime startTime = new
-// DateTime(aCalendarEntry.getStartDates().get(ctr),
-// TimeZone.getTimeZone("GMT-1:00"));
-// DateTime endTime = new
-// DateTime(aCalendarEntry.getEndDates().get(ctr),
-// TimeZone.getTimeZone("GMT-1:00"));
-// When eventTime = new When();
-// eventTime.setStartTime(startTime);
-// eventTime.setEndTime(endTime);
-// aGoogleCalendarEventEntry.addTime(eventTime);
+// Kommentare entfernt -> commit für chris
