@@ -207,7 +207,7 @@ public class GoogleCalendar extends AbstractCalendar {
 	 * @return <code>true</code> if more then 23h and 30m between start end else <code>false</code>
 	 */
 	private boolean isAllDayEvent(Date pStart, Date pEnd) {
-		return pEnd.getTime() - pStart.getTime() > Units.HOUR * 23 + Units.MINUTE * 30;
+		return pEnd.getTime() - pStart.getTime() > Units.HOUR * 15;
 	}
 
 	private EventWho createParticipant(Person aPerson, String aRelation) {
