@@ -169,6 +169,20 @@ public class ICalCalendar extends AbstractCalendar {
 		}
 		return vEvent;
 	}
+	
+	/**
+	 * Adds all given calendar entries.
+	 * 
+	 * @see #put(ICalendarEntry)
+	 * @param aCalendarEntries
+	 *            the calendar entries to be added.
+	 */
+	@Override
+	public final void putList(List<ICalendarEntry> aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			put(calendarEntry);
+		}
+	}
 
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {

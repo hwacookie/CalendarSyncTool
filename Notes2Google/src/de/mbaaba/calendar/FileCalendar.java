@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -94,12 +95,25 @@ public class FileCalendar extends AbstractCalendar {
 
 		return res;
 	}
-
-	/*
-	 * (non-Javadoc)
+	
+	/**
+	 * Adds all given calendar entries.
 	 * 
-	 * @see
-	 * de.mbaaba.calendar.AbstractCalendar#put(de.mbaaba.calendar.ICalendarEntry
+	 * @see #put(ICalendarEntry)
+	 * @param aCalendarEntries
+	 *            the calendar entries to be added.
+	 */
+	@Override
+	public final void putList(List<ICalendarEntry> aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			put(calendarEntry);
+		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * @see de.mbaaba.calendar.AbstractCalendar#put(de.mbaaba.calendar.ICalendarEntry
 	 * )
 	 */
 	@Override

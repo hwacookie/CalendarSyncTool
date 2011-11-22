@@ -91,31 +91,31 @@ public class GoogleCalendar extends AbstractCalendar {
 		return res;
 	}
 
-	private void createEvent(ICalendarEntry aCalendarEntry) throws ServiceException, IOException {
+	private CalendarEventEntry createEvent(ICalendarEntry aCalendarEntry) throws ServiceException {
 		if (aCalendarEntry.getStartDates() == null) {
-			OutputManager.printerr("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
-			return;
+			OutputManager.println("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
+			return null;
 		}
 		if (aCalendarEntry.getEndDates() == null) {
-			OutputManager.printerr("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
-			return;
+			OutputManager.println("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
+			return null;
 		}
 
 		final CalendarEventEntry googleCalendarEventEntry = createGoogleEvent(aCalendarEntry);
 
 		addExtendedProperty(googleCalendarEventEntry, NOTES_ID, aCalendarEntry.getUniqueID());
 
-		this.calendarService.insert(feedUrl, googleCalendarEventEntry);
+		return googleCalendarEventEntry;
 	}
 
 	private CalendarEventEntry createGoogleEvent(ICalendarEntry aCalendarEntry) {
 		final CalendarEventEntry googleCalendarEventEntry = new CalendarEventEntry();
 
-		copyFromInternalToGoogleStyle(aCalendarEntry, googleCalendarEventEntry);
+		updateGoogleCalendarEventEntry(aCalendarEntry, googleCalendarEventEntry);
 		return googleCalendarEventEntry;
 	}
 
-	private void copyFromInternalToGoogleStyle(ICalendarEntry aCalendarEntry, CalendarEventEntry aGoogleCalendarEventEntry) {
+	private void updateGoogleCalendarEventEntry(ICalendarEntry aCalendarEntry, CalendarEventEntry aGoogleCalendarEventEntry) {
 		aGoogleCalendarEventEntry.setId(aCalendarEntry.getUniqueID());
 		aGoogleCalendarEventEntry.setTitle(new PlainTextConstruct(aCalendarEntry.getSubject()));
 		aGoogleCalendarEventEntry.setContent(new PlainTextConstruct(aCalendarEntry.getBody()));
@@ -358,6 +358,76 @@ public class GoogleCalendar extends AbstractCalendar {
 
 		return null;
 	}
+	
+	/**
+	 * Adds all given calendar entries.
+	 * 
+	 * @param aCalendarEntriesthe calendar entries to be added or updated.
+	 */
+	@Override
+	public void putList(List<ICalendarEntry> aCalendarEntries) {
+		// New feed all entries will be add to
+		CalendarEventFeed batchRequest = new CalendarEventFeed();
+		int batchIndex = 1;
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			try {
+				if (calendarEntry.getUniqueID() == null) {
+					OutputManager.printerr("Entry has no unique ID!");
+					continue;
+				}
+				final CalendarEventEntry googleEvent = getByNotesID(calendarEntry.getUniqueID());
+				if (googleEvent != null) {
+					OutputManager.println("Updating entry " + calendarEntry.getShortString() + ".");
+					updateGoogleCalendarEventEntry(calendarEntry, googleEvent);
+					BatchUtils.setBatchId(googleEvent, String.valueOf(batchIndex));
+					BatchUtils.setBatchOperationType(googleEvent, BatchOperationType.UPDATE);
+					batchRequest.getEntries().add(googleEvent);
+					batchIndex++;
+				} else {
+					OutputManager.println("Adding entry " + calendarEntry.getShortString() + ".");
+					CalendarEventEntry entryToAdd = createEvent(calendarEntry);
+					if (entryToAdd != null) {
+						BatchUtils.setBatchId(entryToAdd, String.valueOf(batchIndex));
+						BatchUtils.setBatchOperationType(entryToAdd, BatchOperationType.INSERT);
+						batchRequest.getEntries().add(entryToAdd);
+						batchIndex++;
+					}
+				}
+			} catch (final Exception e) {
+				//skipp element if exception occured
+				OutputManager.println(e.getMessage());
+				continue;
+			}
+		}
+		
+		try{
+			// Get some events to operate on.
+			URL defaultEventFeedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
+			CalendarEventFeed feed = this.calendarService.getFeed(defaultEventFeedUrl, CalendarEventFeed.class);
+	
+			// Get the batch link URL and send the batch request there.
+			Link batchLink = feed.getLink(Link.Rel.FEED_BATCH, Link.Type.ATOM);
+			CalendarEventFeed batchResponse = this.calendarService.batch(new URL(batchLink.getHref()), batchRequest);
+	
+			// Ensure that all the operations were successful.
+			boolean isSuccess = true;
+			for (CalendarEventEntry entry : batchResponse.getEntries()) {
+			  String batchId = BatchUtils.getBatchId(entry);
+			  if (!BatchUtils.isSuccess(entry)) {
+			    isSuccess = false;
+			    BatchStatus status = BatchUtils.getBatchStatus(entry);
+			    OutputManager.println("Batchentry with Id: " + batchId + " failed (" + status.getReason() + ") " + status.getContent());
+			  }
+			}
+			if (isSuccess) {
+				OutputManager.println("Successfully created/updated all events via batch request.");
+			} else {
+				OutputManager.println("Not all events created/updated sucessfully via batch request.");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error during batch update: " + e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
@@ -369,7 +439,7 @@ public class GoogleCalendar extends AbstractCalendar {
 			final CalendarEventEntry googleEvent = getByNotesID(aCalendarEntry.getUniqueID());
 			if (googleEvent != null) {
 				OutputManager.println("Updating entry " + aCalendarEntry.getShortString() + ".");
-				copyFromInternalToGoogleStyle(aCalendarEntry, googleEvent);
+				updateGoogleCalendarEventEntry(aCalendarEntry, googleEvent);
 				googleEvent.delete();
 				createEvent(aCalendarEntry);
 			} else {
