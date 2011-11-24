@@ -10,6 +10,7 @@ package de.mbaaba.calendar;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -100,13 +101,8 @@ public final class CalendarSyncTool {
 				configurator = new PropertyFileConfigurator("Notes2Google.properties");
 				CommConfigUtil.init(configurator);
 
-				final String readFromClassName = configurator.getProperty(ConfigParameter.CALENDAR_FROM,
+				final List<String> readFromClassNames = configurator.getMultiProperty(ConfigParameter.CALENDAR_FROM,
 						ConfigParameter.DEFAULT_CALENDAR_FROM);
-
-				OutputManager.println("Reading from calendar " + readFromClassName + " ... ");
-
-				final AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
-				sourceCalendar.init(configurator);
 
 				final long numDaysPast = configurator.getProperty(ConfigParameter.CALENDAR_NUM_DAYS_PAST,
 						ConfigParameter.DEFAULT_CALENDAR_NUM_DAYS_PAST);
@@ -116,29 +112,38 @@ public final class CalendarSyncTool {
 				final Date startDate = new Date(System.currentTimeMillis() - Units.DAY * numDaysPast);
 				final Date endDate = new Date(System.currentTimeMillis() + Units.DAY * numDaysFuture);
 
-				ArrayList<ICalendarEntry> sourceEntriesUnfiltered = null;
-				try {
-					sourceEntriesUnfiltered = sourceCalendar.readCalendarEntries(startDate, endDate);
-				} catch (final Exception e) {
-					LOG.warn("Error while reading entries from source calendar!", e);
+				ArrayList<ICalendarEntry> sourceEntriesUnfiltered = new ArrayList<ICalendarEntry>();
+
+				for (String readFromClassName : readFromClassNames) {
+					final AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
+					sourceCalendar.init(configurator);
+
+					try {
+						Collection<? extends ICalendarEntry> temp = sourceCalendar.readCalendarEntries(startDate, endDate);
+						if (temp != null) {
+							sourceEntriesUnfiltered.addAll(temp);
+						}
+					} catch (final Exception e) {
+						LOG.warn("Error while reading entries from source calendar " + readFromClassName, e);
+					}
+				}
+				
+				// run fixes on each calendar entry (like fixing missing end dates)
+				for (ICalendarEntry iCalendarEntry : sourceEntriesUnfiltered) {
+					iCalendarEntry.sanityCheck();
 				}
 
-				// if we did not get a list of entries, something must have gone
-				// wrong. In that case, do not write anything to the target
-				// calendar
-				if (sourceEntriesUnfiltered != null) {
-					final ArrayList<ICalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
+				final ArrayList<ICalendarEntry> sourceEntries = runFilters(sourceEntriesUnfiltered);
 
-					final ArrayList<ICalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
-					final ArrayList<ICalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
+				final ArrayList<ICalendarEntry> newEntries = getNewEntries(sourceEntries, oldSourceEntries);
+				final ArrayList<ICalendarEntry> obsoleteEntries = getObsoleteEntries(sourceEntries, oldSourceEntries);
 
-					if ((newEntries.size() > 0) || (obsoleteEntries.size() > 0)) {
-						writeToTargetCalendar(newEntries, obsoleteEntries);
-						copyList(sourceEntries, oldSourceEntries);
-						saveLastKnownCalendarState(sourceEntries);
-					} else {
-						OutputManager.println("... no changes found.");
-					}
+				if ((newEntries.size() > 0) || (obsoleteEntries.size() > 0)) {
+					writeToTargetCalendar(newEntries, obsoleteEntries);
+					copyList(sourceEntries, oldSourceEntries);
+					saveLastKnownCalendarState(sourceEntries);
+				} else {
+					OutputManager.println("... no changes found.");
 				}
 
 				sleepUtililty.sleepUntilNextRun();

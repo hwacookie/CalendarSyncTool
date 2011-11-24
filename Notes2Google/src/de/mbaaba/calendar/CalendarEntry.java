@@ -16,6 +16,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.thoughtworks.xstream.XStream;
 
+import de.mbaaba.notes.AcceptStatus;
 import de.mbaaba.util.Logger;
 import de.mbaaba.util.ObjectUtil;
 
@@ -130,6 +131,12 @@ public class CalendarEntry implements ICalendarEntry {
 
 	@Override
 	public void addStartDate(Date aStartDate) {
+		// check for duplicates
+		for (Date date : startDates) {
+			if (date.equals(aStartDate)) {
+				return;
+			}
+		}
 		startDates.add(aStartDate);
 	}
 
@@ -140,6 +147,11 @@ public class CalendarEntry implements ICalendarEntry {
 
 	@Override
 	public void addEndDate(Date aEndDate) {
+		for (Date date : endDates) {
+			if (date.equals(aEndDate)) {
+				return;
+			}
+		}
 		endDates.add(aEndDate);
 	}
 
@@ -309,5 +321,27 @@ public class CalendarEntry implements ICalendarEntry {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public AcceptStatus getAcceptStatus() {
+		return AcceptStatus.ACCEPTED;
+	}
+
+	@Override
+	public void sanityCheck() {
+		if ((getStartDates().size() > 0) && (getEndDates().size() < getStartDates().size())) {
+			// if we have more startDates then end Dates, assume that the duration is always as long as the one of the first occurence of the entry
+			// this happens with invitations that we get by mail from google.
+
+			long firstDuration = getEndDates().get(0).getTime() - getStartDates().get(0).getTime();
+			int numDates = getStartDates().size();
+
+			// throw away old list of endDates 
+			endDates = new ArrayList<Date>();
+			for (int ctr = 0; ctr < numDates; ctr++) {
+				addEndDate(new Date(getStartDates().get(ctr).getTime() + firstDuration));
+			}
+		}
 	}
 }

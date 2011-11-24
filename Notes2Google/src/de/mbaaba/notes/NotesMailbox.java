@@ -31,16 +31,17 @@ import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
 /**
- * The Class NotesCalendar allows to access events within a Lotus-Notes calendar.
- * Currently, the calendar is read only and does not allow to delete, add or change entries in the calendar.
+ * The Class NotesMailbox allows to access events within a Lotus-Notes mailbox, e.g. mails that have 
+ * a invite.ics attachement.
+ * Access to the mailbox is read only and does not allow to delete, add or change entries.
  */
-public class NotesCalendar extends AbstractCalendar {
+public class NotesMailbox extends AbstractCalendar {
 
 	/** The time that we wait for the data fetcher to finish its job. */
 	private static final long DATA_FETCHER_SLEEP_TIME = 100L;
 
 	/** Used for logging. */
-	private static final Logger LOG = new Logger(NotesCalendar.class);
+	private static final Logger LOG = new Logger(NotesMailbox.class);
 
 	@Override
 	public ArrayList<ICalendarEntry> readCalendarEntries(Date aStartDate, Date aEndDate) {
@@ -75,7 +76,7 @@ public class NotesCalendar extends AbstractCalendar {
 	/**
 	 * A Notes-runnable that fetches the data from the Notes calendar.
 	 */
-	public class DataFetcher extends NotesCalendar.AbstractRunnable {
+	public class DataFetcher extends NotesMailbox.AbstractRunnable {
 
 		/** The Constant COL_START_DATE. */
 		private static final int COL_START_DATE = 8;
@@ -112,7 +113,7 @@ public class NotesCalendar extends AbstractCalendar {
 				NotesPerson.init(session);
 
 				final String p = session.getPlatform();
-				NotesCalendar.LOG.debug("Platform is " + p);
+				NotesMailbox.LOG.debug("Platform is " + p);
 
 				Database mailDB = session.getDatabase("", "names.nsf");
 				if (mailDB != null) {
@@ -123,7 +124,13 @@ public class NotesCalendar extends AbstractCalendar {
 						mailDB.open();
 					}
 					if (mailDB.isOpen()) {
-						final View view = mailDB.getView("($Calendar)");
+						//						Vector views = mailDB.getViews();
+						//						for (Object object : views) {
+						//							View v = (View) object;
+						//							System.out.println(v.getName());
+						//						}
+
+						final View view = mailDB.getView("($Inbox)");
 
 						final DateRange dr = session.createDateRange(startDate, endDate);
 
@@ -137,25 +144,22 @@ public class NotesCalendar extends AbstractCalendar {
 								final NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
 								calendarEntry.setUniqueID(universalID);
 
-								final Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
+								// now parse the document for details
+								final Document doc = viewEntry.getDocument();
+								final Vector<?> items = doc.getItems();
+								for (int j = 0; j < items.size(); j++) {
+									final Item item = (Item) items.elementAt(j);
+									calendarEntry.mapItem(item);
+								}
 
-								final Object viewEntryEndDate = viewEntry.getColumnValues().get(COL_END_DATE);
-
-								// only add if we have both a start and a
-								// endDate (i.e., this is not a ToDo)
-								if ((viewEntryStartDate != null) && (viewEntryEndDate != null)) {
+								// only add those invitation-mails that have a "OPEN" status
+								if (calendarEntry.getAcceptStatus() == AcceptStatus.OPEN) {
+									// only add if this actually is a invitation!
 									calendarEntries.put(universalID, calendarEntry);
-									// now parse the document for details
-									final Document doc = viewEntry.getDocument();
-									final Vector<?> items = doc.getItems();
-									for (int j = 0; j < items.size(); j++) {
-										final Item item = (Item) items.elementAt(j);
-										calendarEntry.mapItem(item);
-									}
-//									System.out.println("#################################");
 								}
 
 							}
+//							System.out.println("#################################");
 							viewEntry = collection.getNextEntry();
 
 						}

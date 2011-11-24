@@ -1,0 +1,92 @@
+$PublicAccess=1
+WebDateTimeInit=1
+$IconSwitcher=Meeting
+OrgTable=C0
+Repeats=1
+Chair=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+Principal=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+$AltPrincipal=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+SequenceNum=1
+UpdateSeq=1
+$CSVersion=2
+$SMTPKeepNotesItems=1
+$CSWISL=$S:1;$L:1;$B:1;$R:1;$E:1;$W:1;$O:1;$M:1
+dspNum=2
+xToDo=To Do
+xMtg=Meeting
+RepeatUnit=D
+RepeatInterval=1
+RepeatStartDate=24.11.2011
+RepeatHow=F
+RepeatUntil=26.11.2011
+txtNum=2
+RepeatForUnit=D
+RepeatFor=2
+RepeatWeekends=D
+RepeatCustom=24.11.2011
+OrgRepeat=1
+STARTDATETIME=24.11.2011 18:00:00
+EndDateTime=24.11.2011 19:00:00
+$NoPurge=24.11.2011 19:00:00
+RepeatDates=24.11.2011 18:00:00;25.11.2011 18:00:00
+$CSTrack=Send[BIO-DE-MAIL01] by Notes on Christian Bieneck(Release 8.5.1|September 28, 2009) at 23.11.2011 20:26:54;PrepareToSend[BIO-DE-MAIL01] by Notes on Christian Bieneck(Release 8.5.1|September 28, 2009) at 23.11.2011 20:26:54
+NoticeType=I
+_ViewIcon=133
+Topic=TestRep
+RepeatEndDates=24.11.2011 19:00:00;25.11.2011 19:00:00
+RequiredAttendees=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+AltRequiredNames=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+INetRequiredNames=hauke.walden@biotronik.com
+StorageRequiredNames=1
+OriginalModTime=23.11.2011 20:26:54
+$HFFlags=1
+Form=Notice
+Logo=stdNotesLtr0
+$FromPreferredLanguage=de
+ApptUNID=8A28E8A8B736CC87C1257951006ACD7E
+AppointmentType=3
+$TableSwitcher=Description
+AltChair=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+OnlinePlace=
+IsBroadcast=0
+$ExpandGroups=3
+Subject=Invitation: TestRep (24 Nov 18:00 CET)
+StartTime=18:00:00
+StartTimeZone=Z=-1$DO=1$DL=3 -1 1 10 -1 1$ZX=71$ZN=W. Europe
+EndTime=19:00:00
+EndTimeZone=Z=-1$DO=1$DL=3 -1 1 10 -1 1$ZX=71$ZN=W. Europe
+PreventCounter=
+ConferenceCallInfo=
+WhiteBoardContent=
+$BorderColor=7F96A3
+$WatchedItems=$S;$L;$B;$R;$E;$W;$O;$M
+ReturnReceipt=
+Sign=
+StartDate=24.11.2011
+EndDate=24.11.2011
+PreventDelegate=
+SchedulerSwitcher=1
+SendTo=CN=Hauke Walden/OU=BIO-DE/O=BIOTRONIK@BIOTRONIK
+CopyTo=
+$NameLanguageTags=en
+InetSendTo=hauke.walden@biotronik.com
+InetCopyTo=
+AltSendTo=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+AltCopyTo=
+$StorageTo=1
+$StorageCc=
+$Mailer=Lotus Notes Release 8.5.1 September 28, 2009
+$MessageID=<OF8A28E8A8.B736CC87-ONC1257951.006ACD7E-C1257951.006AD56B@LocalDomain>
+From=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+INetFrom=christian.bieneck@biotronik.com
+PostedDate=23.11.2011 20:26:54
+Encrypt=0
+$UpdatedBy=CN=BIO-DE-MAIL01/OU=SRV/O=BIOTRONIK
+$Orig=8A28E8A8B736CC87C1257951006ACD7E
+Categories=
+$Revisions=
+RouteServers=CN=BIO-DE-MAIL01/OU=SRV/O=BIOTRONIK
+RouteTimes=23.11.2011 20:26:55-23.11.2011 20:26:55
+DeliveredDate=23.11.2011 20:26:55
+Alarms=
+$MiniView=1

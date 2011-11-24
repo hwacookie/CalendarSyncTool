@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.mbaaba.notes.AcceptStatus;
+
 /**
  * The Interface ICalendarEntry.
  */
@@ -186,4 +188,8 @@ public interface ICalendarEntry {
 	 */
 	public abstract Date getAlarmTime();
 
+	public abstract AcceptStatus getAcceptStatus();
+	
+	public abstract void sanityCheck();
+	
 }

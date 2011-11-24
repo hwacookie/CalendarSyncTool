@@ -1,0 +1,42 @@
+Received=from mail2.biotronik.org ([62.214.120.27])          by gw02-1.biotronik.org (Lotus Domino Release 8.5.2FP3)          with ESMTP id 2011112316411876-218285 ;          Wed, 23 Nov 2011 16:41:18 +0100
+X_ASG_Debug_ID=1322062564-372306f1000a-2AO2qd
+Received=from mail2.biotronik.org ([62.214.120.27])          by gw02-1.biotronik.org (Lotus Domino Release 8.5.2FP3)          with ESMTP id 2011112316411876-218285 ;          Wed, 23 Nov 2011 16:41:18 +0100
+X_Barracuda_Envelope_From=no-reply@iar.com
+DKIM_Signature=v=1; a=rsa-sha1; c=relaxed/relaxed; s=e; d=act-on.net; h=Message-ID:Date:From:Reply-To:To:Subject:Mime-Version:Content-Type; bh=2igJ6dCWQV70uAvbPdKjQv06aZk=; b=IoVDAW44uYUaqI2W6EVexJeH44mZUOQ7Wx3JYMLsiqxQ42sQyZFOn/b+nadCMKq5Yc8+Zlr3HUxi   Me8bj+CB/Q==
+Received=from mail2.biotronik.org ([62.214.120.27])          by gw02-1.biotronik.org (Lotus Domino Release 8.5.2FP3)          with ESMTP id 2011112316411876-218285 ;          Wed, 23 Nov 2011 16:41:18 +0100
+From=IAR Systems <no-reply@iar.com>
+ReplyTo=IAR Systems <no-reply@iar.com>
+SendTo=Hauke Walden <hauke.walden@biotronik.com>
+Subject=IAR KickStart Kit for STM32F407ZG
+MIME_Version=1.0
+X_ASG_Orig_Subj=IAR KickStart Kit for STM32F407ZG
+X_COD=http://10.10.10.101:8080/acton/messages/delivery.jsp?accountid=1011&msuid=s-0101-1111&rcptid=l-sf-rpt-00O3000000545G6-0120%3A14c29&srcid=l-sf-rpt-00O3000000545G6-0120
+X_Barracuda_Connect=ob3.act-on.net[69.30.4.3]
+X_Barracuda_Start_Time=1322062844
+X_Barracuda_URL=http://62.214.120.27:8000/cgi-mod/mark.cgi
+X_Virus_Scanned=by bsmtpd at biotronik.org
+X_Barracuda_Bayes=INNOCENT GLOBAL 0.3653 1.0000 -0.1007
+X_Barracuda_Spam_Score=-0.10
+X_Barracuda_Spam_Status=No, SCORE=-0.10 using per-user scores of TAG_LEVEL=4.0 QUARANTINE_LEVEL=4.9 KILL_LEVEL=4.9 tests=HTML_IMAGE_ONLY_32, HTML_MESSAGE
+X_Barracuda_Spam_Report=Code version 3.2, rules version 3.2.2.81077	Rule breakdown below	 pts rule name              description	---- ---------------------- --------------------------------------------------	0.00 HTML_IMAGE_ONLY_32     BODY: HTML: images with 2800-3200 bytes of words	0.00 HTML_MESSAGE           BODY: HTML included in message
+$INetOrig=4CFAF088174445F813A8A45945E0942F
+$Created=23.11.2011 16:36:07
+TNEFEvaluated=1
+SMTPOriginator=no-reply@iar.com
+$Orig=CA11535A0E8B00AAC125795100562E04
+Form=Memo
+$MessageID=<VWAXUYTU$UWVVTZVYZAWZX@127.0.0.1>
+PostedDate=23.11.2011 16:36:07
+$TkJobFlag=Deny Executables;E6105C50B1AD0BEBC12577C0004195BC
+$UpdatedBy=CN=GW02-1/OU=SRV/O=MSC
+$TkFlag50=starting jobs # GW02-1/SRV/MSC # 23.11.2011 16:41:19 # Process M02 # 13.1.0.4289.n8/64;Virus Check all Mails#NT000009CA(8000) # GW02-1/SRV/MSC # 23.11.2011 16:41:19;Deny Executables#NT00000B36(5000) # GW02-1/SRV/MSC # 23.11.2011 16:41:19;jobs ended # GW02-1/SRV/MSC # 23.11.2011 16:41:19
+RouteServers=CN=GW02-1/OU=SRV/O=MSC;CN=BIO-DE-MAIL01/OU=SRV/O=BIOTRONIK
+RouteTimes=23.11.2011 16:41:18-23.11.2011 16:41:19;23.11.2011 16:41:23-23.11.2011 16:41:23
+Categories=
+$Revisions=
+DeliveredDate=23.11.2011 16:41:23
+$MiniView=
+$TUA=4CFAF088174445F813A8A45945E0942F
+$MIMETrack=Itemize by SMTP Server on GW02-1/SRV/MSC(Release 8.5.2FP3|July 10, 2011) at 23.11.2011 16:41:18;MIME-CD by Notes Client on Hauke Walden/BIO-DE/BIOTRONIK(Release 8.5.1|September 28, 2009) at 23.11.2011 20:33:18;MIME-CD complete at 23.11.2011 20:33:18
+$PaperColor=1
+Body=Multiple lines of BlaBla

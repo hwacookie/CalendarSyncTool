@@ -29,17 +29,25 @@ public class NotesCalendarEntry extends CalendarEntry {
 
 	private boolean confidential;
 
+	/**
+	 * Is this an accepted invitation?
+	 */
+	private AcceptStatus accepted;
+
 	public NotesCalendarEntry(ICalendarEntry aCalendarEntry) {
 		super(aCalendarEntry);
 	}
 
 	public NotesCalendarEntry() {
+		accepted = AcceptStatus.ACCEPTED;
 	}
 
 	public void mapItem(Item aItem) throws NotesException {
+		//		System.out.println(aItem.getName() + " = " + aItem.getDateTimeValue() + " " + aItem.getValueString());
+		//		if (!aItem.getName().equals("Body")) {
+		//			System.out.println(aItem.getName() + " = " + aItem.getText());
+		//		}
 		final String itemName = aItem.getName().toLowerCase();
-		// System.out.println(itemName + " = " + aItem.getDateTimeValue() + " "
-		// + aItem.getValueString());
 		if (itemName.equals("subject")) {
 			setSubject(aItem.getValueString());
 		} else if (itemName.equals("body")) {
@@ -71,10 +79,28 @@ public class NotesCalendarEntry extends CalendarEntry {
 				final Date javaDate = ((DateTime) object).toJavaDate();
 				addEndDate(javaDate);
 			}
-			//} else if (itemName.equals("$alarmoffset")) {
-			// DateTime thisAlarmOffset = aItem.getDateTimeValue();
-			// TODO: 5: Handle alarm settings
-			// http://github.com/hwacookie/CalendarSyncTool/issues/issue/5
+		} else if (itemName.equals("repeatdates")) {
+			// this is for mail invitations that have not yet been confirmed
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				final Date javaDate = ((DateTime) object).toJavaDate();
+				addStartDate(javaDate);
+			}
+		} else if (itemName.equals("repeatenddates")) {
+			// this is for mail invitations that have not yet been confirmed
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				final Date javaDate = ((DateTime) object).toJavaDate();
+				addEndDate(javaDate);
+			}
+		} else if (itemName.equals("noticetype")) {
+			if (aItem.getText().equals("A")) {
+				setAcceptStatus(AcceptStatus.ACCEPTED);
+			} else if (aItem.getText().equals("R")) {
+				setAcceptStatus(AcceptStatus.DECLINED);
+			} else if (aItem.getText().equals("I")) {
+				setAcceptStatus(AcceptStatus.OPEN);
+			}
 		} else if (itemName.equals("originalmodtime")) {
 			setLastModified(aItem.getDateTimeValue().toJavaDate());
 		} else if (itemName.equals("requiredattendees") || itemName.equals("optionalattendees")) {
@@ -110,6 +136,15 @@ public class NotesCalendarEntry extends CalendarEntry {
 		s = s + "---------------------------------------------\n";
 		s = s + "is confidential: " + isConfidential() + "\n";
 		return s;
+	}
+
+	@Override
+	public AcceptStatus getAcceptStatus() {
+		return accepted;
+	}
+
+	public void setAcceptStatus(AcceptStatus aAcceptStatus) {
+		accepted = aAcceptStatus;
 	}
 
 }
