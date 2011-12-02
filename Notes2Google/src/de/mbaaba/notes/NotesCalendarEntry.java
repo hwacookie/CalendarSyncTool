@@ -8,6 +8,7 @@
 
 package de.mbaaba.notes;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -21,6 +22,7 @@ import de.mbaaba.calendar.ItemNotFoundException;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.calendar.PersonFactory;
 import de.mbaaba.calendar.PersonFactory.CalendarType;
+import de.mbaaba.util.OutputManager;
 
 /**
  * The Class NotesCalendarEntry.
@@ -41,6 +43,8 @@ public class NotesCalendarEntry extends CalendarEntry {
 	public NotesCalendarEntry() {
 		accepted = AcceptStatus.ACCEPTED;
 	}
+
+	private static final SimpleDateFormat gmtDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	public void mapItem(Item aItem) throws NotesException {
 
@@ -71,28 +75,28 @@ public class NotesCalendarEntry extends CalendarEntry {
 		} else if (itemName.equals("startdatetime")) {
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addStartDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addStartDate(notesDateTime);
 			}
 		} else if (itemName.equals("enddatetime")) {
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addEndDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addEndDate(notesDateTime);
 			}
 		} else if (itemName.equals("repeatdates")) {
 			// this is for mail invitations that have not yet been confirmed
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addStartDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addStartDate(notesDateTime);
 			}
 		} else if (itemName.equals("repeatenddates")) {
 			// this is for mail invitations that have not yet been confirmed
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addEndDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addEndDate(notesDateTime);
 			}
 		} else if (itemName.equals("noticetype")) {
 			if (aItem.getText().equals("A")) {
@@ -121,6 +125,30 @@ public class NotesCalendarEntry extends CalendarEntry {
 			}
 		}
 
+	}
+
+	public void addStartDate(DateTime aStartDate) {
+		Date javaDate;
+		try {
+			javaDate = aStartDate.toJavaDate();
+			addStartDate(javaDate);
+		} catch (NotesException e) {
+			OutputManager.printerr(e.getMessage(), e);
+//		} catch (ParseException e) {
+//			OutputManager.printerr(e.getMessage(), e);
+		}
+	}
+
+	public void addEndDate(DateTime aEndDate) {
+		Date javaDate;
+		try {
+//			javaDate = gmtDateFormat.parse(aEndDate.getGMTTime());
+			addEndDate(aEndDate.toJavaDate());
+		} catch (NotesException e) {
+			OutputManager.printerr(e.getMessage(), e);
+//		} catch (ParseException e) {
+//			OutputManager.printerr(e.getMessage(), e);
+		}
 	}
 
 	public boolean isConfidential() {
