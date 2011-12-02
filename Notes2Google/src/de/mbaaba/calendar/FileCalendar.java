@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.XStream;
 
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
+import de.mbaaba.util.OutputManager;
 
 /**
  * This is a calendar that uses {@link XStream} to store its content.

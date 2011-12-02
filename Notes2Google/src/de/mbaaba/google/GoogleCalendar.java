@@ -43,9 +43,11 @@ import com.google.gdata.util.ServiceException;
 
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.ICalendarEntry;
-import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.calendar.Person;
+import de.mbaaba.notes.AcceptStatus;
 import de.mbaaba.util.Configurator;
+import de.mbaaba.util.Logger;
+import de.mbaaba.util.OutputManager;
 import de.mbaaba.util.Units;
 
 /**
@@ -59,6 +61,13 @@ public class GoogleCalendar extends AbstractCalendar {
 	private CalendarService calendarService;
 
 	private URL feedUrl;
+
+	/**
+	 * A logger for this class.
+	 */
+	private static final Logger LOG = new Logger(GoogleCalendar.class);
+
+	
 
 	private CalendarEventEntry getByNotesID(String aNotesId) throws ServiceException, IOException {
 		final CalendarQuery myQuery = new CalendarQuery(feedUrl);
@@ -105,7 +114,14 @@ public class GoogleCalendar extends AbstractCalendar {
 
 		addExtendedProperty(googleCalendarEventEntry, NOTES_ID, aCalendarEntry.getUniqueID());
 
-		this.calendarService.insert(feedUrl, googleCalendarEventEntry);
+		try {
+			this.calendarService.insert(feedUrl, googleCalendarEventEntry);
+		} catch (com.google.gdata.util.InvalidEntryException e) {
+			String errorMessage = "Entry "+aCalendarEntry.getUniqueID()+" is invalid: " + e.getMessage();
+			LOG.warn(errorMessage, e);
+			OutputManager.printerr(errorMessage);
+			
+		}
 	}
 
 	private CalendarEventEntry createGoogleEvent(ICalendarEntry aCalendarEntry) {
@@ -139,8 +155,8 @@ public class GoogleCalendar extends AbstractCalendar {
 		// if number of dates is 1 so handle single date event
 		if (numDates == 1) {
 			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
-			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+			final SimpleDateFormat sdf = createDateFormatter(aCalendarEntry, pattern);
+			
 
 			final Date start = aCalendarEntry.getStartDates().get(0);
 			final Date end = aCalendarEntry.getEndDates().get(0);
@@ -164,8 +180,7 @@ public class GoogleCalendar extends AbstractCalendar {
 			aGoogleCalendarEventEntry.addTime(eventTimes);
 		} else if (numDates > 1) {
 			final String pattern = "yyyyMMdd'T'HHmmss";
-			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+			final SimpleDateFormat sdf = createDateFormatter(aCalendarEntry, pattern);
 
 			final Recurrence rr = new Recurrence();
 			String rrS = "";
@@ -198,6 +213,16 @@ public class GoogleCalendar extends AbstractCalendar {
 		final EventWho organizedBy = createParticipant(aCalendarEntry.getChair(), Who.Rel.EVENT_ORGANIZER);
 		aGoogleCalendarEventEntry.addParticipant(organizedBy);
 
+	}
+
+	private SimpleDateFormat createDateFormatter(ICalendarEntry aCalendarEntry, final String pattern) {
+		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		if (aCalendarEntry.getAcceptStatus()==AcceptStatus.OPEN) {
+			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+		} else {
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+		}
+		return sdf;
 	}
 
 	/**

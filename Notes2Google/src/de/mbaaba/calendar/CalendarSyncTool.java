@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 
 import de.mbaaba.util.CommConfigUtil;
 import de.mbaaba.util.Logger;
+import de.mbaaba.util.OutputManager;
 import de.mbaaba.util.PropertyFileConfigurator;
 import de.mbaaba.util.Units;
 
@@ -342,6 +343,9 @@ public final class CalendarSyncTool {
 	 *             the exception
 	 */
 	public static void main(String[] aAgs) throws Exception {
+		if ((aAgs.length>0) && (aAgs[0].contains("clearAll"))) {
+			ClearGoogle.clearGoogle();
+		}
 		final CalendarSyncTool notes2GoogleExporter = new CalendarSyncTool();
 		notes2GoogleExporter.syncLoop();
 	}

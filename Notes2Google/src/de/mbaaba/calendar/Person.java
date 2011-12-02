@@ -87,8 +87,12 @@ public class Person {
 	}
 
 	public String getPrettyMailAdress() {
-		return ((getFirstName() != null) ? getFirstName() + " " : "") + ((getLastName() != null) ? getLastName() + " " : "")
-				+ "<" + getINetAdress() + ">";
+		if ((getFirstName()!=null) || (getLastName()!=null)) {
+			return ((getFirstName() != null) ? getFirstName() + " " : "") + ((getLastName() != null) ? getLastName() + " " : "")
+					+ "<" + getINetAdress() + ">";
+		} else {
+			return getINetAdress().substring(0,getINetAdress().indexOf("@"))+ " <" + getINetAdress() + ">"; 
+		}
 	}
 
 	public String getShortContactInfo() {

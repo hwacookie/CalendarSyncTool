@@ -78,11 +78,6 @@ public class NotesMailbox extends AbstractCalendar {
 	 */
 	public class DataFetcher extends NotesMailbox.AbstractRunnable {
 
-		/** The Constant COL_START_DATE. */
-		private static final int COL_START_DATE = 8;
-
-		/** The Constant COL_END_DATE. */
-		private static final int COL_END_DATE = 10;
 
 		/** The end date. */
 		private Date endDate;

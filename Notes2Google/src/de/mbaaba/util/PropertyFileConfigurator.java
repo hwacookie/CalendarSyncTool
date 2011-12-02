@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import de.mbaaba.calendar.OutputManager;
 
 /**
  * The Class AdapterConfigurator contains functionality to configure the

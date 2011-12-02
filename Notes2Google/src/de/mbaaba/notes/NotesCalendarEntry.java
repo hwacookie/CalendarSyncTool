@@ -43,6 +43,7 @@ public class NotesCalendarEntry extends CalendarEntry {
 	}
 
 	public void mapItem(Item aItem) throws NotesException {
+
 		//		System.out.println(aItem.getName() + " = " + aItem.getDateTimeValue() + " " + aItem.getValueString());
 		//		if (!aItem.getName().equals("Body")) {
 		//			System.out.println(aItem.getName() + " = " + aItem.getText());
