@@ -206,7 +206,7 @@ public class GoogleCalendar extends AbstractCalendar {
 	 * @return <code>true</code> if more then 23h and 30m between start end else <code>false</code>
 	 */
 	private boolean isAllDayEvent(Date pStart, Date pEnd) {
-		return pEnd.getTime() - pStart.getTime() > Units.HOUR * 23 + Units.MINUTE * 30;
+		return pEnd.getTime() - pStart.getTime() > Units.HOUR * 15 + Units.MINUTE * 30;
 	}
 
 	private EventWho createParticipant(Person aPerson, String aRelation) {
@@ -307,7 +307,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		boolean isSuccess = false;
 		try {
 			final CalendarEventFeed feed = this.calendarService.getFeed(feedUrl, CalendarEventFeed.class);
-			final Link batchLink = feed.getLink("http://schemas.google.com/g/2005#batch", ILink.Type.ATOM);
+			final Link batchLink = feed.getLink(Link.Rel.FEED_BATCH, ILink.Type.ATOM);
 			final URL batchUrl = new URL(batchLink.getHref());
 
 			final CalendarEventFeed batchResponse = this.calendarService.batch(batchUrl, batchRequest);
@@ -399,10 +399,9 @@ public class GoogleCalendar extends AbstractCalendar {
 			}
 		}
 		
-		try{
+		try {
 			// Get some events to operate on.
-			URL defaultEventFeedUrl = new URL("https://www.google.com/calendar/feeds/default/private/full");
-			CalendarEventFeed feed = this.calendarService.getFeed(defaultEventFeedUrl, CalendarEventFeed.class);
+			CalendarEventFeed feed = this.calendarService.getFeed(feedUrl, CalendarEventFeed.class);
 	
 			// Get the batch link URL and send the batch request there.
 			Link batchLink = feed.getLink(Link.Rel.FEED_BATCH, Link.Type.ATOM);
