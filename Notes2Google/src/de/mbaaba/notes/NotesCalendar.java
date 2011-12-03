@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import lotus.domino.Database;
@@ -127,6 +128,16 @@ public class NotesCalendar extends AbstractCalendar {
 						final View view = mailDB.getView("($Calendar)");
 
 						final DateRange dr = session.createDateRange(startDate, endDate);
+								
+						int timezoneOffset = session.getInternational().getTimeZone();
+						TimeZone timezone;
+						if (timezoneOffset > 0) {
+							timezone = TimeZone.getTimeZone("Etc/GMT+" + timezoneOffset);
+						} else if (timezoneOffset < 0) {
+							timezone = TimeZone.getTimeZone("Etc/GMT-" + timezoneOffset);
+						} else {
+							timezone = TimeZone.getTimeZone("Etc/GMT+");
+						}
 
 						final ViewEntryCollection collection = view.getAllEntriesByKey(dr, true);
 
@@ -137,6 +148,7 @@ public class NotesCalendar extends AbstractCalendar {
 							if (!calendarEntries.containsKey(universalID)) {
 								final NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
 								calendarEntry.setUniqueID(universalID);
+								calendarEntry.setTimezone(timezone);
 
 								final Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
 

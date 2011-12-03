@@ -11,6 +11,7 @@ package de.mbaaba.calendar;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * The Interface ICalendarEntry.
@@ -185,5 +186,18 @@ public interface ICalendarEntry {
 	 * @return the alarm time
 	 */
 	public abstract Date getAlarmTime();
-
+	
+	/**
+	 * Gets the timezone.
+	 * 
+	 * @return the timezone
+	 */
+	public abstract TimeZone getTimezone();
+	
+	/**
+	 * Sets the timezone.
+	 * 
+	 * @param the timezone
+	 */
+	public abstract void setTimezone(TimeZone pTimezone);
 }

@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import com.google.gdata.client.calendar.CalendarQuery;
 import com.google.gdata.client.calendar.CalendarService;
@@ -140,7 +139,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		if (numDates == 1) {
 			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+			sdf.setTimeZone(aCalendarEntry.getTimezone());
 
 			final Date start = aCalendarEntry.getStartDates().get(0);
 			final Date end = aCalendarEntry.getEndDates().get(0);
@@ -165,7 +164,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		} else if (numDates > 1) {
 			final String pattern = "yyyyMMdd'T'HHmmss";
 			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
+			sdf.setTimeZone(aCalendarEntry.getTimezone());
 
 			final Recurrence rr = new Recurrence();
 			String rrS = "";
