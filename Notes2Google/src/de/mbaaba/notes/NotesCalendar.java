@@ -11,6 +11,8 @@ package de.mbaaba.notes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import lotus.domino.Database;
@@ -27,6 +29,7 @@ import lotus.domino.ViewEntryCollection;
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
@@ -126,6 +129,17 @@ public class NotesCalendar extends AbstractCalendar {
 						final View view = mailDB.getView("($Calendar)");
 
 						final DateRange dr = session.createDateRange(startDate, endDate);
+								
+						int timezoneOffset = session.getInternational().getTimeZone();
+						TimeZone timezone;
+						if (timezoneOffset > 0) {
+							timezone = TimeZone.getTimeZone("Etc/GMT+" + timezoneOffset);
+						} else if (timezoneOffset < 0) {
+							timezone = TimeZone.getTimeZone("Etc/GMT" + timezoneOffset);
+						} else {
+							timezone = TimeZone.getTimeZone("Etc/GMT+1");
+						}
+						OutputManager.println("Using timezone: " + timezone.getDisplayName() + " - Offset: " + timezone.getOffset(System.currentTimeMillis()));
 
 						final ViewEntryCollection collection = view.getAllEntriesByKey(dr, true);
 
@@ -136,6 +150,7 @@ public class NotesCalendar extends AbstractCalendar {
 							if (!calendarEntries.containsKey(universalID)) {
 								final NotesCalendarEntry calendarEntry = new NotesCalendarEntry();
 								calendarEntry.setUniqueID(universalID);
+								calendarEntry.setTimezone(timezone);
 
 								final Object viewEntryStartDate = viewEntry.getColumnValues().get(COL_START_DATE);
 
@@ -207,6 +222,20 @@ public class NotesCalendar extends AbstractCalendar {
 		}
 	}
 
+	/**
+	 * Adds all given calendar entries.
+	 * 
+	 * @see #put(ICalendarEntry)
+	 * @param aCalendarEntries
+	 *            the calendar entries to be added.
+	 */
+	@Override
+	public final void putList(List<ICalendarEntry> aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			put(calendarEntry);
+		}
+	}
+	
 	/**
 	 * Adding calendar entries is not supported (yet?)
 	 *

@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import com.google.gdata.client.calendar.CalendarQuery;
 import com.google.gdata.client.calendar.CalendarService;
@@ -36,6 +35,7 @@ import com.google.gdata.data.extensions.GivenName;
 import com.google.gdata.data.extensions.PhoneNumber;
 import com.google.gdata.data.extensions.PhoneNumber.Rel;
 import com.google.gdata.data.extensions.Recurrence;
+import com.google.gdata.data.extensions.When;
 import com.google.gdata.data.extensions.Where;
 import com.google.gdata.data.extensions.Who;
 import com.google.gdata.util.ServiceException;
@@ -97,38 +97,31 @@ public class GoogleCalendar extends AbstractCalendar {
 		return res;
 	}
 
-	private void createEvent(ICalendarEntry aCalendarEntry) throws ServiceException, IOException {
+	private CalendarEventEntry createEvent(ICalendarEntry aCalendarEntry) throws ServiceException {
 		if (aCalendarEntry.getStartDates() == null) {
-			OutputManager.printerr("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
-			return;
+			OutputManager.println("Ooops: no start date set: " + aCalendarEntry.getUniqueID());
+			return null;
 		}
 		if (aCalendarEntry.getEndDates() == null) {
-			OutputManager.printerr("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
-			return;
+			OutputManager.println("Ooops: no end date set: " + aCalendarEntry.getUniqueID());
+			return null;
 		}
 
 		final CalendarEventEntry googleCalendarEventEntry = createGoogleEvent(aCalendarEntry);
 
 		addExtendedProperty(googleCalendarEventEntry, NOTES_ID, aCalendarEntry.getUniqueID());
 
-		try {
-			this.calendarService.insert(feedUrl, googleCalendarEventEntry);
-		} catch (com.google.gdata.util.InvalidEntryException e) {
-			String errorMessage = "Entry " + aCalendarEntry.getUniqueID() + " is invalid: " + e.getMessage();
-			LOG.warn(errorMessage, e);
-			OutputManager.printerr(errorMessage);
-
-		}
+		return googleCalendarEventEntry;
 	}
 
 	private CalendarEventEntry createGoogleEvent(ICalendarEntry aCalendarEntry) {
 		final CalendarEventEntry googleCalendarEventEntry = new CalendarEventEntry();
 
-		copyFromInternalToGoogleStyle(aCalendarEntry, googleCalendarEventEntry);
+		updateGoogleCalendarEventEntry(aCalendarEntry, googleCalendarEventEntry);
 		return googleCalendarEventEntry;
 	}
 
-	private void copyFromInternalToGoogleStyle(ICalendarEntry aCalendarEntry, CalendarEventEntry aGoogleCalendarEventEntry) {
+	private void updateGoogleCalendarEventEntry(ICalendarEntry aCalendarEntry, CalendarEventEntry aGoogleCalendarEventEntry) {
 		aGoogleCalendarEventEntry.setId(aCalendarEntry.getUniqueID());
 		aGoogleCalendarEventEntry.setTitle(new PlainTextConstruct(aCalendarEntry.getSubject()));
 		aGoogleCalendarEventEntry.setContent(new PlainTextConstruct(aCalendarEntry.getBody()));
@@ -151,58 +144,59 @@ public class GoogleCalendar extends AbstractCalendar {
 
 		final int numDates = aCalendarEntry.getStartDates().size();
 
-		//		// if number of dates is more than 1 so handle recurrence
-		//		// if number of dates is 1 so handle single date event
-		//		if (numDates == 1) {
-		//			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
-		//			final SimpleDateFormat sdf = createDateFormatter(aCalendarEntry, pattern);
-		//			
-		//
-		//			final Date start = aCalendarEntry.getStartDates().get(0);
-		//			final Date end = aCalendarEntry.getEndDates().get(0);
-		//			final boolean allDayEvent = isAllDayEvent(start, end);
-		//			
-		//			DateTime startTime = DateTime.parseDateTime(sdf.format(start));  // Time value is irrelevant 
-		//			if (allDayEvent) {
-		//				startTime.setDateOnly(true);
-		//			} else {
-		//				startTime.setDateOnly(false);
-		//			}
-		//			DateTime endTime = DateTime.parseDateTime(sdf.format(end));  // Time value is irrelevant 
-		//			if (allDayEvent) {
-		//				endTime.setDateOnly(true);
-		//			} else {
-		//				endTime.setDateOnly(false);
-		//			}
-		//			When eventTimes = new When();
-		//			eventTimes.setStartTime(startTime);
-		//			eventTimes.setEndTime(endTime);
-		//			aGoogleCalendarEventEntry.addTime(eventTimes);
-		//		} else if (numDates > 1) {
-		final String pattern = "yyyyMMdd'T'HHmmss";
-		final SimpleDateFormat sdf = createDateFormatter(aCalendarEntry, pattern);
+		// if number of dates is more than 1 so handle recurrence
+		// if number of dates is 1 so handle single date event
+		if (numDates == 1) {
+			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+			sdf.setTimeZone(aCalendarEntry.getTimezone());
 
-		final Recurrence rr = new Recurrence();
-		String rrS = "";
-		for (int ctr = 0; ctr < numDates; ctr++) {
-			final Date start = aCalendarEntry.getStartDates().get(ctr);
-			final Date end = aCalendarEntry.getEndDates().get(ctr);
+			final Date start = aCalendarEntry.getStartDates().get(0);
+			final Date end = aCalendarEntry.getEndDates().get(0);
+			final boolean allDayEvent = isAllDayEvent(start, end);
+			
+			DateTime startTime = DateTime.parseDateTime(sdf.format(start));  // Time value is irrelevant 
+			if (allDayEvent) {
+				startTime.setDateOnly(true);
+			} else {
+				startTime.setDateOnly(false);
+			}
+			DateTime endTime = DateTime.parseDateTime(sdf.format(end));  // Time value is irrelevant 
+			if (allDayEvent) {
+				endTime.setDateOnly(true);
+			} else {
+				endTime.setDateOnly(false);
+			}
+			When eventTimes = new When();
+			eventTimes.setStartTime(startTime);
+			eventTimes.setEndTime(endTime);
+			aGoogleCalendarEventEntry.addTime(eventTimes);
+		} else if (numDates > 1) {
+			final String pattern = "yyyyMMdd'T'HHmmss";
+			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+			sdf.setTimeZone(aCalendarEntry.getTimezone());
 
-			if (ctr == 0) {
-				rrS = "DTSTART;TZID=\"W. Europe\":" + sdf.format(start) + NEWLINE + "DTEND;TZID=\"W. Europe\":" + sdf.format(end)
-						+ NEWLINE + "TRANSP:OPAQUE" + NEWLINE + "RDATE;VALUE=PERIOD:";
+			final Recurrence rr = new Recurrence();
+			String rrS = "";
+			for (int ctr = 0; ctr < numDates; ctr++) {
+				final Date start = aCalendarEntry.getStartDates().get(ctr);
+				final Date end = aCalendarEntry.getEndDates().get(ctr);
+
+				if (ctr == 0) {
+					rrS = "DTSTART;TZID=\"W. Europe\":" + sdf.format(start) + NEWLINE + "DTEND;TZID=\"W. Europe\":" + sdf.format(end)
+							+ NEWLINE + "TRANSP:OPAQUE" + NEWLINE + "RDATE;VALUE=PERIOD:";
+				}
+
+				rrS = rrS + sdf.format(start) + "Z/" + sdf.format(end) + "Z,";
+			}
+			rrS = rrS.substring(0, rrS.length() - 1);
+			if (aCalendarEntry.getLastModified() != null) {
+				rrS = rrS + NEWLINE + "DTSTAMP:" + sdf.format(aCalendarEntry.getLastModified());
 			}
 
-			rrS = rrS + sdf.format(start) + "Z/" + sdf.format(end) + "Z,";
+			rr.setValue(rrS);
+			aGoogleCalendarEventEntry.setRecurrence(rr);
 		}
-		rrS = rrS.substring(0, rrS.length() - 1);
-		if (aCalendarEntry.getLastModified() != null) {
-			rrS = rrS + NEWLINE + "DTSTAMP:" + sdf.format(aCalendarEntry.getLastModified());
-		}
-
-		rr.setValue(rrS);
-		aGoogleCalendarEventEntry.setRecurrence(rr);
-		//		}
 
 		final List<Person> attendees = aCalendarEntry.getAttendees();
 		for (final Person person : attendees) {
@@ -215,22 +209,11 @@ public class GoogleCalendar extends AbstractCalendar {
 
 	}
 
-	private SimpleDateFormat createDateFormatter(ICalendarEntry aCalendarEntry, final String pattern) {
-		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		//		if (aCalendarEntry.getAcceptStatus()==AcceptStatus.OPEN) {
-		//			sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-		//		} else {
-		//			sdf.setTimeZone(TimeZone.getTimeZone("GMT-0:00"));
-		//		}
-		return sdf;
-	}
-
 	/**
-	 * Gets <code>true</code> if more then 23h and 30m between start end else <code>false</code>.
+	 * Gets <code>true</code> if more then 15h between start end else <code>false</code>.
 	 * @param pStart start date
 	 * @param pEnd end date
-	 * @return <code>true</code> if more then 23h and 30m between start end else <code>false</code>
+	 * @return <code>true</code> if more then 15h between start end else <code>false</code>
 	 */
 	private boolean isAllDayEvent(Date pStart, Date pEnd) {
 		return pEnd.getTime() - pStart.getTime() > Units.HOUR * 15;
@@ -334,7 +317,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		boolean isSuccess = false;
 		try {
 			final CalendarEventFeed feed = this.calendarService.getFeed(feedUrl, CalendarEventFeed.class);
-			final Link batchLink = feed.getLink("http://schemas.google.com/g/2005#batch", ILink.Type.ATOM);
+			final Link batchLink = feed.getLink(Link.Rel.FEED_BATCH, ILink.Type.ATOM);
 			final URL batchUrl = new URL(batchLink.getHref());
 
 			final CalendarEventFeed batchResponse = this.calendarService.batch(batchUrl, batchRequest);
@@ -384,6 +367,75 @@ public class GoogleCalendar extends AbstractCalendar {
 
 		return null;
 	}
+	
+	/**
+	 * Adds all given calendar entries.
+	 * 
+	 * @param aCalendarEntriesthe calendar entries to be added or updated.
+	 */
+	@Override
+	public void putList(List<ICalendarEntry> aCalendarEntries) {
+		// New feed all entries will be add to
+		CalendarEventFeed batchRequest = new CalendarEventFeed();
+		int batchIndex = 1;
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			try {
+				if (calendarEntry.getUniqueID() == null) {
+					OutputManager.printerr("Entry has no unique ID!");
+					continue;
+				}
+				final CalendarEventEntry googleEvent = getByNotesID(calendarEntry.getUniqueID());
+				if (googleEvent != null) {
+					OutputManager.println("Updating entry " + calendarEntry.getShortString() + ".");
+					updateGoogleCalendarEventEntry(calendarEntry, googleEvent);
+					BatchUtils.setBatchId(googleEvent, String.valueOf(batchIndex));
+					BatchUtils.setBatchOperationType(googleEvent, BatchOperationType.UPDATE);
+					batchRequest.getEntries().add(googleEvent);
+					batchIndex++;
+				} else {
+					OutputManager.println("Adding entry " + calendarEntry.getShortString() + ".");
+					CalendarEventEntry entryToAdd = createEvent(calendarEntry);
+					if (entryToAdd != null) {
+						BatchUtils.setBatchId(entryToAdd, String.valueOf(batchIndex));
+						BatchUtils.setBatchOperationType(entryToAdd, BatchOperationType.INSERT);
+						batchRequest.getEntries().add(entryToAdd);
+						batchIndex++;
+					}
+				}
+			} catch (final Exception e) {
+				//skipp element if exception occured
+				OutputManager.println(e.getMessage());
+				continue;
+			}
+		}
+		
+		try {
+			// Get some events to operate on.
+			CalendarEventFeed feed = this.calendarService.getFeed(feedUrl, CalendarEventFeed.class);
+	
+			// Get the batch link URL and send the batch request there.
+			Link batchLink = feed.getLink(Link.Rel.FEED_BATCH, Link.Type.ATOM);
+			CalendarEventFeed batchResponse = this.calendarService.batch(new URL(batchLink.getHref()), batchRequest);
+	
+			// Ensure that all the operations were successful.
+			boolean isSuccess = true;
+			for (CalendarEventEntry entry : batchResponse.getEntries()) {
+			  String batchId = BatchUtils.getBatchId(entry);
+			  if (!BatchUtils.isSuccess(entry)) {
+			    isSuccess = false;
+			    BatchStatus status = BatchUtils.getBatchStatus(entry);
+			    OutputManager.println("Batchentry with Id: " + batchId + " failed (" + status.getReason() + ") " + status.getContent());
+			  }
+			}
+			if (isSuccess) {
+				OutputManager.println("Successfully created/updated all events via batch request.");
+			} else {
+				OutputManager.println("Not all events created/updated sucessfully via batch request.");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error during batch update: " + e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
@@ -395,7 +447,7 @@ public class GoogleCalendar extends AbstractCalendar {
 			final CalendarEventEntry googleEvent = getByNotesID(aCalendarEntry.getUniqueID());
 			if (googleEvent != null) {
 				OutputManager.println("Updating entry " + aCalendarEntry.getShortString() + ".");
-				copyFromInternalToGoogleStyle(aCalendarEntry, googleEvent);
+				updateGoogleCalendarEventEntry(aCalendarEntry, googleEvent);
 				googleEvent.delete();
 				createEvent(aCalendarEntry);
 			} else {
@@ -410,19 +462,6 @@ public class GoogleCalendar extends AbstractCalendar {
 	@Override
 	public void close() {
 	}
-
-	// public void deleteAllEntries() {
-	// try {
-	// CalendarEventFeed resultFeed = (CalendarEventFeed)
-	// this.calendarService.getFeed(feedUrl, CalendarEventFeed.class);
-	// List<CalendarEventEntry> entries = resultFeed.getEntries();
-	// delete(entries);
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// } catch (ServiceException e) {
-	// e.printStackTrace();
-	// }
-	// }
 
 	@Override
 	public void delete(ICalendarEntry aParamCalendarEntry) {
@@ -445,4 +484,3 @@ public class GoogleCalendar extends AbstractCalendar {
 
 }
 
-// Kommentare entfernt -> commit für chris
