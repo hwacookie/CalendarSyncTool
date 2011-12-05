@@ -11,7 +11,6 @@ package de.mbaaba.notes;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Database;
@@ -204,20 +203,6 @@ public class NotesMailbox extends AbstractCalendar {
 		 */
 		public boolean isRunning() {
 			return running;
-		}
-	}
-
-	/**
-	 * Adds all given calendar entries.
-	 * 
-	 * @see #put(ICalendarEntry)
-	 * @param aCalendarEntries
-	 *            the calendar entries to be added.
-	 */
-	@Override
-	public final void putList(List<ICalendarEntry> aCalendarEntries) {
-		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
-			put(calendarEntry);
 		}
 	}
 	

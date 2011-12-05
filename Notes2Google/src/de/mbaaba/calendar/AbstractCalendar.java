@@ -59,7 +59,19 @@ public abstract class AbstractCalendar {
 	 * @param aCalendarEntries
 	 *            the calendar entries to be added.
 	 */
-	public abstract void putList(List<ICalendarEntry> aCalendarEntries);
+	//public abstract void putList(List<ICalendarEntry> aCalendarEntries);
+	
+	/**
+	 * Adds all given calendar entries.
+	 * 
+	 * @see #put(ICalendarEntry)
+	 * @param aCalendarEntries the calendar entries to be added.
+	 */
+	public void putList(List<ICalendarEntry> aCalendarEntries) {
+		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
+			put(calendarEntry);
+		}
+	}
 
 	/**
 	 * Adds the given entry to this calendar if it does not yet exist, or

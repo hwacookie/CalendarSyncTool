@@ -11,7 +11,6 @@ package de.mbaaba.calendar;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -66,9 +65,6 @@ public class CalendarEntry implements ICalendarEntry {
 
 	/** The alarm time. */
 	private Date alarmTime;
-	
-	/** The timezone. */
-	private TimeZone timezone;
 
 	/*
 	 * (non-Javadoc)
@@ -298,22 +294,6 @@ public class CalendarEntry implements ICalendarEntry {
 	public Date getAlarmTime() {
 		return alarmTime;
 	}
-	
-	/**
-	 * @see de.mbaaba.calendar.ICalendarEntry#setTimezone(TimeZone)
-	 */
-	@Override
-	public void setTimezone(TimeZone pTimezone) {
-		timezone = pTimezone;
-	}
-	
-	/**
-	 * @see de.mbaaba.calendar.ICalendarEntry#getTimezone()
-	 */
-	@Override
-	public TimeZone getTimezone() {
-		return timezone;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -329,8 +309,7 @@ public class CalendarEntry implements ICalendarEntry {
 					&& ObjectUtil.objectEquals(subject, other.subject) && ObjectUtil.objectEquals(body, other.body)
 					&& ObjectUtil.objectEquals(chair, other.chair) && ObjectUtil.objectEquals(location, other.location)
 					&& ObjectUtil.objectEquals(alarmTime, other.alarmTime) && ObjectUtil.objectEquals(room, other.room)
-					&& ObjectUtil.objectEquals(startDates, other.startDates) && ObjectUtil.objectEquals(endDates, other.endDates)
-					&& ObjectUtil.objectEquals(timezone, other.timezone);
+					&& ObjectUtil.objectEquals(startDates, other.startDates) && ObjectUtil.objectEquals(endDates, other.endDates);
 			return isEqual;
 		}
 		return false;

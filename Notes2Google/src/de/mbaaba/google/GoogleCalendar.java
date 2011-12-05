@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.google.gdata.client.calendar.CalendarQuery;
 import com.google.gdata.client.calendar.CalendarService;
@@ -147,21 +148,19 @@ public class GoogleCalendar extends AbstractCalendar {
 		// if number of dates is more than 1 so handle recurrence
 		// if number of dates is 1 so handle single date event
 		if (numDates == 1) {
-			final String pattern = "yyyy-MM-dd'T'HH:mm:ss";
-			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(aCalendarEntry.getTimezone());
-
 			final Date start = aCalendarEntry.getStartDates().get(0);
 			final Date end = aCalendarEntry.getEndDates().get(0);
 			final boolean allDayEvent = isAllDayEvent(start, end);
 			
-			DateTime startTime = DateTime.parseDateTime(sdf.format(start));  // Time value is irrelevant 
+			DateTime startTime = new DateTime(start);
+			startTime.setTzShift(start.getTimezoneOffset()); 
 			if (allDayEvent) {
 				startTime.setDateOnly(true);
 			} else {
 				startTime.setDateOnly(false);
 			}
-			DateTime endTime = DateTime.parseDateTime(sdf.format(end));  // Time value is irrelevant 
+			DateTime endTime = new DateTime(end);
+			endTime.setTzShift(end.getTimezoneOffset());
 			if (allDayEvent) {
 				endTime.setDateOnly(true);
 			} else {
@@ -174,7 +173,7 @@ public class GoogleCalendar extends AbstractCalendar {
 		} else if (numDates > 1) {
 			final String pattern = "yyyyMMdd'T'HHmmss";
 			final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			sdf.setTimeZone(aCalendarEntry.getTimezone());
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 			final Recurrence rr = new Recurrence();
 			String rrS = "";

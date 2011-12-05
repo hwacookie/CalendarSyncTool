@@ -10,7 +10,6 @@ package de.mbaaba.notify;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.ICalendarEntry;
@@ -43,20 +42,6 @@ public class NotifyCalendar extends AbstractCalendar {
 		return new ArrayList<ICalendarEntry>();
 	}
 
-	/**
-	 * Adds all given calendar entries.
-	 * 
-	 * @see #put(ICalendarEntry)
-	 * @param aCalendarEntries
-	 *            the calendar entries to be added.
-	 */
-	@Override
-	public final void putList(List<ICalendarEntry> aCalendarEntries) {
-		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
-			put(calendarEntry);
-		}
-	}
-	
 	@Override
 	public void put(ICalendarEntry aCalendarEntry) {
 		// TODO Auto-generated method stub
