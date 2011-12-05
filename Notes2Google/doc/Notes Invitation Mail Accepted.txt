@@ -1,0 +1,99 @@
+$PublicAccess=1
+Chair=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+Principal=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+$AltPrincipal=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+SequenceNum=1
+UpdateSeq=1
+$CSVersion=2
+$SMTPKeepNotesItems=1
+$CSWISL=$S:1;$L:1;$B:1;$R:1;$E:1;$W:1;$O:1;$M:1
+WebDateTimeInit=1
+$IconSwitcher=Meeting
+
+STARTDATETIME=24.11.2011 19:00:00
+EndDateTime=24.11.2011 20:00:00
+
+$CSTrack=Send[BIO-DE-MAIL01] by Notes on Christian Bieneck(Release 8.5.1|September 28, 2009) at 23.11.2011 20:26:30;PrepareToSend[BIO-DE-MAIL01] by Notes on Christian Bieneck(Release 8.5.1|September 28, 2009) at 23.11.2011 20:26:30;Response_Outgoing_0037AFCE[BIO-DE-MAIL01] by Notes on Hauke Walden(Release 8.5.1|September 28, 2009) at 24.11.2011 11:08:15;PA(Accept)[BIO-DE-MAIL01] by Notes on Hauke Walden(Release 8.5.1|September 28, 2009) at 24.11.2011 11:08:15
+
+
+Topic=Test
+RequiredAttendees=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+AltRequiredNames=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+INetRequiredNames=hauke.walden@biotronik.com
+StorageRequiredNames=1
+OriginalModTime=23.11.2011 20:26:30
+
+
+Logo=stdNotesLtr0
+$FromPreferredLanguage=de
+ApptUNID=77AB9B0F2F01564EC1257951006AC845
+AppointmentType=3
+$TableSwitcher=Description
+AltChair=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+OnlinePlace=
+IsBroadcast=0
+$ExpandGroups=3
+
+StartTime=19:00:00
+StartTimeZone=Z=-1$DO=1$DL=3 -1 1 10 -1 1$ZX=71$ZN=W. Europe
+EndTime=20:00:00
+EndTimeZone=Z=-1$DO=1$DL=3 -1 1 10 -1 1$ZX=71$ZN=W. Europe
+PreventCounter=
+ConferenceCallInfo=
+WhiteBoardContent=
+
+$WatchedItems=$S;$L;$B;$R;$E;$W;$O;$M
+ReturnReceipt=
+Sign=
+StartDate=24.11.2011
+EndDate=24.11.2011
+PreventDelegate=
+SchedulerSwitcher=1
+SendTo=CN=Hauke Walden/OU=BIO-DE/O=BIOTRONIK@BIOTRONIK
+CopyTo=
+$NameLanguageTags=en
+InetSendTo=hauke.walden@biotronik.com
+InetCopyTo=
+AltSendTo=Hauke Walden/BIO-DE/BIOTRONIK@BIOTRONIK
+AltCopyTo=
+$StorageTo=1
+$StorageCc=
+$Mailer=Lotus Notes Release 8.5.1 September 28, 2009
+$MessageID=<OF77AB9B0F.2F01564E-ONC1257951.006AC845-C1257951.006ACC0B@LocalDomain>
+From=CN=Christian Bieneck/OU=BIO-DE/O=BIOTRONIK
+INetFrom=christian.bieneck@biotronik.com
+PostedDate=23.11.2011 20:26:30
+Encrypt=0
+
+$Orig=77AB9B0F2F01564EC1257951006AC845
+Categories=
+$Revisions=23.11.2011 20:26:31
+RouteServers=CN=BIO-DE-MAIL01/OU=SRV/O=BIOTRONIK
+RouteTimes=23.11.2011 20:26:31-23.11.2011 20:26:31
+DeliveredDate=23.11.2011 20:26:31
+$MiniView=
+Alarms=
+RespActTaken=1
+ExcludeFromView=D
+_ViewIcon=158
+OrgTable=C0
+NoticeType=A
+CalendarDateTime=24.11.2011 19:00:00
+$NoPurge=24.11.2011 20:00:00
+$Alarm=1
+$AlarmOffset=-10
+SaveOptions=
+MailOptions=
+$BusyName=CN=Hauke Walden/OU=BIO-DE/O=BIOTRONIK
+$BusyPriority=1
+$HFFlags=1
+Form=Appointment
+SMTPKeepNotesItems=1
+ApptUNIDURL=
+Subject=Test
+StatusUpdate=
+$BorderColor=7F96A3
+$ShowComments=Normal
+$ShowDescription=Show
+$UpdatedBy=CN=Hauke Walden/OU=BIO-DE/O=BIOTRONIK
+$Abstract=

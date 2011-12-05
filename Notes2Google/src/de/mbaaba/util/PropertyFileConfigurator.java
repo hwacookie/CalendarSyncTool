@@ -12,9 +12,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
-import de.mbaaba.calendar.OutputManager;
 
 /**
  * The Class AdapterConfigurator contains functionality to configure the
@@ -68,6 +70,17 @@ public class PropertyFileConfigurator implements Configurator {
 	@Override
 	public String getProperty(String aPropertyName, String aDefaultValue) {
 		return props.getProperty(aPropertyName, aDefaultValue);
+	}
+
+	public List<String> getMultiProperty(String aPropertyName, String aDefaultValue) {
+		String s = getProperty(aPropertyName, aDefaultValue);
+		final StringTokenizer tok = new StringTokenizer(s, ",");
+		List<String> allElements = new ArrayList<String>();
+		while (tok.hasMoreTokens()) {
+			final String element = tok.nextToken();
+			allElements.add(element);
+		}
+		return allElements;
 	}
 
 	/**

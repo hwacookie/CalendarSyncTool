@@ -8,6 +8,7 @@
 
 package de.mbaaba.notes;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -21,6 +22,7 @@ import de.mbaaba.calendar.ItemNotFoundException;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.calendar.PersonFactory;
 import de.mbaaba.calendar.PersonFactory.CalendarType;
+import de.mbaaba.util.OutputManager;
 
 /**
  * The Class NotesCalendarEntry.
@@ -29,17 +31,28 @@ public class NotesCalendarEntry extends CalendarEntry {
 
 	private boolean confidential;
 
+	/**
+	 * Is this an accepted invitation?
+	 */
+	private AcceptStatus accepted;
+
 	public NotesCalendarEntry(ICalendarEntry aCalendarEntry) {
 		super(aCalendarEntry);
 	}
 
 	public NotesCalendarEntry() {
+		accepted = AcceptStatus.ACCEPTED;
 	}
 
+	private static final SimpleDateFormat gmtDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
 	public void mapItem(Item aItem) throws NotesException {
+
+		//		System.out.println(aItem.getName() + " = " + aItem.getDateTimeValue() + " " + aItem.getValueString());
+		//		if (!aItem.getName().equals("Body")) {
+		//			System.out.println(aItem.getName() + " = " + aItem.getText());
+		//		}
 		final String itemName = aItem.getName().toLowerCase();
-		// System.out.println(itemName + " = " + aItem.getDateTimeValue() + " "
-		// + aItem.getValueString());
 		if (itemName.equals("subject")) {
 			setSubject(aItem.getValueString());
 		} else if (itemName.equals("body")) {
@@ -62,19 +75,37 @@ public class NotesCalendarEntry extends CalendarEntry {
 		} else if (itemName.equals("startdatetime")) {
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addStartDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addStartDate(notesDateTime);
 			}
 		} else if (itemName.equals("enddatetime")) {
 			final Vector<?> dates = aItem.getValueDateTimeArray();
 			for (final Object object : dates) {
-				final Date javaDate = ((DateTime) object).toJavaDate();
-				addEndDate(javaDate);
+				DateTime notesDateTime = (DateTime) object;
+				addEndDate(notesDateTime);
 			}
-			//} else if (itemName.equals("$alarmoffset")) {
-			// DateTime thisAlarmOffset = aItem.getDateTimeValue();
-			// TODO: 5: Handle alarm settings
-			// http://github.com/hwacookie/CalendarSyncTool/issues/issue/5
+		} else if (itemName.equals("repeatdates")) {
+			// this is for mail invitations that have not yet been confirmed
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				DateTime notesDateTime = (DateTime) object;
+				addStartDate(notesDateTime);
+			}
+		} else if (itemName.equals("repeatenddates")) {
+			// this is for mail invitations that have not yet been confirmed
+			final Vector<?> dates = aItem.getValueDateTimeArray();
+			for (final Object object : dates) {
+				DateTime notesDateTime = (DateTime) object;
+				addEndDate(notesDateTime);
+			}
+		} else if (itemName.equals("noticetype")) {
+			if (aItem.getText().equals("A")) {
+				setAcceptStatus(AcceptStatus.ACCEPTED);
+			} else if (aItem.getText().equals("R")) {
+				setAcceptStatus(AcceptStatus.DECLINED);
+			} else if (aItem.getText().equals("I")) {
+				setAcceptStatus(AcceptStatus.OPEN);
+			}
 		} else if (itemName.equals("originalmodtime")) {
 			setLastModified(aItem.getDateTimeValue().toJavaDate());
 		} else if (itemName.equals("requiredattendees") || itemName.equals("optionalattendees")) {
@@ -96,6 +127,30 @@ public class NotesCalendarEntry extends CalendarEntry {
 
 	}
 
+	public void addStartDate(DateTime aStartDate) {
+		Date javaDate;
+		try {
+			javaDate = aStartDate.toJavaDate();
+			addStartDate(javaDate);
+		} catch (NotesException e) {
+			OutputManager.printerr(e.getMessage(), e);
+//		} catch (ParseException e) {
+//			OutputManager.printerr(e.getMessage(), e);
+		}
+	}
+
+	public void addEndDate(DateTime aEndDate) {
+		Date javaDate;
+		try {
+//			javaDate = gmtDateFormat.parse(aEndDate.getGMTTime());
+			addEndDate(aEndDate.toJavaDate());
+		} catch (NotesException e) {
+			OutputManager.printerr(e.getMessage(), e);
+//		} catch (ParseException e) {
+//			OutputManager.printerr(e.getMessage(), e);
+		}
+	}
+
 	public boolean isConfidential() {
 		return confidential;
 	}
@@ -110,6 +165,15 @@ public class NotesCalendarEntry extends CalendarEntry {
 		s = s + "---------------------------------------------\n";
 		s = s + "is confidential: " + isConfidential() + "\n";
 		return s;
+	}
+
+	@Override
+	public AcceptStatus getAcceptStatus() {
+		return accepted;
+	}
+
+	public void setAcceptStatus(AcceptStatus aAcceptStatus) {
+		accepted = aAcceptStatus;
 	}
 
 }

@@ -32,6 +32,7 @@ public class GoogleCalendarEntry extends CalendarEntry {
 
 	public GoogleCalendarEntry(CalendarEventEntry aEntry) {
 
+
 		final Date lastModified = new Date(aEntry.getUpdated().getValue());
 		setLastModified(lastModified);
 		final List<EventWho> participants = aEntry.getParticipants();

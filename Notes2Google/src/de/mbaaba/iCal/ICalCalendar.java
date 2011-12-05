@@ -43,9 +43,9 @@ import net.fortuna.ical4j.util.Calendars;
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
-import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.calendar.Person;
 import de.mbaaba.util.Configurator;
+import de.mbaaba.util.OutputManager;
 
 /**
  * The Class ICalCalendar allows to access events within a iCal calendar.

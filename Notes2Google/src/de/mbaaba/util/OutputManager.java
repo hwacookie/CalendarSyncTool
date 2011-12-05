@@ -6,12 +6,11 @@
  * --------------------------------------------------------------------------
  */
 
-package de.mbaaba.calendar;
+package de.mbaaba.util;
 
 import java.text.DateFormat;
 import java.util.Date;
 
-import de.mbaaba.util.Logger;
 
 /**
  * The Class OutputManager handles output to the screen.
