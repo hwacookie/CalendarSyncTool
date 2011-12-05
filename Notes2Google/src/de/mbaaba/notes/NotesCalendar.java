@@ -29,6 +29,7 @@ import lotus.domino.ViewEntryCollection;
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
@@ -134,10 +135,11 @@ public class NotesCalendar extends AbstractCalendar {
 						if (timezoneOffset > 0) {
 							timezone = TimeZone.getTimeZone("Etc/GMT+" + timezoneOffset);
 						} else if (timezoneOffset < 0) {
-							timezone = TimeZone.getTimeZone("Etc/GMT-" + timezoneOffset);
+							timezone = TimeZone.getTimeZone("Etc/GMT" + timezoneOffset);
 						} else {
-							timezone = TimeZone.getTimeZone("Etc/GMT+");
+							timezone = TimeZone.getTimeZone("Etc/GMT+1");
 						}
+						OutputManager.println("Using timezone: " + timezone.getDisplayName() + " - Offset: " + timezone.getOffset(System.currentTimeMillis()));
 
 						final ViewEntryCollection collection = view.getAllEntriesByKey(dr, true);
 
