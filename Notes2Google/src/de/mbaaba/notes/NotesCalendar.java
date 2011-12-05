@@ -29,9 +29,9 @@ import lotus.domino.ViewEntryCollection;
 import de.mbaaba.calendar.AbstractCalendar;
 import de.mbaaba.calendar.CalendarEntry;
 import de.mbaaba.calendar.ICalendarEntry;
-import de.mbaaba.calendar.OutputManager;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
+import de.mbaaba.util.OutputManager;
 
 /**
  * The Class NotesCalendar allows to access events within a Lotus-Notes calendar.

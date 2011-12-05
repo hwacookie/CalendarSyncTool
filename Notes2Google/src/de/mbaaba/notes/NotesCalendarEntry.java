@@ -8,7 +8,6 @@
 
 package de.mbaaba.notes;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -43,8 +42,6 @@ public class NotesCalendarEntry extends CalendarEntry {
 	public NotesCalendarEntry() {
 		accepted = AcceptStatus.ACCEPTED;
 	}
-
-	private static final SimpleDateFormat gmtDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	public void mapItem(Item aItem) throws NotesException {
 
