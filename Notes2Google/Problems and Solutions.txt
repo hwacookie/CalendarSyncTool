@@ -1,0 +1,25 @@
+Problem:
+
+Notes-Datenbank kan nicht geöffnet werden, obwohl Notes läuft:
+
+09.10.2013 15:01:03 | repeatEach.nonofficehours=20
+NotesException: Database open failed (%1)
+        at lotus.domino.local.DbDirectory.NopenMailDatabase(Native Method)
+        at lotus.domino.local.DbDirectory.openMailDatabase(Unknown Source)
+        at de.mbaaba.notes.NotesCalendar$DataFetcher.run(NotesCalendar.java:120)
+        at lotus.domino.NotesThread.run(Unknown Source)
+NotesException: Database open failed (%1)
+        at lotus.domino.local.DbDirectory.NopenMailDatabase(Native Method)
+        at lotus.domino.local.DbDirectory.openMailDatabase(Unknown Source)
+        at de.mbaaba.notes.NotesMailbox$DataFetcher.run(NotesMailbox.java:116)
+        at lotus.domino.NotesThread.run(Unknown Source)
+09.10.2013 15:01:03 | ... no changes found. 
+
+
+Lösung:
+
+Tool ohne laufendes Notes starten, Passwort eingeben, sollte gehen. 
+
+
+----------------------------------------------------------------------------------
+
