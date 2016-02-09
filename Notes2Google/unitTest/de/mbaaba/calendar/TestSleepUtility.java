@@ -10,8 +10,8 @@ package de.mbaaba.calendar;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
 import de.mbaaba.util.Units;
+import junit.framework.TestCase;
 
 //CHECKSTYLE:OFF  ... show some mercy on hacked unit-tests.
 public class TestSleepUtility extends TestCase {
@@ -25,7 +25,6 @@ public class TestSleepUtility extends TestCase {
 
 		final Thread guard = new Thread(new Runnable() {
 
-			@Override
 			public void run() {
 				try {
 					Thread.sleep(aTimeout * Units.SECOND);

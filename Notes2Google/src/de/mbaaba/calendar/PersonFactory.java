@@ -10,7 +10,7 @@ package de.mbaaba.calendar;
 
 import java.util.List;
 
-import de.mbaaba.google.GooglePerson;
+import de.mbaaba.googleNew.GooglePerson;
 import de.mbaaba.notes.NotesPerson;
 
 /**

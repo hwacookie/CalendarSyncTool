@@ -18,9 +18,6 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 
-import de.mbaaba.directions.GoogleDirections;
-import de.mbaaba.directions.Legs;
-import de.mbaaba.directions.Routes;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.Logger;
 
@@ -55,7 +52,6 @@ public class FixLocationFilter implements ICalendarFilter {
 
 	}
 
-	@Override
 	public boolean passes(ICalendarEntry aParamCalendarEntry) {
 
 		final String defaultLocation = configurator.getProperty(DEFAULT_LOCATION, "");
@@ -103,19 +99,19 @@ public class FixLocationFilter implements ICalendarFilter {
 
 				final URLConnection conn = url.openConnection();
 				final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				final GoogleDirections directions = gson.fromJson(rd, GoogleDirections.class);
-
-				if ((directions.getStatus().equals("OK"))) {
-					final Routes route0 = directions.getRoutes().get(0);
-					final Legs leg0 = route0.getLegs().get(0);
-					if (leg0.getDistance().getValue().longValue() > ONE_HUNDRED_KILOMETER.longValue()) {
-						// result is probably broken!
-						result = aDefaultLocation;
-					} else {
-						//TODO: check encoding problems
-						result = leg0.getEnd_address();
-					}
-				}
+//				final GoogleDirections directions = gson.fromJson(rd, GoogleDirections.class);
+//
+//				if ((directions.getStatus().equals("OK"))) {
+//					final Routes route0 = directions.getRoutes().get(0);
+//					final Legs leg0 = route0.getLegs().get(0);
+//					if (leg0.getDistance().getValue().longValue() > ONE_HUNDRED_KILOMETER.longValue()) {
+//						// result is probably broken!
+//						result = aDefaultLocation;
+//					} else {
+//						//TODO: check encoding problems
+//						result = leg0.getEnd_address();
+//					}
+//				}
 			}
 			cachedLocations.put(aOriginalLocation, result);
 		}

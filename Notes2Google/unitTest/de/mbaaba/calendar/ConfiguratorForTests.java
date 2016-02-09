@@ -30,7 +30,7 @@ public class ConfiguratorForTests implements Configurator {
 		setProperty(CommConfigUtil.PROP_TRUST_ALL_HTTPS_CERTIFICATES, "true");
 	}
 
-	@Override
+	
 	public String getProperty(String aPropertyName, String aDefaultValue) {
 		final String property = props.getProperty(aPropertyName);
 		if (property == null) {
@@ -41,7 +41,7 @@ public class ConfiguratorForTests implements Configurator {
 		return property;
 	}
 
-	@Override
+	
 	public int getProperty(String aPropertyName, int aDefaultValue) {
 		final String s = props.getProperty(aPropertyName);
 		if (s == null) {
@@ -52,7 +52,7 @@ public class ConfiguratorForTests implements Configurator {
 		return Integer.valueOf(s);
 	}
 
-	@Override
+	
 	public void setProperty(String aPropertyName, String aValue) {
 		props.put(aPropertyName, aValue);
 	}

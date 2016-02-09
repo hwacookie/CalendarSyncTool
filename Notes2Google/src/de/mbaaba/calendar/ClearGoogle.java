@@ -8,7 +8,7 @@
 
 package de.mbaaba.calendar;
 
-import de.mbaaba.google.GoogleCalendar;
+import de.mbaaba.googleNew.GoogleCalendar;
 import de.mbaaba.util.CommConfigUtil;
 import de.mbaaba.util.Configurator;
 import de.mbaaba.util.PropertyFileConfigurator;

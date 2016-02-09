@@ -13,6 +13,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
+import de.mbaaba.calendar.AbstractCalendar;
+import de.mbaaba.calendar.CalendarEntry;
+import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.util.Configurator;
+import de.mbaaba.util.Logger;
 import lotus.domino.Database;
 import lotus.domino.DateRange;
 import lotus.domino.DbDirectory;
@@ -24,11 +29,6 @@ import lotus.domino.Session;
 import lotus.domino.View;
 import lotus.domino.ViewEntry;
 import lotus.domino.ViewEntryCollection;
-import de.mbaaba.calendar.AbstractCalendar;
-import de.mbaaba.calendar.CalendarEntry;
-import de.mbaaba.calendar.ICalendarEntry;
-import de.mbaaba.util.Configurator;
-import de.mbaaba.util.Logger;
 
 /**
  * The Class NotesMailbox allows to access events within a Lotus-Notes mailbox, e.g. mails that have 
@@ -101,7 +101,6 @@ public class NotesMailbox extends AbstractCalendar {
 			calendarEntries = new HashMap<String, NotesCalendarEntry>();
 		}
 
-		@Override
 		public void run() {
 			try {
 				final Session session = NotesFactory.createSession();

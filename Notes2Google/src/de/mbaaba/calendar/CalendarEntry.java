@@ -71,7 +71,6 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#getBody()
 	 */
-	@Override
 	public String getBody() {
 		return body;
 	}
@@ -79,57 +78,55 @@ public class CalendarEntry implements ICalendarEntry {
 	/* (non-Javadoc)
 	 * @see de.mbaaba.calendar.ICalendarEntry#setBody(java.lang.String)
 	 */
-	@Override
 	public void setBody(String aBody) {
 		body = aBody;
 	}
 
-	@Override
 	public Person getChair() {
 		return chair;
 	}
 
-	@Override
+	
 	public void setChair(Person aChair) {
 		chair = aChair;
 	}
 
-	@Override
+	
 	public String getLocation() {
 		return location;
 	}
 
-	@Override
+	
 	public void setLocation(String aLocation) {
 		location = aLocation;
 	}
 
-	@Override
+	
 	public String getRoom() {
 		return room;
 	}
 
-	@Override
+	
 	public void setRoom(String aRoom) {
 		room = aRoom;
 	}
 
-	@Override
+	
 	public List<Person> getAttendees() {
 		return attendees;
 	}
 
-	@Override
+	
 	public void setAttendees(List<Person> aAttendees) {
 		attendees = aAttendees;
 	}
 
-	@Override
+	
 	public ArrayList<Date> getStartDates() {
 		return startDates;
 	}
 
-	@Override
+	
 	public void addStartDate(Date aStartDate) {
 		// check for duplicates
 		for (Date date : startDates) {
@@ -140,12 +137,12 @@ public class CalendarEntry implements ICalendarEntry {
 		startDates.add(aStartDate);
 	}
 
-	@Override
+	
 	public ArrayList<Date> getEndDates() {
 		return endDates;
 	}
 
-	@Override
+	
 	public void addEndDate(Date aEndDate) {
 		for (Date date : endDates) {
 			if (date.equals(aEndDate)) {
@@ -155,27 +152,27 @@ public class CalendarEntry implements ICalendarEntry {
 		endDates.add(aEndDate);
 	}
 
-	@Override
+	
 	public Date getLastModified() {
 		return lastModified;
 	}
 
-	@Override
+	
 	public void setLastModified(Date aLastModified) {
 		lastModified = aLastModified;
 	}
 
-	@Override
+	
 	public String getUniqueID() {
 		return uniqueID;
 	}
 
-	@Override
+	
 	public void setUniqueID(String aUniqueID) {
 		uniqueID = aUniqueID;
 	}
 
-	@Override
+	
 	public String getSubject() {
 		return subject;
 	}
@@ -190,12 +187,12 @@ public class CalendarEntry implements ICalendarEntry {
 		setChair(UNKNOWN_PERSON);
 	}
 
-	@Override
+	
 	public void setSubject(String aSubject) {
 		subject = aSubject;
 	}
 
-	@Override
+	
 	public void addAttendee(String aAttendee, String aType) {
 		try {
 			final List<Person> persons = PersonFactory.findPerson(PersonFactory.CalendarType.Notes, aAttendee);
@@ -207,6 +204,7 @@ public class CalendarEntry implements ICalendarEntry {
 		}
 	}
 
+	
 	@Override
 	public String toString() {
 		String toStringLocation = "";
@@ -235,7 +233,7 @@ public class CalendarEntry implements ICalendarEntry {
 		return s;
 	}
 
-	@Override
+	
 	public String getShortString() {
 		return "\"" + getSubject() + "\" (" + getUniqueID() + ")";
 	}
@@ -280,7 +278,7 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#setAlarmTime(java.util.Date)
 	 */
-	@Override
+	
 	public void setAlarmTime(Date aAlarmOffset) {
 		alarmTime = aAlarmOffset;
 	}
@@ -290,7 +288,7 @@ public class CalendarEntry implements ICalendarEntry {
 	 * 
 	 * @see de.mbaaba.calendar.ICalendarEntry#getAlarmTime()
 	 */
-	@Override
+	
 	public Date getAlarmTime() {
 		return alarmTime;
 	}
@@ -298,6 +296,7 @@ public class CalendarEntry implements ICalendarEntry {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	
 	@Override
 	public boolean equals(Object aObj) {
 		if (aObj instanceof CalendarEntry) {
@@ -318,17 +317,18 @@ public class CalendarEntry implements ICalendarEntry {
 	/**
 	 * Calculates the hashCode for this calendar entry, using the {@link HashCodeBuilder#reflectionHashCode(Object)} utility.
 	 */
+	
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
-	@Override
+	
 	public AcceptStatus getAcceptStatus() {
 		return AcceptStatus.ACCEPTED;
 	}
 
-	@Override
+	
 	public void sanityCheck() {
 		if ((getStartDates().size() > 0) && (getEndDates().size() < getStartDates().size())) {
 			// if we have more startDates then end Dates, assume that the duration is always as long as the one of the first occurence of the entry

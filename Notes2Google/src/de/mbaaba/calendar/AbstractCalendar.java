@@ -24,7 +24,6 @@ public abstract class AbstractCalendar {
 
 	/**
 	 * Initializes the calendar.
-	 * Neuer Kommentar! Test12
 	 * 
 	 * @param aConfigurator
 	 *            the {@link Configurator} that contains configuration
@@ -58,14 +57,6 @@ public abstract class AbstractCalendar {
 	 * @see #put(ICalendarEntry)
 	 * @param aCalendarEntries
 	 *            the calendar entries to be added.
-	 */
-	//public abstract void putList(List<ICalendarEntry> aCalendarEntries);
-	
-	/**
-	 * Adds all given calendar entries.
-	 * 
-	 * @see #put(ICalendarEntry)
-	 * @param aCalendarEntries the calendar entries to be added.
 	 */
 	public void putList(List<ICalendarEntry> aCalendarEntries) {
 		for (final ICalendarEntry calendarEntry : aCalendarEntries) {
