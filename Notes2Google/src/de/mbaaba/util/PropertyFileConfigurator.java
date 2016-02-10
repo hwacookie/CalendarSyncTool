@@ -68,6 +68,7 @@ public class PropertyFileConfigurator implements Configurator {
 	 *      java.lang.String)
 	 */
 	
+	@Override
 	public String getProperty(String aPropertyName, String aDefaultValue) {
 		return props.getProperty(aPropertyName, aDefaultValue);
 	}
@@ -90,11 +91,13 @@ public class PropertyFileConfigurator implements Configurator {
 	 *      java.lang.String)
 	 */
 	
+	@Override
 	public void setProperty(String aPropertyName, String aValue) {
 		props.setProperty(aPropertyName, aValue);
 	}
 
 	
+	@Override
 	public int getProperty(String aPropertyName, int aDefaultValue) {
 		try {
 			final String s = props.getProperty(aPropertyName, "" + aDefaultValue);

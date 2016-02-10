@@ -52,6 +52,7 @@ public class FixLocationFilter implements ICalendarFilter {
 
 	}
 
+	@Override
 	public boolean passes(ICalendarEntry aParamCalendarEntry) {
 
 		final String defaultLocation = configurator.getProperty(DEFAULT_LOCATION, "");

@@ -101,6 +101,7 @@ public class NotesMailbox extends AbstractCalendar {
 			calendarEntries = new HashMap<String, NotesCalendarEntry>();
 		}
 
+		@Override
 		public void run() {
 			try {
 				final Session session = NotesFactory.createSession();

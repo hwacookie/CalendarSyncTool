@@ -105,6 +105,7 @@ public class NotesCalendar extends AbstractCalendar {
 			calendarEntries = new HashMap<String, NotesCalendarEntry>();
 		}
 
+		@Override
 		public void run() {
 			try {
 				final Session session = NotesFactory.createSession();

@@ -63,6 +63,7 @@ public class ScriptFilter implements ICalendarFilter {
 	 *
 	 * @see de.mbaaba.calendar.ICalendarFilter#passes(de.mbaaba.calendar.ICalendarEntry)
 	 */
+	@Override
 	public boolean passes(ICalendarEntry aParamCalendarEntry) {
 		scriptEngine.put("calendarEntry", aParamCalendarEntry);
 		boolean returnValue;

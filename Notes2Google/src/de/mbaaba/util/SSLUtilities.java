@@ -105,6 +105,7 @@ public final class SSLUtilities {
 		 * @return the true boolean value indicating the host name is trusted.
 		 */
 		
+		@Override
 		public boolean verify(String aHostname, javax.net.ssl.SSLSession aSession) {
 			return (true);
 		}
@@ -133,6 +134,7 @@ public final class SSLUtilities {
 		 *            the authentication type based on the client certificate.
 		 */
 		
+		@Override
 		public void checkClientTrusted(X509Certificate[] aChain, String aAuthType) {
 		}
 
@@ -146,6 +148,7 @@ public final class SSLUtilities {
 		 *            the key exchange algorithm used.
 		 */
 		
+		@Override
 		public void checkServerTrusted(X509Certificate[] aChain, String aAuthType) {
 		}
 
@@ -156,6 +159,7 @@ public final class SSLUtilities {
 		 * @return a empty array of issuer certificates.
 		 */
 		
+		@Override
 		public X509Certificate[] getAcceptedIssuers() {
 			return (ACCEPTED_ISSUERS);
 		}

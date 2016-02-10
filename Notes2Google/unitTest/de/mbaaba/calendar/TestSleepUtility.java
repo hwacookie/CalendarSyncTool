@@ -25,6 +25,7 @@ public class TestSleepUtility extends TestCase {
 
 		final Thread guard = new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(aTimeout * Units.SECOND);

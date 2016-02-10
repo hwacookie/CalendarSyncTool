@@ -1,4 +1,5 @@
-You need to install Notes.jar to your local maven repository in order to be able to use maven:
+You need to install some jar files into your local maven repository because they are not available in any maven repository.
+
 
 cd libs_to_import
 

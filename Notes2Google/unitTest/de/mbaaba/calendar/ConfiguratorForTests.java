@@ -31,6 +31,7 @@ public class ConfiguratorForTests implements Configurator {
 	}
 
 	
+	@Override
 	public String getProperty(String aPropertyName, String aDefaultValue) {
 		final String property = props.getProperty(aPropertyName);
 		if (property == null) {
@@ -42,6 +43,7 @@ public class ConfiguratorForTests implements Configurator {
 	}
 
 	
+	@Override
 	public int getProperty(String aPropertyName, int aDefaultValue) {
 		final String s = props.getProperty(aPropertyName);
 		if (s == null) {
@@ -53,6 +55,7 @@ public class ConfiguratorForTests implements Configurator {
 	}
 
 	
+	@Override
 	public void setProperty(String aPropertyName, String aValue) {
 		props.put(aPropertyName, aValue);
 	}
