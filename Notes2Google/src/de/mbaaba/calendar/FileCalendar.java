@@ -79,6 +79,7 @@ public class FileCalendar extends AbstractCalendar {
 		} catch (final Throwable e) {
 			LOG.error("Warning: " + fileName + " could not be opened for reading, using empty list!", e);
 			OutputManager.printerr("Warning: " + fileName + " could not be opened for reading, using empty list!");
+			
 			allEntries = new ArrayList<CalendarEntry>();
 		}
 	}

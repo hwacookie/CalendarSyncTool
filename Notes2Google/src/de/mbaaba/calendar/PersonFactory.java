@@ -11,6 +11,7 @@ package de.mbaaba.calendar;
 import java.util.List;
 
 import de.mbaaba.googleNew.GooglePerson;
+import de.mbaaba.iCal.ICalPerson;
 import de.mbaaba.notes.NotesPerson;
 
 /**
@@ -29,7 +30,7 @@ public abstract class PersonFactory {
 	 * The different calendar types.
 	 */
 	public enum CalendarType {
-		Notes, Google
+		Notes, Google, iCal
 	}
 
 	public static List<Person> findPerson(CalendarType aCalendarType, String aPerson) throws ItemNotFoundException {
@@ -38,6 +39,8 @@ public abstract class PersonFactory {
 			return NotesPerson.findPerson(aPerson);
 		case Google:
 			return GooglePerson.findPerson(aPerson);
+		case iCal:
+			return ICalPerson.findPerson(aPerson);
 		default:
 			break;
 

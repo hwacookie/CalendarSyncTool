@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.mbaaba.calendar.AbstractCalendar;
+import de.mbaaba.calendar.CalendarEntry;
+import de.mbaaba.calendar.ICalendarEntry;
+import de.mbaaba.calendar.Person;
+import de.mbaaba.util.Configurator;
+import de.mbaaba.util.OutputManager;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
@@ -40,16 +46,10 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.Calendars;
-import de.mbaaba.calendar.AbstractCalendar;
-import de.mbaaba.calendar.CalendarEntry;
-import de.mbaaba.calendar.ICalendarEntry;
-import de.mbaaba.calendar.Person;
-import de.mbaaba.util.Configurator;
-import de.mbaaba.util.OutputManager;
 
 /**
  * The Class ICalCalendar allows to access events within a iCal calendar.
- * Currently, the calendar is does not allow to delete entries in the calendar.
+ * Currently, the calendar does not allow to delete entries in the calendar.
  */
 public class ICalCalendar extends AbstractCalendar {
 

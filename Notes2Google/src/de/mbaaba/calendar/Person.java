@@ -16,6 +16,9 @@ import de.mbaaba.util.ObjectUtil;
  * The Class Person encapsulates all data of a person.
  */
 public class Person {
+	
+	
+
 	private String firstName;
 
 	private String lastName;
@@ -91,7 +94,11 @@ public class Person {
 			return ((getFirstName() != null) ? getFirstName() + " " : "") + ((getLastName() != null) ? getLastName() + " " : "")
 					+ "<" + getINetAdress() + ">";
 		} else {
-			return getINetAdress().substring(0,getINetAdress().indexOf("@"))+ " <" + getINetAdress() + ">"; 
+			if (getINetAdress()!=null) {
+				return getINetAdress().substring(0,getINetAdress().indexOf("@"))+ " <" + getINetAdress() + ">";
+			} else {
+				return "";
+			}
 		}
 	}
 

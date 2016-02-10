@@ -33,7 +33,7 @@ public class GooglePerson extends Person {
 
 	/**
 	 * 
-	 * Returns list with Person found for the given name 
+	 * Returns list of Persons found for the given name 
 	 *
 	 * @param aPerson name of the Person to find
 	 * 

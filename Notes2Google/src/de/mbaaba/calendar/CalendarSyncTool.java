@@ -154,6 +154,7 @@ public final class CalendarSyncTool {
 				// while reading/writing entries, we never want to break the
 				// while-true-loop.
 				LOG.error(e.getMessage(), e);
+				e.printStackTrace();
 				OutputManager.printerr("Some error occured, resuming loop anyway. I'm still here! Error", e);
 				OutputManager.println("Now sleeping for 10 seconds ...");
 				try {
