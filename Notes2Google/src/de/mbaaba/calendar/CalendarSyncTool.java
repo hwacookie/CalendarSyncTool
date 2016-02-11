@@ -116,7 +116,7 @@ public final class CalendarSyncTool {
 				ArrayList<ICalendarEntry> sourceEntriesUnfiltered = new ArrayList<ICalendarEntry>();
 
 				for (String readFromClassName : readFromClassNames) {
-					final AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName).newInstance();
+					final AbstractCalendar sourceCalendar = (AbstractCalendar) Class.forName(readFromClassName.trim()).newInstance();
 					sourceCalendar.init(configurator);
 
 					try {
@@ -234,11 +234,13 @@ public final class CalendarSyncTool {
 		final StringTokenizer tok = new StringTokenizer(filterScriptNames, ",");
 		while (tok.hasMoreTokens()) {
 			final String scriptName = tok.nextToken();
-			try {
-				final ScriptFilter filter = new ScriptFilter(scriptName, configurator);
-				allFilters.add(filter);
-			} catch (final FileNotFoundException e) {
-				OutputManager.printerr("Found no script named \"" + scriptName + "\"", e);
+			if (!scriptName.toLowerCase().startsWith("<")) {
+				try {
+					final ScriptFilter filter = new ScriptFilter(scriptName, configurator);
+					allFilters.add(filter);
+				} catch (final FileNotFoundException e) {
+					OutputManager.printerr("Found no script named \"" + scriptName + "\"", e);
+				}
 			}
 		}
 

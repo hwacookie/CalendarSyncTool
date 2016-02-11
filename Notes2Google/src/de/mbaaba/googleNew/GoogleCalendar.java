@@ -21,6 +21,7 @@ import de.mbaaba.util.Configurator;
  */
 public class GoogleCalendar extends AbstractCalendar {
 	private static final String NOTES_ID = "notes-id";
+	private String calendarID;
 
 
 	@Override
@@ -29,8 +30,7 @@ public class GoogleCalendar extends AbstractCalendar {
 
 	@Override
 	public void init(Configurator aConfigurator) throws Exception {
-		final String username = aConfigurator.getProperty("google.user", "");
-		final String password = aConfigurator.getProperty("google.pwd", "");
+		calendarID = aConfigurator.getProperty("google.calendarID", "");
 		
 	}
 

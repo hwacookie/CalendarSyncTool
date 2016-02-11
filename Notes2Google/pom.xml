@@ -7,8 +7,8 @@
 	<name>Notes2Google</name>
 	<description>Transfer tool from Lotus Notes to Google Calendar</description>
 	<properties>
-	    <maven.compiler.target>1.8</maven.compiler.target>
-    	<maven.compiler.source>1.8</maven.compiler.source>
+	    <maven.compiler.target>1.7</maven.compiler.target>
+    	<maven.compiler.source>1.7</maven.compiler.source>
 	</properties>
 	<!-- <repositories> <repository> <id>mvnrepository</id> <url>http://mvnrepository.com/artifact/</url> 
 		</repository> </repositories> -->
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>lotus.notes</groupId>
 			<artifactId>lotus.notes</artifactId>
-			<version>1.0</version>
+			<version>9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

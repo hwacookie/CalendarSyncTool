@@ -23,3 +23,31 @@ Tool ohne laufendes Notes starten, Passwort eingeben, sollte gehen.
 
 ----------------------------------------------------------------------------------
 
+Problem:
+Exception in thread "Thread-0" java.lang.UnsatisfiedLinkError: no nlsxbe in java.library.path
+
+Lösung: 
+Beim Start des Programs muss das Installationsverzeichnis vpn Lotus-Notes mit im Pfad liegen:
+-Djava.library.path="C:\Program Files (x86)\IBM\Notes"
+
+----------------------------------------------------------------------------------
+
+Problem:
+Exception in thread "Thread-0" java.lang.UnsatisfiedLinkError: C:\Program Files (x86)\IBM\Notes\nlsxbe.dll: Can't load IA 32-bit .dll on a AMD 64-bit platform
+
+Lösung: Es muss (leider) eine 32-bit JRE/JDK verwendet werden.
+
+Wenn danach folgendes kommt:
+Exception in thread "main" java.lang.UnsupportedClassVersionError: de/mbaaba/calendar/CalendarSyncTool : Unsupported major.minor version 52.0
+
+Lösung: Projekt neu bauen
+
+-------------------------
+
+Problem:
+Exception in thread "Thread-0" java.lang.NoSuchFieldError: cpp_object
+
+Lösung:
+mvn install:install-file -Dfile=Notes.jar -DgroupId=lotus.notes -DartifactId=lotus.notes -Dversion=9.0 -Dpackaging=jar -DgeneratePom=true
+
+Notes.jar passte nicht zu Notes Installation und musste geupdated werden.
